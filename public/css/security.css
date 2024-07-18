@@ -1,0 +1,1333 @@
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+*{
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Poppins';
+    color: #444444;
+    margin: 0;
+}
+
+a {
+    color: #4154f1;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #717ff5;
+    text-decoration: none;
+}
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+.align-items-center {
+    align-items: center !important;
+}
+.d-flex {
+    display: flex !important;
+}
+.fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+.header {
+    transition: all 0.5s;
+    z-index: 997;
+    height: 60px;
+    box-shadow: 0px 3px 2px rgb(93 92 92 / 38%);
+    background-color: rgba(232, 232, 232, 1);
+    padding-left: 20px;
+    /* Toggle Sidebar Button */
+    /* Search Bar */
+}
+.header .toggle-sidebar-btn {
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.bar{
+    width: 17%;
+    position: absolute;
+}
+.bar i{
+    color: rgba(97, 103, 121, 1);
+    float: inline-end;
+}
+@media (max-width: 1199px) {
+    .bar{
+        width: 6%;
+    }
+}
+
+
+.logo{
+    width: 100%;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+  
+/*--------------------------------------------------------------
+# Sidebar
+--------------------------------------------------------------*/
+.sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    z-index: 996;
+    transition: all 0.3s;
+    padding: 20px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #aab7cf transparent;
+    box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+    background-color: rgba(232, 232, 232, 1);
+}
+
+@media (max-width: 1199px) {
+    .sidebar {
+    left: -300px;
+    }
+}
+
+.sidebar::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: #fff;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #aab7cf;
+}
+
+@media (min-width: 1200px) {
+
+    #main,
+    #footer {
+    margin-left: 300px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .toggle-sidebar .sidebar {
+    left: 0;
+    }
+}
+
+@media (min-width: 1200px) {
+
+    .toggle-sidebar #main,
+    .toggle-sidebar #footer {
+    margin-left: 0;
+    }
+
+    .toggle-sidebar .sidebar {
+    left: -300px;
+    }
+}
+
+.sidebar-nav {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.sidebar-nav .nav-item {
+    margin-bottom: 5px;
+}
+
+.sidebar-nav .nav-item span{
+    font-size: 16px;
+    color: rgba(97, 103, 121, 1);
+    margin-left: 1rem;
+    font-weight: 700;
+}
+.sidebar-nav .last{
+    margin-top: 11.5rem;
+}
+
+.sidebar-nav .nav-heading {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #899bbd;
+    font-weight: 600;
+    margin: 10px 0 5px 15px;
+}
+
+.sidebar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4154f1;
+    transition: 0.3;
+
+    padding: 15px 15px;
+    border-radius: 4px;
+}
+
+.sidebar-nav .nav-link i {
+    font-size: 16px;
+    margin-right: 10px;
+    color: #4154f1;
+}
+
+.sidebar-nav .nav-link.collapsed {
+    color: #012970;
+}
+
+.sidebar-nav .nav-link.collapsed i {
+    color: #899bbd;
+}
+
+.sidebar-nav .nav-link:hover {
+    color: #4154f1;
+    background: #f6f9ff;
+}
+.hove{
+    background-color: rgb(84 176 242 / 26%);
+}
+
+/*--------------------------------------------------------------
+# Profile
+--------------------------------------------------------------*/
+.profile{
+    padding: 10px 15px;
+    color: rgba(97, 103, 121, 1);
+}
+.image i{
+    font-size: 70px;
+}
+
+.info h2{
+    margin-top: -0.5rem;
+    font-size: 22px;
+}
+.info h3{
+    margin-top: -1rem;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+
+/*--------------------------------------------------------------
+# MAIN
+--------------------------------------------------------------*/
+main{
+    padding: 0 15px;
+}
+.date-time {
+    color: rgba(173, 173, 173, 1);
+    font-size: 14px;
+    padding: 5px;
+    font-weight: 600;
+    background-color: rgba(232, 232, 232, 0.788);
+    border-radius: 5px;
+    margin-top: 4.5rem;
+}
+.front{
+    margin-top: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 203, 170, 1);
+    padding: 50px 10px 0px 0px;
+    display: flex;
+    box-shadow: 1px 1px 5px #d9cece;
+}
+.asset1 img{
+    height: 150px;
+    width: 150px;
+    margin-bottom: -0.7rem;
+}
+.front-name{
+    margin-top: -1.3rem;
+    margin-left: 5px;
+}
+.front-name h3{
+    font-weight: 600;
+    font-size: 20px;
+    color: rgba(0, 155, 221, 1);
+    letter-spacing: 1.5px;
+    margin: 0;
+}
+.front-name h3 span{
+    color: rgba(242, 117, 43, 1);
+    margin: 0;
+}
+.front-name h1{
+    font-weight: bold;
+    font-size: 30px;
+    color: rgba(4, 0, 68, 1);
+    margin: 0;
+    margin-top: -5px;
+}
+.front-name p{
+    color: rgba(80, 119, 165, 1);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 14px;
+    margin: 0;
+    margin-top: -5px;
+}
+.reports{
+    display: flex;
+    margin-top: 1.5rem;
+}
+.filed{
+    background-color: rgba(232, 232, 232, 1);
+    box-shadow: 1px 1px 5px rgb(185 180 180);
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: flex;
+    width: 50%;
+}
+.filed h3{
+    margin-left: 1rem;
+    font-size: 25px;
+    color: rgba(0, 155, 221, 1);
+}
+.filed p{
+    margin-left: 1rem;
+    font-weight: 600;
+    color: rgba(97, 103, 121, 1);
+    font-size: 14px;
+    margin-top: 20px;
+}
+.filed2{
+    background-color: rgba(232, 232, 232, 1);
+    box-shadow: 1px 1px 5px rgb(185 180 180);
+    border-radius: 5px;
+    padding: 5px;
+    display: flex;
+    width: 50%;
+    margin-left: 10px;
+}
+.filed2 h3{
+    margin-left: 1rem;
+    font-size: 25px;
+    color: rgba(0, 155, 221, 1);
+}
+.filed2 p{
+    margin-left: 1rem;
+    font-weight: 600;
+    color: rgba(97, 103, 121, 1);
+    font-size: 14px;
+}
+
+.btn1 {
+    font-size: 14px;
+    padding: 5px;
+    font-weight: 600;
+    background-color: rgba(232, 232, 232, 0.788);
+    border-radius: 5px;
+    margin-top: 1.2rem;
+    text-align: center;
+    cursor: pointer;
+}
+.btn1 a{
+    color: rgba(4, 0, 68, 1);
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.upload{
+    display: flex;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+.child{
+    background-color: rgba(242, 117, 43, 0.2);
+    box-shadow: 1px 1px 5px rgb(185 180 180);
+    border-radius: 5px;
+    width: 50%;
+}
+.child img{
+    font-size: 35px;
+    color: rgba(0, 155, 221, 1);
+}
+.child p{
+    font-weight: 600;
+    color: rgba(97, 103, 121, 1);
+    font-size: 14px;
+    margin: 0;
+    margin-top: 5px;
+}
+.child2{
+    background-color: rgba(242, 117, 43, 0.2);
+    box-shadow: 1px 1px 5px rgb(185 180 180);
+    border-radius: 5px;
+    width: 50%;
+    margin-left: 10px;
+}
+.unauthorize{
+    margin-top: 1.5rem;
+}
+.violation{
+    margin-top: 1.5rem;
+}
+.child2 a{
+    margin-top: 1.3rem;
+}
+.child2 .bi-exclamation-circle-fill{
+    font-size: 35px;
+    color: rgba(0, 155, 221, 1);
+}
+.child2 p{
+    font-weight: 600;
+    color: rgba(97, 103, 121, 1);
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+
+/*--------------------------------------------------------------
+# CREATE REPORT CSS ON MAIN DIV //// UNAUTHORIZED PAGE MAIN DIV
+--------------------------------------------------------------*/
+.to_report{
+    background-color: rgba(232, 232, 232, 1);
+    padding: 0px 10px 20px 10px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+.to_report h3{
+    text-align: center;
+    color: rgba(4, 0, 68, 1);
+    padding: 10px 0px 0px 0px;
+}
+.input-form{
+    margin-top: 10px;
+    padding: 5px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.input-form label {
+    flex: 1;
+    margin-right: 10px;
+    color: #333;
+    text-align: end;
+    font-size: 16px;
+    color: rgba(62, 62, 62, 1);
+    font-weight: 500;
+}
+
+.input-form input,
+.input-form select {
+    flex: 5;
+    padding: 5px 5px 5px 10px;
+    border: 1px solid rgba(173, 173, 173, 1);
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+    background: rgba(244, 244, 242, 1);
+    color: rgba(97, 103, 121, 1);
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .input-form input,
+    .input-form select {
+        flex: 1.7;
+        max-width: 220px;
+    }
+}
+@media (max-width: 400px) {
+    .input-form label {
+        font-size: 12px;
+    }
+    .input-form input, .input-form select {
+        flex: 0;
+        font-size: 12px;
+        max-width: 130px;
+    }
+}
+
+.input-form2 {
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.click_files {
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed rgba(0, 0, 0, 1);
+    border-radius: 4px;
+    padding: 30px 20px 20px 20px;;
+    text-align: center;
+    color: #999;
+    cursor: pointer;
+    background-color: rgba(217, 217, 217, 1);
+    margin-top: 0.3rem;
+}
+
+.click_files img {
+    width: 100px;
+    margin-right: 10px;
+}
+
+.save_not_btn {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.save_not_btn button,
+.save_not_btn a {
+    width: 48%;
+    text-align: center;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: rgba(62, 62, 62, 1);
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 2rem;
+}
+
+.save_not_btn .done {
+    
+    font-family: 'Poppins';
+    background-color: rgba(242, 117, 43, 0.2);
+}
+
+.save_not_btn a {
+    background-color: rgba(80, 119, 165, 0.2);
+    text-decoration: none;
+}
+
+
+/*--------------------------------------------------------------
+# VIEW REPORTS MAIN DIV CSS
+--------------------------------------------------------------*/
+.title h3{
+    color: rgba(4, 0, 68, 1);
+    padding: 10px 0px 0px 0px;
+    margin-top: 5px;
+}
+.content{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+select#month-type {
+    width: 90%;
+    margin-left: -1px;
+    border-radius: 0px 5px 5px 0px;
+    padding: 0px 10px;
+    font-family: 'Poppins';
+    font-size: 16px;
+    letter-spacing: 2px;
+    background-color: rgba(232, 232, 232, 1);
+    color: rgba(97, 103, 121, 1);
+    border: none;
+}
+@media (max-width: 600px) {
+    select#month-type {
+        width: 60%;
+    }
+}
+.dropdown-month{
+    display: flex;
+    flex: 2;
+}
+.dropdown-month label{
+    z-index: 10;
+    background-color: rgba(80, 119, 165, 0.2);
+    padding: 3px 12px;
+    border-radius: 5px 0px 0px 5px;
+    color: rgba(97, 103, 121, 1);
+}
+.export-tbn{
+    flex: 0;
+}
+.export-child{
+    border-radius: 5px;
+    background-color: rgba(80, 119, 165, 0.2);
+    text-align: right;
+    padding: 7px 25px;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(62, 62, 62, 1);
+    border: none;
+}
+
+.search-bar {
+    width: 100%;
+    max-width: 800px; /* Adjust as needed */
+    margin-top: 15px;
+}
+
+.search-bar form {
+    display: flex;
+    width: 100%;
+}
+
+.search-bar input[type="text"] {
+    font-family: 'Poppins';
+    flex: 2;
+    padding: 7px 10px;
+    border: none;
+    border-radius: 5px 0px 0px 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: rgba(232, 232, 232, 1);
+}
+
+.search-bar button {
+    font-family: 'Poppins';
+    border: none;
+    padding: 7px 20px;
+    border-radius: 0px 5px 5px 0px;
+    background-color: rgba(80, 119, 165, 0.2);
+    color: rgba(97, 103, 121, 1);
+    font-size: 14px;
+    cursor: pointer;
+    box-sizing: border-box;
+    margin-left: -1px;
+}
+
+.search-bar button:hover {
+    background-color: rgb(79, 132, 192);
+}
+
+.myreports{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+    gap: 20px 30px;
+}
+.filed-child{
+    background-color: rgba(232, 232, 232, 1);
+    box-shadow: 1px 1px 5px rgb(185 180 180);
+    border-radius: 5px;
+    padding: 10px 50px 10px 20px;
+}
+.myfiled h3{
+    font-size: 14px;
+    color: rgba(0, 155, 221, 1);
+    margin: 0;
+}
+.myfiled p{
+    font-weight: 600;
+    color: rgba(97, 103, 121, 1);
+    font-size: 14px;
+    margin: 0;
+    margin-top: 5px;
+}
+
+
+/*--------------------------------------------------------------
+# VIEW PER REPORT PAGE MAIN DIV CSS
+--------------------------------------------------------------*/
+.per_report{
+    background-color: rgba(232, 232, 232, 1);
+    padding: 0px 10px 20px 10px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+.per-title{
+    text-align: left;
+    color: rgba(4, 0, 68, 1);
+    padding: 10px 0px 0px 0px;
+}
+.per-title span{
+    color: rgba(62, 62, 62, 1);
+    margin-left: 0.7rem;
+}
+.click_files2 {
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed rgba(0, 0, 0, 1);
+    border-radius: 4px;
+    padding: 50px;
+    text-align: center;
+    color: #999;
+    cursor: pointer;
+    background-color: rgba(217, 217, 217, 1);
+    margin-top: 0.3rem;
+}
+
+.click_files2 img {
+    width: 100px;
+    margin-right: 10px;
+}
+
+.back-btn{
+    padding: 40px 0px 10px 0px;
+}
+.back-btn a {
+    text-align: center;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: rgba(62, 62, 62, 1);
+    font-weight: 600;
+    font-size: 16px;
+    background-color: rgba(80, 119, 165, 0.2);
+    text-decoration: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+
+
+/*--------------------------------------------------------------
+# SCANNED QR CODE MAIN DIV CSS
+--------------------------------------------------------------*/
+.scanner{
+    background-color: rgba(232, 232, 232, 1);
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px rgb(185 180 180);
+}
+.scanner h3{
+    text-align: center;
+    color: rgba(4, 0, 68, 1);
+    font-size: 25px;
+}
+.body-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    justify-content: center;
+    color: rgba(62, 62, 62, 1);
+    text-decoration: none;
+}
+#video-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+}
+
+#video {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+#scanner-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 10px solid rgba(62, 62, 62, 1);
+}
+
+#top-left {
+    top: 0;
+    left: 0;
+    border-top-left-radius: 8px;
+    border-width: 4px 0 0 4px;
+}
+
+#top-right {
+    top: 0;
+    right: 0;
+    border-top-right-radius: 8px;
+    border-width: 4px 4px 0 0;
+}
+
+#bottom-left {
+    bottom: 0;
+    left: 0;
+    border-bottom-left-radius: 8px;
+    border-width: 0 0 4px 4px;
+}
+
+#bottom-right {
+    bottom: 0;
+    right: 0;
+    border-bottom-right-radius: 8px;
+    border-width: 0 4px 4px 0;
+}
+
+#canvas {
+    display: none;
+}
+
+#output {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+.scan-info{
+    text-align: center;
+    padding: 40px 0px;
+}
+
+.scan-info p{
+    font-weight: 550;
+    font-size: 14px;
+    margin: 0;
+}
+.back-btn2{
+    padding: 30px 0px;
+
+}
+.back-btn2 a {
+    text-align: center;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: rgba(62, 62, 62, 1);
+    font-weight: 600;
+    font-size: 16px;
+    background-color: rgba(80, 119, 165, 0.2);
+    text-decoration: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+
+
+/*--------------------------------------------------------------
+# VEHICLE INFO AFTER SCANNED MAIN DIV CSS
+--------------------------------------------------------------*/
+.back-btn3{
+    margin-top: 15px;
+}
+.back-btn3 a {
+    text-align: center;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: rgba(62, 62, 62, 1);
+    font-weight: 600;
+    font-size: 16px;
+    background-color: rgba(80, 119, 165, 0.2);
+    text-decoration: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+.view{
+    border: none;
+    padding: 8px;
+    background-color: rgba(242, 117, 43, 0.2);
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Poppins';
+    color: rgba(97, 103, 121, 1);
+}
+
+
+/*--------------------------------------------------------------
+# REGISTRATION NOT FOUND MAIN DIV CSS
+--------------------------------------------------------------*/
+.reg_not_found{
+    background-color: rgba(232, 232, 232, 1);
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px rgb(185 180 180);
+}
+.reg_not_found h3{
+    text-align: center;
+    color: rgba(4, 0, 68, 1);
+    font-size: 35px;
+    margin-top: 160px;
+}
+.note{
+    text-align: center;
+    padding: 0px 0px 70px 0px;
+}
+
+.note p{
+    padding: 0px 25px;
+    font-weight: 550;
+    font-size: 14px;
+}
+
+
+/*--------------------------------------------------------------
+# MY ACCOUNT MAIN DIV CSS
+--------------------------------------------------------------*/
+
+.main-title h3{
+    text-align: left;
+    color: rgba(4, 0, 68, 1);
+    font-size: 25px;
+    margin-top: -1px;
+}
+
+.photo{
+    text-align: center;
+    padding: 15px 0px 0px 0px;
+}
+.back-btn4{
+    margin-top: 40px;
+}
+.back-btn4 a {
+    text-align: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: rgba(62, 62, 62, 1);
+    font-weight: 600;
+    font-size: 16px;
+    background-color: rgba(80, 119, 165, 0.2);
+    text-decoration: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
+@media (max-width: 400px) {
+    .back-btn4 a {
+        padding: 5px 20px;
+    }
+}
+/*--------------------------------------------------------------
+# LOG IN MAIN DIV CSS
+--------------------------------------------------------------*/
+.main1{
+    text-align: center;
+    margin: 0;
+}
+.login-con{
+    margin: auto;
+    width: 25%;
+    text-align: center;
+    background-color: rgba(255, 203, 170, 1);
+    display: flex;
+    padding: 90px 0px 0px 0px;
+    border-radius: 0px 0px 30px 30px;
+    box-shadow: 0px 5px 5px rgb(185 180 180);
+}
+.login-asset img{
+    width: 220px;
+    height: 220px;
+    margin-top: 20px;
+    margin-bottom: -0.8rem;
+}
+.login-name{
+    margin-top: -4rem;
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(232, 232, 232, 0.75);
+    border-radius: 20px;
+}
+.login-name h3{
+    color: rgba(0, 155, 221, 1);
+    margin: 0;
+}
+.login-name span{
+    color: rgba(242, 117, 43, 1);
+}
+.login-name h1{
+    color: rgba(4, 0, 68, 1);
+    font-size: 25px;
+    margin: 0;
+}
+.login-title h2{
+    color: rgba(4, 0, 68, 1);
+    font-weight: 550;
+    margin-top: 4rem;
+}
+.login-form{
+    margin: auto;
+    width: 25%;
+}
+.login-inputs{
+    text-align: left;
+}
+.login-input-form{
+    padding: 5px 50px;
+    position: relative;
+    margin-bottom: 1rem;
+}
+.login-input-form label{
+    text-align: left;
+    color: rgba(62, 62, 62, 1);
+    font: 12px;
+    font-weight: 500;
+    font-family: 'Poppins';
+}
+.login-input-form input{
+    width: 100%;
+    border-style: solid;
+    border-width: thin;
+    border-color: #0e81b5eb;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 0.6rem 1.25rem; /* Adjusting padding to accommodate the icon */
+}
+.forgot{
+    text-align: right;
+    margin-right: 50px;
+    margin-top: 10px;
+}
+.forgot a{
+    color: rgba(80, 119, 165, 1);
+    font-weight: 500;
+    font-size: 14px;
+    text-align: end;
+}
+
+.login-form button{
+    font-family: 'Poppins';
+    margin-top: 3rem;
+    color: white;
+    background-color: rgba(84, 176, 242, 1);
+    border: none;
+    border-radius: 115px;
+    width: 80%;
+    padding: 10px 60px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 16px;
+}
+.eye-icon {
+    position: absolute;
+    right: 63px;
+    top: 65%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #333;
+}
+  
+@media (max-width: 1024px) {
+    .main1{
+        margin: 0;
+        padding: 0;
+    }
+    .login-con{
+        width: 100%;
+    }
+    .login-form{
+        margin: auto;
+        width: 100%;
+    }
+    .login-form button{
+        width: 75%;
+    }
+    .login-asset img{
+        width: 200px;
+        height: 200px;
+    }
+    .login-name h3{
+        font-size: 14px;
+    }
+    .login-name h1{
+        font-size: 24px;
+    }
+    .spare-login-name {
+        margin-left: -1rem;
+    }
+    .login-name{
+        height: auto;
+        width: auto;
+    }
+  
+}
+
+@media (max-width: 600px) {
+    .main1{
+        margin: 0;
+        padding: 0;
+    }
+    .login-con{
+        width: 100%;
+    }
+    .login-form{
+        margin: auto;
+        width: 100%;
+    }
+    .login-form button{
+        width: 75%;
+    }
+    .login-asset img{
+        width: 200px;
+        height: 200px;
+    }
+    .login-name h3{
+        font-size: 20px;
+    }
+    .login-name h1{
+        font-size: 30px;
+    }
+    .spare-login-name {
+        margin-left: -1rem;
+    }
+    .login-name{
+        height: auto;
+        width: auto;
+    }
+}
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #f35868;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin: 10px 0;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.error-message span {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+}
+
+.error-message i.bi-exclamation-circle {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.cancel-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #721c24;
+    cursor: pointer;
+    margin-left: auto; /* Pushes the button to the right */
+    margin-right: -0.5rem;
+}
+.cancel-button:hover {
+    color: white;
+}
+
+.cancel-button i.bi-x {
+    font-size: 24px;
+}
+
+.main-error {
+    padding: 0px 50px;
+}
+
+.success-message{
+    background-color: #d7f8e0;
+    color: #1d721c;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #35a133;
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin: 10px 0;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.success-message span {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+}
+
+.success-message i.bi-check-circle {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.cancel-button-success {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #4baf74;
+    cursor: pointer;
+    margin-left: auto; /* Pushes the button to the right */
+    margin-right: -0.5rem;
+}
+.cancel-button-success:hover {
+    color: #1f5f39;
+}
+
+.cancel-button-success i.bi-x {
+    font-size: 24px;
+}
+.main-success {
+    padding: 0px 50px;
+}
+/*--------------------------------------------------------------
+# FORGOT PASSWORD MAIN DIV CSS
+--------------------------------------------------------------*/
+.forgot-info{
+    margin-top: -2rem;
+    padding: 10px 50px;
+    text-align: left;
+}
+.forgot-info p{
+    font-size: 14px;
+    color: rgba(80, 119, 165, 1);
+    font-weight: 500;
+}
+.forgot-info span{
+    font-weight: 800;
+}
+.back-login{
+    margin-top: 10px;
+}
+.back-login a {
+    color: #0099cb;
+}
+.forgot-info3{
+    padding: 0px 40px;
+    text-align: left;
+}
+.forgot-info3 span{
+    font-weight: 700;
+}
+.login-input-form3{
+    padding: 10px;
+}
+.login-input-form3 label{
+    padding: 10px 0px;
+    font-size: 14px;
+}
+.login-input-form3 input {
+    width: 93.6%;
+    border-style: solid;
+    border-width: thin;
+    border-color: rgba(173, 173, 173, 1);
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 8px;
+    background-color: rgba(232, 232, 232, 1);
+    margin-top: 0.5rem;
+}
+.login-form .sendbtn{
+    margin-top: 2rem;
+}
+.forgot-info3 p {
+    font-size: 14px;
+    color: rgba(80, 119, 165, 1);
+    font-weight: 500;
+    padding: 0px 10px;
+}
+.back-login{
+    margin-top: 10px;
+    cursor: pointer;
+}
+.back-login a{
+    color: #0099cb;
+}
+.back-login a:hover{
+    color: rgba(242, 117, 43, 1);
+}
+
+
+/*--------------------------------------------------------------
+# NEW PASSWORD MAIN DIV CSS
+--------------------------------------------------------------*/
+.newpass-info{
+    text-align: center;
+}
+.newpass-info h2{
+    color: rgba(4, 0, 68, 1);
+    font-weight: 550;
+    margin-top: 4rem;
+}
+.check_img{
+    margin-top: 2rem;
+}
+.check_img img{
+    width: 120px;
+    height: 120px;
+}
+.newpass-note{
+    color: rgba(80, 119, 165, 1);
+}
+.newpass-note p{
+    padding: 5px 20px;
+}
+.newpass-note span{
+    font-weight: 700;
+}
+
+.inside-error-message{
+    font-size: 14px;
+    color: red;
+    padding: 0px 10px;
+    display: none;
+}
+.inside-success-message{
+    font-size: 14px;
+    color: rgb(34 153 80);
+    padding: 0px 10px;
+}
+.inside-weak-message{
+    font-size: 14px;
+    color: rgb(0, 153, 255);
+    padding: 0px 10px;
+}
+/*--------------------------------------------------------------
+# RESET NEW PASSWORD MAIN DIV CSS
+--------------------------------------------------------------*/
+.forgot-info3 {
+    padding: 0px 40px;
+    text-align: left;
+}
+
+.login-input-form3 {
+    padding: 10px;
+    position: relative;
+}
+
+.login-input-form3 label {
+    padding: 10px 0px;
+    font-size: 14px;
+}
+
+.login-input-form3 input {
+    width: 100%;
+    border-style: solid;
+    border-width: thin;
+    border-color: #0e81b5eb;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 8px 20px 8px 8px;
+    background-color: rgb(232 232 232 / 0%);
+    margin-top: 0.5rem;
+}
+
+.eye-icon2{
+    position: absolute;
+    right: 20px;
+    top: 67%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.2em;
+    color: #333;
+}
