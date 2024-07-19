@@ -6,6 +6,7 @@
     <body>
         <div class='email-container'>
             <div class="headmail">
+                <img src="{{ asset('lockreload.png') }}" alt="">
                 <h3>Please reset your password</h3>
             </div>
             <div class="semi-mail">
