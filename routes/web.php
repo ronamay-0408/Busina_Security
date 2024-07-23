@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Middleware\CheckLastActivity;
 
 // Group routes that require authentication and email verification
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', 'verified', CheckLastActivity::class])->group(function () {
     Route::get('/index', function () {
         return view('index');
     })->name('index');
@@ -16,35 +17,35 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('view_reports');
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    
+
     Route::get('/scanned_qr', function () {
         return view('scanned_qr');
     })->name('scanned_qr');
-    
+
     Route::get('/guidelines', function () {
         return view('guidelines');
     })->name('guidelines');
-    
+
     Route::get('/myaccount', function () {
         return view('myaccount');
     })->name('myaccount');
-    
+
     Route::get('/report_vehicle', function () {
         return view('report_vehicle');
     })->name('report_vehicle');
-    
+
     Route::get('/unauthorized', function () {
         return view('unauthorized');
     })->name('unauthorized');
-    
+
     Route::get('/reg_not_found', function () {
         return view('reg_not_found');
     })->name('reg_not_found');
-    
+
     Route::get('/user_info', function () {
         return view('user_info');
     })->name('user_info');
-    
+
     Route::get('/view_per_report', function () {
         return view('view_per_report');
     })->name('view_per_report');
@@ -70,8 +71,6 @@ Route::get('/updated_pass_result', function () {
     return view('updated_pass_result');
 })->name('updated_pass_result'); // Password updated confirmation
 
-
 Route::get('/email', function () {
     return view('email');
 })->name('email'); // Password reset link emailed confirmation
-

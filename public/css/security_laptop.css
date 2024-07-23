@@ -8,6 +8,7 @@ body {
     font-family: 'Poppins';
     color: #444444;
     margin: 0;
+    background-color: #f8fafc;
 }
 
 a {
@@ -40,8 +41,8 @@ a:hover {
     transition: all 0.5s;
     z-index: 997;
     height: 60px;
-    box-shadow: 0px 3px 2px rgb(93 92 92 / 38%);
-    background-color: rgba(232, 232, 232, 1);
+    box-shadow: 0px 0.5px 0.5px rgb(93 92 92 / 38%);
+    background-color: white;
     padding-left: 20px;
     /* Toggle Sidebar Button */
     /* Search Bar */
@@ -88,7 +89,7 @@ a:hover {
     scrollbar-width: thin;
     scrollbar-color: #aab7cf transparent;
     box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
-    background-color: rgba(232, 232, 232, 1);
+    background-color: #f8fafc;
 }
 
 @media (max-width: 1199px) {
@@ -230,13 +231,14 @@ main{
     padding: 0 15px;
 }
 .date-time {
-    color: rgba(173, 173, 173, 1);
+    color: black;
     font-size: 14px;
     padding: 5px;
     font-weight: 600;
-    background-color: rgba(232, 232, 232, 0.788);
+    background-color: white;
     border-radius: 5px;
     margin-top: 4.5rem;
+    border: 0.1px solid #80808061;
 }
 .front{
     margin-top: 20px;
@@ -286,12 +288,13 @@ main{
     margin-top: 1.5rem;
 }
 .filed{
-    background-color: rgba(232, 232, 232, 1);
-    box-shadow: 1px 1px 5px rgb(185 180 180);
+    background-color: white;
+    /* box-shadow: 1px 1px 5px rgb(185 180 180); */
     border-radius: 5px;
     padding: 5px 10px;
     display: flex;
     width: 50%;
+    border: 0.1px solid #80808061;
 }
 .filed h3{
     margin-left: 1rem;
@@ -306,13 +309,14 @@ main{
     margin-top: 20px;
 }
 .filed2{
-    background-color: rgba(232, 232, 232, 1);
-    box-shadow: 1px 1px 5px rgb(185 180 180);
+    background-color: white;
+    /* box-shadow: 1px 1px 5px rgb(185 180 180); */
     border-radius: 5px;
     padding: 5px;
     display: flex;
     width: 50%;
     margin-left: 10px;
+    border: 0.1px solid #80808061;
 }
 .filed2 h3{
     margin-left: 1rem;
@@ -330,14 +334,15 @@ main{
     font-size: 14px;
     padding: 5px;
     font-weight: 600;
-    background-color: rgba(232, 232, 232, 0.788);
+    background-color: white;
     border-radius: 5px;
     margin-top: 1.2rem;
     text-align: center;
     cursor: pointer;
+    border: 0.1px solid #80808061;
 }
 .btn1 a{
-    color: rgba(4, 0, 68, 1);
+    color: black;
     font-weight: 800;
     font-size: 16px;
 }
@@ -349,7 +354,7 @@ main{
 }
 .child{
     background-color: rgba(242, 117, 43, 0.2);
-    box-shadow: 1px 1px 5px rgb(185 180 180);
+    box-shadow: 1px 1px 3px rgb(185 180 180);
     border-radius: 5px;
     width: 50%;
 }
@@ -366,7 +371,7 @@ main{
 }
 .child2{
     background-color: rgba(242, 117, 43, 0.2);
-    box-shadow: 1px 1px 5px rgb(185 180 180);
+    box-shadow: 1px 1px 3px rgb(185 180 180);
     border-radius: 5px;
     width: 50%;
     margin-left: 10px;
@@ -396,10 +401,11 @@ main{
 # CREATE REPORT CSS ON MAIN DIV //// UNAUTHORIZED PAGE MAIN DIV
 --------------------------------------------------------------*/
 .to_report{
-    background-color: rgba(232, 232, 232, 1);
+    background-color: white;
     padding: 0px 10px 20px 10px;
     margin-top: 20px;
     border-radius: 10px;
+    border: 0.1px solid #80808061;
 }
 .to_report h3{
     text-align: center;
@@ -427,13 +433,13 @@ main{
 .input-form select {
     flex: 5;
     padding: 5px 5px 5px 10px;
-    border: 1px solid rgba(173, 173, 173, 1);
+    border: 0.1px solid #80808061;
     border-radius: 5px;
     box-sizing: border-box;
     font-family: 'Poppins';
-    background: rgba(244, 244, 242, 1);
+    background: white;
     color: rgba(97, 103, 121, 1);
-    font-size: 14px;
+    font-size: 13px;
 }
 
 @media (max-width: 600px) {
@@ -468,7 +474,7 @@ main{
     text-align: center;
     color: #999;
     cursor: pointer;
-    background-color: rgba(217, 217, 217, 1);
+    background-color: white;
     margin-top: 0.3rem;
 }
 
@@ -530,9 +536,9 @@ select#month-type {
     font-family: 'Poppins';
     font-size: 16px;
     letter-spacing: 2px;
-    background-color: rgba(232, 232, 232, 1);
+    background-color: white;
+    border: 0.1px solid #80808061;
     color: rgba(97, 103, 121, 1);
-    border: none;
 }
 @media (max-width: 600px) {
     select#month-type {
@@ -583,7 +589,8 @@ select#month-type {
     border-radius: 5px 0px 0px 5px;
     font-size: 14px;
     box-sizing: border-box;
-    background-color: rgba(232, 232, 232, 1);
+    background-color: white;
+    border: 0.1px solid #80808061;
 }
 
 .search-bar button {
@@ -607,11 +614,11 @@ select#month-type {
     display: flex;
     flex-wrap: wrap;
     margin-top: 1.5rem;
-    gap: 20px 30px;
+    gap: 20px 25px;
 }
 .filed-child{
-    background-color: rgba(232, 232, 232, 1);
-    box-shadow: 1px 1px 5px rgb(185 180 180);
+    background-color: white;
+    border: 0.1px solid #80808061;
     border-radius: 5px;
     padding: 10px 50px 10px 20px;
 }
@@ -633,10 +640,11 @@ select#month-type {
 # VIEW PER REPORT PAGE MAIN DIV CSS
 --------------------------------------------------------------*/
 .per_report{
-    background-color: rgba(232, 232, 232, 1);
+    background-color: white;
     padding: 0px 10px 20px 10px;
     margin-top: 20px;
     border-radius: 10px;
+    border: 0.1px solid #80808061;
 }
 .per-title{
     text-align: left;
@@ -690,11 +698,11 @@ select#month-type {
 # SCANNED QR CODE MAIN DIV CSS
 --------------------------------------------------------------*/
 .scanner{
-    background-color: rgba(232, 232, 232, 1);
+    background-color: white;
     padding: 10px;
     margin-top: 20px;
     border-radius: 10px;
-    box-shadow: 1px 1px 5px rgb(185 180 180);
+    border: 0.1px solid #80808061;
 }
 .scanner h3{
     text-align: center;
@@ -983,7 +991,7 @@ select#month-type {
     border-color: #0e81b5eb;
     border-radius: 5px;
     font-size: 16px;
-    padding: 0.6rem 1.25rem; /* Adjusting padding to accommodate the icon */
+    padding: 0.6rem 0.8rem; /* Adjusting padding to accommodate the icon */
 }
 .forgot{
     text-align: right;
@@ -1019,6 +1027,7 @@ select#month-type {
     font-size: 1.2em;
     color: #333;
 }
+  
 @media (min-width: 1366px) and (max-width: 1920px) {
     .login-con{
         width: 33%;
@@ -1224,13 +1233,11 @@ select#month-type {
     padding: 0px 40px;
     text-align: left;
 }
-
 .forgot-info3 span{
     font-weight: 700;
 }
 .login-input-form3{
     padding: 10px;
-    position: relative;
 }
 .login-input-form3 label{
     padding: 10px 0px;
@@ -1243,7 +1250,7 @@ select#month-type {
     border-color: rgba(173, 173, 173, 1);
     border-radius: 5px;
     font-size: 16px;
-    padding: 8px;
+    padding: 0.6rem 0.8rem;
     background-color: rgba(232, 232, 232, 1);
     margin-top: 0.5rem;
 }
@@ -1328,6 +1335,16 @@ select#month-type {
 /*--------------------------------------------------------------
 # RESET NEW PASSWORD MAIN DIV CSS
 --------------------------------------------------------------*/
+.forgot-info3 {
+    padding: 0px 40px;
+    text-align: left;
+}
+
+.login-input-form3 {
+    padding: 10px;
+    position: relative;
+}
+
 .login-input-form3 label {
     padding: 10px 0px;
     font-size: 14px;
@@ -1340,11 +1357,10 @@ select#month-type {
     border-color: #0e81b5eb;
     border-radius: 5px;
     font-size: 16px;
-    padding: 8px 20px 8px 8px;
+    padding: 0.6rem 0.8rem;
     background-color: rgb(232 232 232 / 0%);
     margin-top: 0.5rem;
 }
-
 .eye-icon2{
     position: absolute;
     right: 20px;

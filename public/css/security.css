@@ -401,10 +401,11 @@ main{
 # CREATE REPORT CSS ON MAIN DIV //// UNAUTHORIZED PAGE MAIN DIV
 --------------------------------------------------------------*/
 .to_report{
-    background-color: rgba(232, 232, 232, 1);
+    background-color: white;
     padding: 0px 10px 20px 10px;
     margin-top: 20px;
     border-radius: 10px;
+    border: 0.1px solid #80808061;
 }
 .to_report h3{
     text-align: center;
@@ -473,7 +474,7 @@ main{
     text-align: center;
     color: #999;
     cursor: pointer;
-    background-color: rgba(217, 217, 217, 1);
+    background-color: white;
     margin-top: 0.3rem;
 }
 
@@ -990,7 +991,7 @@ select#month-type {
     border-color: #0e81b5eb;
     border-radius: 5px;
     font-size: 16px;
-    padding: 0.6rem 1.25rem; /* Adjusting padding to accommodate the icon */
+    padding: 0.6rem 0.8rem; /* Adjusting padding to accommodate the icon */
 }
 .forgot{
     text-align: right;
@@ -1230,7 +1231,7 @@ select#month-type {
     border-color: rgba(173, 173, 173, 1);
     border-radius: 5px;
     font-size: 16px;
-    padding: 8px;
+    padding: 0.6rem 0.8rem;
     background-color: rgba(232, 232, 232, 1);
     margin-top: 0.5rem;
 }
@@ -1324,7 +1325,7 @@ select#month-type {
     border-color: #0e81b5eb;
     border-radius: 5px;
     font-size: 16px;
-    padding: 8px 20px 8px 8px;
+    padding: 0.6rem 0.8rem;
     background-color: rgb(232 232 232 / 0%);
     margin-top: 0.5rem;
 }

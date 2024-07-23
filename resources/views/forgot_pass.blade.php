@@ -39,7 +39,7 @@
                 <form action="{{ route('password.email') }}" method="POST" class="login-form">
                     @csrf
                     <div class="forgot-info">
-                        <p>Enter your Employee Number and we'll send you a reset url</p>
+                        <p>Enter your Employee Number and we'll send you a reset URL.</p>
                         <p>If you have any issues, contact us through <span>BUsina@gmail.com</span></p>
                     </div>
 
@@ -52,11 +52,29 @@
                     </div>
                     @endif
 
+                    @if(session('success'))
+                    <div class="main-success">
+                        <p id="successMessage" class="success-message">
+                            <span><i class="bi bi-check-circle"></i></span> {{ session('success') }}
+                            <a class="cancel-button" onclick="hideSuccessMessage()"><i class="bi bi-x"></i></a>
+                        </p>
+                    </div>
+                    @endif
+
+                    @if ($errors->has('emp_no'))
+                    <div class="main-error">
+                        <p id="errorMessage" class="error-message">
+                            <span><i class="bi bi-exclamation-circle"></i></span> {{ $errors->first('emp_no') }}
+                            <a class="cancel-button" onclick="hideErrorMessage()"><i class="bi bi-x"></i></a>
+                        </p>
+                    </div>
+                    @endif
+
                     <div class="forgot-info3">
                         <div class="login-inputs">
                             <div class="login-input-form3">
                                 <label for="emp_no">EMPLOYEE NUMBER</label><br>
-                                <input type="text" placeholder="" id="emp_no" name="emp_no" required>
+                                <input type="text" placeholder="" id="emp_no" name="emp_no" value="{{ old('emp_no') }}" required>
                             </div>
                         </div>
                     </div>
@@ -70,24 +88,7 @@
             </div>
         </div>
     </main>
-    <script>
-        function hideErrorMessage() {
-            const errorMessage = document.getElementById('errorMessage');
-            if (errorMessage) {
-                errorMessage.style.display = 'none';
-            }
-        }
-
-        // Hide the error message after 5 seconds
-        document.addEventListener('DOMContentLoaded', function () {
-            const errorMessage = document.getElementById('errorMessage');
-            if (errorMessage) {
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 5000); // 5000 milliseconds = 5 seconds
-            }
-        });
-    </script>
+    <script src="{{ asset('js/hide_error_message.js') }}"></script>
 </body>
 
 </html>
