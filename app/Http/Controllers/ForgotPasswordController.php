@@ -38,7 +38,7 @@ class ForgotPasswordController extends Controller
                              ->with('error', 'Employee not found.')
                              ->withInput();
         }
-
+        
         // Fetch associated user record using emp_id
         $user = DB::table('user')->where('emp_id', $employee->id)->first();
 
@@ -56,6 +56,13 @@ class ForgotPasswordController extends Controller
         if (!$login) {
             return redirect()->route('password.request')
                              ->with('error', 'Login information not found for this user.')
+                             ->withInput();
+        }
+
+        // Check if user_type is allowed to reset password
+        if ($user->user_type != 2) {
+            return redirect()->route('password.request')
+                             ->with('error', 'You are not authorize to reset the password on this site, maybe your are on the wrong site.')
                              ->withInput();
         }
 
