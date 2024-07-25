@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Forgot Password</title>
+    <title>Busina Security - Forgot Password</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     <meta content="" name="description">
     <meta content="" name="keywords">
     
@@ -73,7 +74,7 @@
                     <div class="forgot-info3">
                         <div class="login-inputs">
                             <div class="login-input-form3">
-                                <label for="emp_no">EMPLOYEE NUMBER</label><br>
+                                <label for="emp_no">Employee Number</label><br>
                                 <input type="text" placeholder="" id="emp_no" name="emp_no" value="{{ old('emp_no') }}" required>
                             </div>
                         </div>

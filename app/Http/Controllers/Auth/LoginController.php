@@ -7,12 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        return view('login'); // Assuming 'login.blade.php' is in 'resources/views'
+        $lockoutTime = session('lockout_time');
+        $remainingSeconds = $lockoutTime && Carbon::now()->lessThan(Carbon::parse($lockoutTime)) 
+            ? Carbon::now()->diffInSeconds(Carbon::parse($lockoutTime)) 
+            : 0;
+
+        return view('login', ['remainingSeconds' => $remainingSeconds]);
     }
 
     public function login(Request $request)
@@ -25,6 +31,15 @@ class LoginController extends Controller
 
         $email = $request->input('email');
         $password = $request->input('password');
+
+        // Check if the user is locked out
+        $lockoutTime = session('lockout_time');
+        if ($lockoutTime && Carbon::now()->lessThan(Carbon::parse($lockoutTime))) {
+            $remainingSeconds = Carbon::now()->diffInSeconds(Carbon::parse($lockoutTime));
+            throw ValidationException::withMessages([
+                'email' => "Too many login attempts. Please try again in $remainingSeconds seconds."
+            ]);
+        }
 
         // Email validation
         if (!preg_match('/@gmail\.com$/', $email) && !preg_match('/@bicol-u\.edu\.ph$/', $email)) {
@@ -58,6 +73,10 @@ class LoginController extends Controller
 
                     $request->session()->put('user', $sessionData);
 
+                    // Reset the login attempts on successful login
+                    $request->session()->forget('login_attempts');
+                    $request->session()->forget('lockout_time');
+
                     return redirect()->intended('/index');
                 } else {
                     Auth::logout();
@@ -67,6 +86,18 @@ class LoginController extends Controller
                     ]);
                 }
             }
+        }
+
+        // Handle failed login attempts
+        $attempts = $request->session()->get('login_attempts', 0) + 1;
+        $request->session()->put('login_attempts', $attempts);
+
+        if ($attempts >= 3) {
+            $lockoutTime = Carbon::now()->addSeconds(30);
+            $request->session()->put('lockout_time', $lockoutTime);
+            throw ValidationException::withMessages([
+                'email' => 'Too many login attempts. Please try again in 30 seconds.'
+            ]);
         }
 
         throw ValidationException::withMessages([

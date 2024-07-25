@@ -74,7 +74,7 @@ class ForgotPasswordController extends Controller
             'emp_no' => $request->emp_no,
             'login_id' => $login->id,
             'reset_token' => $resetToken,
-            'expiration' => now()->addMinutes(10), // Set expiration to 10 minutes
+            'expiration' => now()->addMinutes(20), // Set expiration to 10 minutes
         ]);
 
         // Generate reset link using the named route with emp_no parameter

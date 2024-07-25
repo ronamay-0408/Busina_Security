@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-    <title>Password Emailed Successfully</title>
+    <title>Busina Security - Password Emailed Successfully</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     <meta content="" name="description">
     <meta content="" name="keywords">
     

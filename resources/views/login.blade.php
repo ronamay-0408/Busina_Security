@@ -4,12 +4,12 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Login Page</title>
+    <title>Busina Security - Login Page</title>
+    <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     <!-- Meta tags and CSS links -->
-     <!-- Google Fonts -->
+    <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -34,7 +34,7 @@
                 <div class="login-title">
                     <h2>LOG IN</h2>
                 </div>
-                <form action="{{ route('login') }}" method="post" class="login-form">
+                <form action="{{ route('login') }}" method="post" class="login-form" id="loginForm">
                     @csrf
                     @if ($errors->any())
                     <div class="main-error">
@@ -68,7 +68,7 @@
 
                     <div class="login-inputs">
                         <div class="login-input-form">
-                            <label for="email">Email</label>
+                            <label for="email">Email Address</label>
                             <input type="email" placeholder="" id="email" name="email" required>
                         </div>
 
@@ -83,61 +83,16 @@
                         </div>
                     </div>
 
-                    <button type="submit">LOG IN</button>
+                    <button type="submit" id="loginButton">LOG IN</button>
+                    <div class="countdown"  id="countdownContainer" data-remaining-seconds="{{ $remainingSeconds }}">
+                    </div>
                 </form>
             </div>
         </div>
     </main>
-
-    <script>
-        function togglePassword() {
-            var passwordInput = document.getElementById('password');
-            var eyeIcon = document.querySelector('.eye-icon');
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.classList.remove('fa-eye-slash');
-                eyeIcon.classList.add('fa-eye');
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.classList.remove('fa-eye');
-                eyeIcon.classList.add('fa-eye-slash');
-            }
-        }
-
-        function hideErrorMessage() {
-            const errorMessage = document.getElementById('errorMessage');
-            if (errorMessage) {
-                errorMessage.style.display = 'none';
-            }
-        }
-
-        // Hide the error message after 5 seconds
-        document.addEventListener('DOMContentLoaded', function () {
-            const errorMessage = document.getElementById('errorMessage');
-            if (errorMessage) {
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                }, 5000); // 5000 milliseconds = 5 seconds
-            }
-        });
-
-        function hideSuccessMessage() {
-            const successMessage = document.getElementById('successMessage');
-            if (successMessage) {
-                successMessage.style.display = 'none';
-            }
-        }
-
-        // Hide the success message after 5 seconds
-        document.addEventListener('DOMContentLoaded', function () {
-            const successMessage = document.getElementById('successMessage');
-            if (successMessage) {
-                setTimeout(() => {
-                    successMessage.style.display = 'none';
-                }, 5000); // 5000 milliseconds = 5 seconds
-            }
-        });
-    </script>
+    
+    <script src="{{ asset('js/disableForm.js') }}"></script>
+    <script src="{{ asset('js/login_toggle_password.js') }}"></script>
+    <script src="{{ asset('js/hide_error_message.js') }}"></script>
 </body>
-
 </html>

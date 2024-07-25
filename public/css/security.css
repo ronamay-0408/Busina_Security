@@ -175,8 +175,7 @@ a:hover {
     font-weight: 600;
     color: #4154f1;
     transition: 0.3;
-
-    padding: 15px 15px;
+    padding: 10px 15px;
     border-radius: 4px;
 }
 
@@ -422,10 +421,9 @@ main{
 .input-form label {
     flex: 1;
     margin-right: 10px;
-    color: #333;
     text-align: end;
-    font-size: 16px;
-    color: rgba(62, 62, 62, 1);
+    font-size: 13px;
+    color: black;
     font-weight: 500;
 }
 
@@ -979,19 +977,19 @@ select#month-type {
 }
 .login-input-form label{
     text-align: left;
-    color: rgba(62, 62, 62, 1);
-    font: 12px;
+    color: black;
     font-weight: 500;
     font-family: 'Poppins';
+    font-size: 14px;
 }
 .login-input-form input{
     width: 100%;
     border-style: solid;
     border-width: thin;
-    border-color: #0e81b5eb;
-    border-radius: 5px;
+    border-color: rgb(173 173 173 / 48%);
+    border-radius: 10px;
     font-size: 16px;
-    padding: 0.6rem 0.8rem; /* Adjusting padding to accommodate the icon */
+    padding: 0.6rem 0.8rem;
 }
 .forgot{
     text-align: right;
@@ -999,7 +997,7 @@ select#month-type {
     margin-top: 10px;
 }
 .forgot a{
-    color: rgba(80, 119, 165, 1);
+    color: #008cc7;
     font-weight: 500;
     font-size: 14px;
     text-align: end;
@@ -1009,23 +1007,26 @@ select#month-type {
     font-family: 'Poppins';
     margin-top: 3rem;
     color: white;
-    background-color: rgba(84, 176, 242, 1);
+    background-color: #009BDC;
     border: none;
-    border-radius: 115px;
+    border-radius: 10px;
     width: 80%;
-    padding: 10px 60px;
+    padding: 8px 60px;
     font-weight: 600;
     cursor: pointer;
     font-size: 16px;
 }
 .eye-icon {
     position: absolute;
-    right: 63px;
-    top: 65%;
+    right: 51px;
+    top: 67%;
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 1.2em;
     color: #333;
+    background-color: #9e9e9e45;
+    padding: 10px 10px 12px 10px;
+    border-radius: 0px 10px 10px 0px;
 }
   
 @media (max-width: 1024px) {
@@ -1076,7 +1077,7 @@ select#month-type {
         width: 100%;
     }
     .login-form button{
-        width: 75%;
+        width: 77%;
     }
     .login-asset img{
         width: 200px;
@@ -1188,13 +1189,21 @@ select#month-type {
 .main-success {
     padding: 0px 50px;
 }
+
+#countdownDisplay {
+    color: #e74c3c;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    padding: 10px 50px;
+}
 /*--------------------------------------------------------------
 # FORGOT PASSWORD MAIN DIV CSS
 --------------------------------------------------------------*/
 .forgot-info{
     margin-top: -2rem;
     padding: 10px 50px;
-    text-align: left;
+    text-align: justify;
 }
 .forgot-info p{
     font-size: 14px;
@@ -1217,12 +1226,11 @@ select#month-type {
 .forgot-info3 span{
     font-weight: 700;
 }
-.login-input-form3{
-    padding: 10px;
-}
 .login-input-form3 label{
-    padding: 10px 0px;
+    padding: 5px 0px;
     font-size: 14px;
+    font-weight: 500;
+    color: black;
 }
 .login-input-form3 input {
     width: 93.6%;
@@ -1243,6 +1251,7 @@ select#month-type {
     color: rgba(80, 119, 165, 1);
     font-weight: 500;
     padding: 0px 10px;
+    text-align: justify;
 }
 .back-login{
     margin-top: 10px;
@@ -1309,33 +1318,35 @@ select#month-type {
 }
 
 .login-input-form3 {
-    padding: 10px;
+    padding: 5px;
     position: relative;
-}
-
-.login-input-form3 label {
-    padding: 10px 0px;
-    font-size: 14px;
 }
 
 .login-input-form3 input {
     width: 100%;
-    border-style: solid;
-    border-width: thin;
-    border-color: #0e81b5eb;
-    border-radius: 5px;
+    /* border-style: solid; */
+    /* border-width: thin; */
+    /* border-color: #0e81b5eb; */
+    border-radius: 10px;
     font-size: 16px;
     padding: 0.6rem 0.8rem;
-    background-color: rgb(232 232 232 / 0%);
+    background-color: white;
     margin-top: 0.5rem;
+    border-style: solid;
+    border-width: thin;
+    border-color: rgb(173 173 173 / 48%);
 }
 
 .eye-icon2{
     position: absolute;
-    right: 20px;
-    top: 67%;
+    right: 6px;
+    top: 70%;
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 1.2em;
     color: #333;
+    background-color: #9e9e9e45;
+    padding: 10px 10px 12px 10px;
+    border-radius: 0px 10px 10px 0px;
+
 }

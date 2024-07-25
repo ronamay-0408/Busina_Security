@@ -71,7 +71,10 @@ class ResetPasswordController extends Controller
             ->where('id', $password_reset->id)
             ->update(['used_reset_token' => 1]);
 
-        // Clear session variables
+        // Set session variable to indicate successful password update
+        Session::put('password_updated', true);
+
+        // Clear other session variables
         Session::forget('reset_token');
         Session::forget('emp_no');
         Session::forget('login_id');
@@ -80,4 +83,5 @@ class ResetPasswordController extends Controller
         return redirect()->route('updated_pass_result')->with('success', 'Password updated successfully.');
     }
 }
+
 
