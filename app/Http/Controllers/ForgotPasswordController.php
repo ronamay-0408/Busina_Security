@@ -39,42 +39,42 @@ class ForgotPasswordController extends Controller
                              ->withInput();
         }
         
-        // Fetch associated user record using emp_id
-        $user = DB::table('user')->where('emp_id', $employee->id)->first();
+        // Fetch associated authorized_user record using emp_id
+        $authorizedUser = DB::table('authorized_user')->where('emp_id', $employee->id)->first();
 
-        // Check if user exists
-        if (!$user) {
+        // Check if authorized_user exists
+        if (!$authorizedUser) {
             return redirect()->route('password.request')
                              ->with('error', 'User information not found for this employee.')
                              ->withInput();
         }
 
-        // Fetch associated login record using user_id
-        $login = DB::table('login')->where('user_id', $user->id)->first();
+        // Fetch associated users record using authorized_user_id
+        $user = DB::table('users')->where('authorized_user_id', $authorizedUser->id)->first();
 
-        // Check if login exists
-        if (!$login) {
+        // Check if users exists
+        if (!$user) {
             return redirect()->route('password.request')
                              ->with('error', 'Login information not found for this user.')
                              ->withInput();
         }
 
         // Check if user_type is allowed to reset password
-        if ($user->user_type != 2) {
+        if ($authorizedUser->user_type != 2) {
             return redirect()->route('password.request')
-                             ->with('error', 'You are not authorize to reset the password on this site, maybe your are on the wrong site.')
+                             ->with('error', 'You are not authorized to reset the password on this site, maybe you are on the wrong site.')
                              ->withInput();
         }
 
         // Generate a unique reset token
         $resetToken = Str::random(60);
 
-        // Store the token in the password_reset table
-        DB::table('password_reset')->insert([
+        // Store the token in the password_resets table
+        DB::table('password_resets')->insert([
             'emp_no' => $request->emp_no,
-            'login_id' => $login->id,
+            'users_id' => $user->id,
             'reset_token' => $resetToken,
-            'expiration' => now()->addMinutes(20), // Set expiration to 10 minutes
+            'expiration' => now()->addMinutes(20), // Set expiration to 20 minutes
         ]);
 
         // Generate reset link using the named route with emp_no parameter
@@ -95,7 +95,7 @@ class ForgotPasswordController extends Controller
 
             // Recipients
             $mail->setFrom('busina@example.com', 'BUsina');
-            $mail->addAddress($login->email);  // Add recipient email
+            $mail->addAddress($user->email);  // Add recipient email
 
             // Content
             $mail->isHTML(true); // Set to true if sending HTML email
@@ -111,7 +111,7 @@ class ForgotPasswordController extends Controller
                         <h3 style='color: white; font-size: 20px;'>Please reset your password</h3>
                     </div>
                     <div style='padding: 40px;'>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Hello <span style='font-weight: 600;'>{$user->fname} {$user->lname}</span>,</p>
+                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Hello <span style='font-weight: 600;'>{$authorizedUser->fname} {$authorizedUser->lname}</span>,</p>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'>We have received a request to reset your password. If you did not initiate this request, please disregard this email.</p>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'>To reset your password, click on the button below:</p>
                         <div style='margin: 20px 0; text-align: center;'>

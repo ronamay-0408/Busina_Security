@@ -16,6 +16,17 @@
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        .reports a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -103,15 +114,21 @@
             </div>
         </div>
 
+        <!-- resources/views/index.blade.php -->
         <div class="reports">
-            <div class="filed">
-                <h3>10</h3>
-                <p>Filed Reports Today</p>
-            </div>
-            <div class="filed2">
-                <h3>5</h3>
-                <p>Recorded Unauthorized Entries</p>
-            </div>
+            <a href="{{ route('view_reports') }}">
+                <div class="filed">
+                    <h3>{{ $filedReportsToday }}</h3>
+                    <p>Filed Reports Today</p>
+                </div>
+            </a>
+            
+            <a href="{{ route('unauthorized') }}">
+                <div class="filed2">
+                    <h3>{{ $unauthorizedEntriesToday }}</h3>
+                    <p>Recorded Unauthorized Entries</p>
+                </div>
+            </a>
         </div>
 
         <div class="btn1">

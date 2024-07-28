@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Busina Security - Unauthorized Vehicle</title>
+    <title>Busina Head Security - My Account</title>
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     <meta content="" name="description">
     <meta content="" name="keywords">
@@ -35,9 +35,9 @@
 
         <div class="profile">
             <div class="image">
-                <i class="bi bi-person-circle"></i>
+                <img src="{{ asset('images/BUsina logo (1) 1.png') }}" alt="">
             </div>
-            <div class="info">
+            <div class="head_info">
                 @if(Session::has('user'))
                     <h2>{{ Session::get('user')['fname'] }} {{ Session::get('user')['lname'] }}</h2>
                     <h3>{{ Session::get('user')['email'] }}</h3>
@@ -47,31 +47,37 @@
 
         <ul class="sidebar-nav" id="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('index') }}">
+                <a class="nav-link hove" href="{{ route('head_index') }}">
                     <img src="images/Dashboard Layout.png" alt="">
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('view_reports') }}">
+                <a class="nav-link" href="{{ route('violation_list') }}">
                     <img src="images/Foul.png" alt="">
-                    <span>My Reports</span>
+                    <span>Violations</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('scanned_qr') }}">
+                <a class="nav-link" href="{{ route('unauthorized_list') }}">
                     <img src="images/Qr Code.png" alt="">
-                    <span>Scanned QR Code</span>
+                    <span>Unauthorized Vehicles</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('guidelines') }}">
+                <a class="nav-link" href="{{ route('ssu_personnel') }}">
+                    <img src="images/Foul.png" alt="">
+                    <span>SSU Personnels</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('head_guidelines') }}">
                     <img src="images/Driving Guidelines.png" alt="">
                     <span>Guidelines</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('myaccount') }}">
+                <a class="nav-link" href="{{ route('head_account') }}">
                     <img src="images/Account.png" alt="">
                     <span>My Account</span>
                 </a>
@@ -88,88 +94,63 @@
         </ul>
 
     </aside><!-- End Sidebar-->
-    
+
     <main id="main" class="main">
         <div class="date-time">
         </div>
 
-        <div class="to_report">
-            <h3>LOG UNAUTHORIZED VEHICLE</h3>
-            <!-- Display success or error messages -->
-            @if ($errors->any())
-                <div class="main-error unauthorized_report_error">
-                    <p id="errorMessage" class="error-message">
-                        <span><i class="bi bi-exclamation-circle"></i></span>
-                        {{ $errors->first() }}
-                        <a class="cancel-button" onclick="hideMessage('errorMessage')"><i class="bi bi-x"></i></a>
-                    </p>
+        <div class="main-title">
+            <h3 class="per-title">MY ACCOUNT</h3>
+        </div>
+
+        <div class="per_report">
+            <form action="">
+                <div class="photo">
+                    <img src="images/Male User.png" alt="">
                 </div>
-            @endif
-
-            @if (session('error'))
-                <div class="main-error unauthorized_report_error">
-                    <p id="errorMessage" class="error-message">
-                        <span><i class="bi bi-exclamation-circle"></i></span>
-                        {{ session('error') }}
-                        <a class="cancel-button" onclick="hideMessage('errorMessage')"><i class="bi bi-x"></i></a>
-                    </p>
-                </div>
-            @endif
-
-            @if (session('success'))
-                <div class="main-success unauthorized_report_success">
-                    <p id="successMessage" class="success-message">
-                        <span><i class="bi bi-check-circle"></i></span>
-                        {{ session('success') }}
-                        <a class="cancel-button-success" onclick="hideMessage('successMessage')"><i class="bi bi-x"></i></a>
-                    </p>
-                </div>
-            @endif
-
-
-            <form action="{{ route('store_unauthorized') }}" method="POST">
-                @csrf
                 <div class="inputs">
                     <div class="input-form">
-                        <label for="plate_no">Plate No.</label>
-                        <input type="text" placeholder="LLL-DDDD or DDD-LLL/L-DDD-LL" id="plate_no" name="plate_no" required>
+                        <label for="emp_no">Employee Number</label>
+                        <input type="text" name="emp_no" value="{{ Session::has('user') ? Session::get('user')['emp_no'] : '' }}" readonly>
                     </div>
 
                     <div class="input-form">
-                        <label for="fullname">Full Name</label>
-                        <input type="text" placeholder="Full Name" id="fullname" name="fullname" required>
+                        <label for="fname">First Name</label>
+                        <input type="text" name="fname" value="{{ Session::has('user') ? Session::get('user')['fname'] : '' }}" readonly>
                     </div>
 
                     <div class="input-form">
-                        <label for="purpose">Purpose</label>
-                        <input type="text" placeholder="Submission of Document" id="purpose" name="purpose" required>
+                        <label for="mname">Middle Name</label>
+                        <input type="text" name="mname" value="{{ Session::has('user') ? Session::get('user')['mname'] : '' }}" readonly>
                     </div>
 
                     <div class="input-form">
-                        <label for="date">Date</label>
-                        <input type="text" placeholder="" id="date" readonly>
+                        <label for="lname">Last Name</label>
+                        <input type="text" name="lname" value="{{ Session::has('user') ? Session::get('user')['lname'] : '' }}" readonly>
                     </div>
 
                     <div class="input-form">
-                        <label for="time">Time</label>
-                        <input type="text" placeholder="" id="time" readonly>
+                        <label for="contact_num">Contact No.</label>
+                        <input type="text" name="contact_num" value="{{ Session::has('user') ? Session::get('user')['contact_no'] : '' }}" readonly>
                     </div>
 
-                    <div class="save_not_btn">
-                        <button type="submit" id="submit" class="done">DONE</button>
-                        <a class="nav-link" href="{{ url('/index') }}">BACK</a>
-                    </div>
+                    <div class="input-form">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" value="{{ Session::has('user') ? Session::get('user')['email'] : '' }}" readonly>
+                    </div>                    
                 </div>
             </form>
+
+            <div class="back-btn4">
+                <a class="nav-link" href="{{ url('/head_index') }}">BACK</a>
+            </div>
         </div>
-        
     </main><!-- End #main -->
 
-    <script src="{{ asset('js/hide_errors_success_unauthorized.js') }}"></script>
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
 
     <!-- DATE AND TIME -->
-    <script src="{{ asset('js/twodisplayed_DateTime.js') }}"></script>
+    <script src="{{ asset('js/date_time.js') }}"></script>
 </body>
 </html>

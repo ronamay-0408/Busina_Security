@@ -222,6 +222,19 @@ a:hover {
     font-size: 16px;
 }
 
+.head_info {
+    margin-top: 0.5rem;
+}
+
+.head_info h2{
+    margin: 0;
+    font-size: 22px;
+}
+.head_info h3{
+    margin: 0;
+    font-weight: 300;
+    font-size: 16px;
+}
 
 /*--------------------------------------------------------------
 # MAIN
@@ -292,7 +305,7 @@ main{
     border-radius: 5px;
     padding: 5px 10px;
     display: flex;
-    width: 50%;
+    /* width: 50%; */
     border: 0.1px solid #80808061;
 }
 .filed h3{
@@ -313,7 +326,7 @@ main{
     border-radius: 5px;
     padding: 5px;
     display: flex;
-    width: 50%;
+    /* width: 50%; */
     margin-left: 10px;
     border: 0.1px solid #80808061;
 }
@@ -443,8 +456,7 @@ main{
 @media (max-width: 600px) {
     .input-form input,
     .input-form select {
-        flex: 1.7;
-        max-width: 220px;
+        max-width: 250px;
     }
 }
 @media (max-width: 400px) {
@@ -618,8 +630,10 @@ select#month-type {
     background-color: white;
     border: 0.1px solid #80808061;
     border-radius: 5px;
-    padding: 10px 50px 10px 20px;
+    padding: 10px 10px 10px 20px;
+    width: 46.5%;
 }
+
 .myfiled h3{
     font-size: 14px;
     color: rgba(0, 155, 221, 1);
@@ -658,7 +672,6 @@ select#month-type {
     justify-content: center;
     border: 2px dashed rgba(0, 0, 0, 1);
     border-radius: 4px;
-    padding: 50px;
     text-align: center;
     color: #999;
     cursor: pointer;
@@ -667,8 +680,7 @@ select#month-type {
 }
 
 .click_files2 img {
-    width: 100px;
-    margin-right: 10px;
+    width: 350px;
 }
 
 .back-btn{
@@ -1143,7 +1155,9 @@ select#month-type {
 .main-error {
     padding: 0px 50px;
 }
-
+.unauthorized_report_error{
+    padding: 0;
+}
 .success-message{
     background-color: #d7f8e0;
     color: #1d721c;
@@ -1188,6 +1202,10 @@ select#month-type {
 }
 .main-success {
     padding: 0px 50px;
+}
+
+.unauthorized_report_success{
+    padding: 0;
 }
 
 #countdownDisplay {

@@ -5,29 +5,30 @@
 return [
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'logins',
+        'passwords' => 'users',
     ],
 
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'logins',
+            'provider' => 'users',
         ],
     ],
 
     'providers' => [
-        'logins' => [
+        'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Login::class,
+            'model' => App\Models\Users::class, // Updated to point to Users model
         ],
     ],
 
     'passwords' => [
-        'logins' => [
-            'provider' => 'logins',
-            'table' => 'password_reset', // Ensure this matches your table name
+        'users' => [
+            'provider' => 'users',
+            'table' => 'password_reset',
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
 ];
+

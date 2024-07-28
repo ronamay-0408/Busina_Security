@@ -15,7 +15,7 @@ class ResetPasswordController extends Controller
         $token = $request->query('t');
 
         // Check if the token is valid and not used
-        $password_reset = DB::table('password_reset')
+        $password_reset = DB::table('password_resets')
             ->where('emp_no', $emp_no)
             ->where('reset_token', $token)
             ->where('used_reset_token', 0)
@@ -46,7 +46,7 @@ class ResetPasswordController extends Controller
         $token = $request->input('token');
 
         // Fetch password reset record using emp_no and token
-        $password_reset = DB::table('password_reset')
+        $password_reset = DB::table('password_resets')
             ->where('emp_no', $emp_no)
             ->where('reset_token', $token)
             ->where('used_reset_token', 0)
@@ -60,14 +60,14 @@ class ResetPasswordController extends Controller
                              ->withInput();
         }
 
-        // Update password in the login table
+        // Update password in the users table
         $hashed_password = bcrypt($new_password);
-        DB::table('login')
-            ->where('id', $password_reset->login_id)
+        DB::table('users')
+            ->where('id', $password_reset->users_id)
             ->update(['password' => $hashed_password]);
 
         // Mark the reset token as used
-        DB::table('password_reset')
+        DB::table('password_resets')
             ->where('id', $password_reset->id)
             ->update(['used_reset_token' => 1]);
 
@@ -83,5 +83,3 @@ class ResetPasswordController extends Controller
         return redirect()->route('updated_pass_result')->with('success', 'Password updated successfully.');
     }
 }
-
-

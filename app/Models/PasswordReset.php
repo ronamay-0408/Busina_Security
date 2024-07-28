@@ -11,7 +11,7 @@ class PasswordReset extends Model
 
     protected $fillable = [
         'emp_no',
-        'user_id',
+        'users_id',
         'token',
         'expiration',
         'used_reset_token',
@@ -24,6 +24,6 @@ class PasswordReset extends Model
     // Define any relationships if needed
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Users::class);
     }
 }

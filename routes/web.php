@@ -4,19 +4,29 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Middleware\CheckLastActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\UnauthorizedController;
+use App\Http\Controllers\ViolationController;
+use App\Http\Controllers\ReportVehicleController;
+use App\Http\Controllers\ViewReportsController;
+use App\Http\Controllers\IndexReportController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 // Group routes that require authentication and email verification
-Route::middleware(['auth', 'verified', CheckLastActivity::class])->group(function () {
-    Route::get('/index', function () {
-        return view('index');
-    })->name('index');
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Route to view the index page using a controller
+    Route::get('/index', [IndexReportController::class, 'index'])->name('index');
 
-    Route::get('/view_reports', function () {
-        return view('view_reports');
-    })->name('view_reports');
+    // Route::get('/view_reports', function () {
+    //     return view('view_reports');
+    // })->name('view_reports');
+
+    // Keep this route definition
+    Route::get('/view_reports', [ViewReportsController::class, 'index'])->name('view_reports');
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
@@ -36,9 +46,13 @@ Route::middleware(['auth', 'verified', CheckLastActivity::class])->group(functio
         return view('report_vehicle');
     })->name('report_vehicle');
 
+    Route::get('/report_vehicle', [ReportVehicleController::class, 'showForm'])->name('report.vehicle.form');
+    Route::post('/report_vehicle', [ReportVehicleController::class, 'store'])->name('report.vehicle.store');    
+
     Route::get('/unauthorized', function () {
         return view('unauthorized');
     })->name('unauthorized');
+    Route::post('/store_unauthorized', [UnauthorizedController::class, 'store'])->name('store_unauthorized');
 
     Route::get('/reg_not_found', function () {
         return view('reg_not_found');
@@ -51,6 +65,71 @@ Route::middleware(['auth', 'verified', CheckLastActivity::class])->group(functio
     Route::get('/view_per_report', function () {
         return view('view_per_report');
     })->name('view_per_report');
+
+    // routes/web.php
+    Route::get('/violation/{id}', [ViolationController::class, 'show'])->name('violation.show');
+
+
+    Route::get('/head_index', function () {
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            return view('SSUHead.head_index');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+    })->name('head_index');
+
+    Route::get('/violation_list', function () {
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            return view('SSUHead.violation_list');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+    })->name('violation_list');
+
+    Route::get('/unauthorized_list', function () {
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            return view('SSUHead.unauthorized_list');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+    })->name('unauthorized_list');
+
+    Route::get('/head_account', function () {
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            return view('SSUHead.head_account');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+    })->name('head_account');
+
+    Route::get('/head_guidelines', function () {
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            return view('SSUHead.head_guidelines');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+    })->name('head_guidelines');
+
+    Route::get('/ssu_personnel', function () {
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            return view('SSUHead.ssu_personnel');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
+    })->name('ssu_personnel');
+    
 });
 
 // Routes that do not require authentication
@@ -91,3 +170,4 @@ Route::get('/updated_pass_result', function () {
 Route::get('/email', function () {
     return view('email');
 })->name('email'); // Password reset link emailed confirmation
+

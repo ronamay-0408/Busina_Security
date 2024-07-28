@@ -10,12 +10,12 @@ class UpdatePasswordController extends Controller
     public function updatePassword(Request $request)
     {
         // Ensure the reset token is present in the session
-        if (!$request->session()->has('reset_token') || !$request->session()->has('login_id')) {
+        if (!$request->session()->has('reset_token') || !$request->session()->has('users_id')) {
             return "Invalid or missing reset token.";
         }
 
         $reset_token = $request->session()->get('reset_token');
-        $login_id = $request->session()->get('login_id');
+        $users_id = $request->session()->get('users_id');
         $new_password = $request->input('new_pass');
         $confirm_password = $request->input('new_pass_confirmation');
 
@@ -29,22 +29,22 @@ class UpdatePasswordController extends Controller
         $hashed_password = bcrypt($new_password);
 
         try {
-            // Update the password in the database
-            DB::table('login')
-                ->where('id', $login_id)
+            // Update the password in the users table
+            DB::table('users')
+                ->where('id', $users_id)
                 ->update(['password' => $hashed_password]);
 
             // Check if password update was successful
-            if (DB::table('login')->where('id', $login_id)->exists()) {
+            if (DB::table('users')->where('id', $users_id)->exists()) {
                 // Update the used_reset_token field to indicate the token has been used
-                DB::table('password_reset')
-                    ->where('login_id', $login_id)
+                DB::table('password_resets')
+                    ->where('users_id', $users_id)
                     ->update(['used_reset_token' => 1]);
 
                 // Clear the session variables
                 $request->session()->forget('reset_token');
                 $request->session()->forget('emp_no');
-                $request->session()->forget('login_id');
+                $request->session()->forget('users_id');
 
                 // Redirect to updated_pass_result.blade.php with success message
                 $success = "Password updated successfully.";

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Busina Security - Registration Not Found</title>
+    <title>Busina Head Security - Violations</title>
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     <meta content="" name="description">
     <meta content="" name="keywords">
@@ -26,7 +26,7 @@
         </div>
         
         <div class="logo">
-            <img src="images/BUsina logo (1) 2.png" alt="">
+            <img src="{{ asset('images/BUsina logo (1) 2.png') }}" alt="">
         </div>
     </header><!-- End Header -->
 
@@ -35,9 +35,9 @@
 
         <div class="profile">
             <div class="image">
-                <i class="bi bi-person-circle"></i>
+                <img src="{{ asset('images/BUsina logo (1) 1.png') }}" alt="">
             </div>
-            <div class="info">
+            <div class="head_info">
                 @if(Session::has('user'))
                     <h2>{{ Session::get('user')['fname'] }} {{ Session::get('user')['lname'] }}</h2>
                     <h3>{{ Session::get('user')['email'] }}</h3>
@@ -47,31 +47,37 @@
 
         <ul class="sidebar-nav" id="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('index') }}">
+                <a class="nav-link" href="{{ route('head_index') }}">
                     <img src="images/Dashboard Layout.png" alt="">
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('view_reports') }}">
+                <a class="nav-link hove" href="{{ route('violation_list') }}">
                     <img src="images/Foul.png" alt="">
-                    <span>My Reports</span>
+                    <span>Violations</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('scanned_qr') }}">
+                <a class="nav-link" href="{{ route('unauthorized_list') }}">
                     <img src="images/Qr Code.png" alt="">
-                    <span>Scanned QR Code</span>
+                    <span>Unauthorized Vehicles</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('guidelines') }}">
+                <a class="nav-link" href="{{ route('ssu_personnel') }}">
+                    <img src="images/Foul.png" alt="">
+                    <span>SSU Personnels</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('head_guidelines') }}">
                     <img src="images/Driving Guidelines.png" alt="">
                     <span>Guidelines</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('myaccount') }}">
+                <a class="nav-link" href="{{ route('head_account') }}">
                     <img src="images/Account.png" alt="">
                     <span>My Account</span>
                 </a>
@@ -86,23 +92,14 @@
                 </form>
             </li>
         </ul>
-
     </aside><!-- End Sidebar-->
 
     <main id="main" class="main">
         <div class="date-time">
         </div>
-        
-        <div class="reg_not_found">
-            <h3>REGISTRATION NOT FOUND</h3>
 
-            <div class="note">
-                <p>Please contact the BU Motorpool Services for more information </p>
-            </div>
-
-            <div class="back-btn2">
-                <a class="nav-link" href="{{ url('/index') }}">BACK</a>
-            </div>
+        <div class="main-title">
+            <h3 class="per-title">VIOLATIONS</h3>
         </div>
 
     </main><!-- End #main -->

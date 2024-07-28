@@ -163,7 +163,7 @@
             </form>
 
             <div class="back-btn3">
-                <a class="nav-link" href="{{ url('/') }}">BACK</a>
+                <a class="nav-link" href="{{ url('/index') }}">BACK</a>
             </div>
         </div>
     </main><!-- End #main -->

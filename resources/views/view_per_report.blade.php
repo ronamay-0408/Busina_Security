@@ -93,51 +93,55 @@
         <div class="date-time">
         </div>
 
+        <!-- resources/views/view_per_report.blade.php -->
         <div class="per_report">
-            <h3 class="per-title">PLATE NO.:  <span>[Plate No.]</span></h3>
-            
-            <form action="">
+            <h3 class="per-title">PLATE NO.:  <span>{{ $violation->plate_no }}</span></h3>
+
+            <form>
                 <div class="inputs">
 
                     <div class="input-form">
                         <label for="location">Location</label>
-                        <input type="text" placeholder="location" id="location" name="location" required>
+                        <input type="text" value="{{ $violation->location }}" id="location" name="location" required>
                     </div>
 
                     <div class="input-form">
                         <label for="vio_type">Violation Type</label>
-                        <input type="text" placeholder="Wrong Parking" id="vio_type" name="vio_type" required>
+                        <input type="text" value="{{ $violation->violationType->violation_name }}" id="vio_type" name="vio_type" required>
                     </div>
 
                     <div class="input-form">
                         <label for="date">Date</label>
-                        <input type="text" placeholder="" id="date"required>
+                        <input type="text" value="{{ $violation->created_at->format('m-d-Y') }}" id="date" required>
                     </div>
 
                     <div class="input-form">
                         <label for="time">Time</label>
-                        <input type="text" placeholder="" id="time" required>
+                        <input type="text" value="{{ $violation->created_at->format('H:i:s') }}" id="time" required>
                     </div>
 
                     <div class="input-form">
                         <label for="report_by">Reported by</label>
-                        <input type="text" placeholder="" id="report_by" required>
+                        <input type="text" value="{{ $violation->reportedBy->full_name ?? 'N/A' }}" id="report_by" required>
                     </div>
-                    
+
                     <div class="row2">
                         <div class="input-form2">
                             <label for="photo">Documentation</label>
-                            
-                            <div class="click_files2">
-                                <img src="images/upload 1.png">
-                            </div>
+                            @if($violation->proof_image)
+                                <div class="click_files2">
+                                    <img src="{{ asset('storage/' . $violation->proof_image) }}" alt="Proof Image">
+                                </div>
+                            @else
+                                <p>No image available</p>
+                            @endif
                         </div>
                     </div>
                 </div>
             </form>
 
             <div class="back-btn">
-                <a class="nav-link" href="{{ url('/') }}">BACK</a>
+                <a class="nav-link" href="{{ url('/view_reports') }}">BACK</a>
             </div>
         </div>
     </main><!-- End #main -->
@@ -147,6 +151,6 @@
     <script src="{{ asset('js/navbar.js') }}"></script>
 
     <!-- DATE AND TIME -->
-    <script src="{{ asset('js/twodisplayed_DateTime.js') }}"></script>
+    <script src="{{ asset('js/date_time.js') }}"></script>
 </body>
 </html>

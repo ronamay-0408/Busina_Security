@@ -121,55 +121,20 @@
             </form>
         </div>
 
+        <!-- resources/views/view_reports.blade.php -->
         <div class="myreports">
-            <div class="filed-child">
-                <div class="myfiled">
-                    <h3>WXY</h3><p>Wrong Parking</p>
-                    <div class="date"><p>05-20-2024</p></div>
+            @foreach($violations as $violation)
+                <div class="filed-child">
+                    <div class="myfiled">
+                        <h3><a href="{{ route('violation.show', $violation->id) }}">{{ $violation->plate_no }}</a></h3>
+                        <p>{{ $violation->violationType->violation_name }}</p>
+                        <div class="date">
+                            <p>{{ $violation->created_at->format('m-d-Y') }}</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="filed-child">
-                <div class="myfiled">
-                    <h3>WXY</h3>
-                    <p>Wrong Parking</p>
-                    <div class="date"><p>05-20-2024</p></div>
-                </div>
-            </div>
-
-            <div class="filed-child">
-                <div class="myfiled">
-                    <h3>WXY</h3>
-                    <p>Wrong Parking</p>
-                    <div class="date"><p>05-20-2024</p></div>
-                </div>
-            </div>
-
-            <div class="filed-child">
-                <div class="myfiled">
-                    <h3>WXY</h3>
-                    <p>Wrong Parking</p>
-                    <div class="date"><p>05-20-2024</p></div>
-                </div>
-            </div>
-
-            <div class="filed-child">
-                <div class="myfiled">
-                    <h3>WXY</h3>
-                    <p>Wrong Parking</p>
-                    <div class="date"><p>05-20-2024</p></div>
-                </div>
-            </div>
-
-            <div class="filed-child">
-                <div class="myfiled">
-                    <h3>WXY</h3>
-                    <p>Wrong Parking</p>
-                    <div class="date"><p>05-20-2024</p></div>
-                </div>
-            </div>
+            @endforeach
         </div>
-        
     </main><!-- End #main -->
 
     <!-- Template Main JS File // NAVBAR // -->

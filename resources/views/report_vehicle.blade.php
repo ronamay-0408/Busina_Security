@@ -96,7 +96,39 @@
 
         <div class="to_report">
             <h3>REPORT A VEHICLE</h3>
-            <form action="">
+            <!-- Display success or error messages -->
+            @if ($errors->any())
+                <div class="main-error unauthorized_report_error">
+                    <p id="errorMessage" class="error-message">
+                        <span><i class="bi bi-exclamation-circle"></i></span>
+                        {{ $errors->first() }}
+                        <a class="cancel-button" onclick="hideMessage('errorMessage')"><i class="bi bi-x"></i></a>
+                    </p>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="main-error unauthorized_report_error">
+                    <p id="errorMessage" class="error-message">
+                        <span><i class="bi bi-exclamation-circle"></i></span>
+                        {{ session('error') }}
+                        <a class="cancel-button" onclick="hideMessage('errorMessage')"><i class="bi bi-x"></i></a>
+                    </p>
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="main-success unauthorized_report_success">
+                    <p id="successMessage" class="success-message">
+                        <span><i class="bi bi-check-circle"></i></span>
+                        {{ session('success') }}
+                        <a class="cancel-button-success" onclick="hideMessage('successMessage')"><i class="bi bi-x"></i></a>
+                    </p>
+                </div>
+            @endif
+
+            <form action="{{ route('report.vehicle.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="inputs">
                     <div class="input-form">
                         <label for="plate_no">Plate No.</label>
@@ -112,11 +144,9 @@
                         <label for="vio_type">Violation Type</label>
                         <select id="vio_type" name="vio_type" required>
                             <option value="">Select Violation Type</option>
-                            <option value="speeding">Speeding</option>
-                            <option value="parking">Wrong Parking</option>
-                            <option value="signal_violation">Signal Violation</option>
-                            <option value="reckless_driving">Reckless Driving</option>
-                            <!-- Add more options as needed -->
+                            @foreach($violationTypes as $violationType)
+                                <option value="{{ $violationType->id }}">{{ $violationType->violation_name }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -132,23 +162,22 @@
 
                     <div class="input-form">
                         <label for="report_by">Reported by</label>
+                        <input type="hidden" name="report_by" value="{{ Session::get('user')['id'] }}">
                         <input type="text" placeholder="" id="report_by" value="{{ Session::get('user')['fname'] }} {{ Session::get('user')['lname'] }}" readonly>
                     </div>
                     
                     <div class="row2">
                         <div class="input-form2">
                             <label for="photo">Documentation</label>
-                            
                             <div class="click_files">
                                 <img src="{{ asset('images/upload 1.png') }}" alt="Upload icon" id="upload-icon">
                                 <div class="file-label">
                                     <label for="files">Click to Attach Photo</label>
                                 </div>
-                                <input type="file" id="files" accept="image/*" style="display: none;">
+                                <input type="file" id="files" name="photo" accept="image/*" style="display: none;">
                             </div>
                         </div>
                     </div>
-
 
                     <div class="save_not_btn">
                         <button type="submit" id="submit" class="done">DONE</button>
@@ -160,6 +189,8 @@
         
     </main><!-- End #main -->
 
+    <script src="{{ asset('js/hide_errors_success_unauthorized.js') }}"></script>
+    
     <!-- SELECTED IMAGE -->
     <script src="{{ asset('js/selected_img.js') }}"></script>
 
