@@ -24,7 +24,6 @@
             width: 100%;
             height: 100%;
         }
-
     </style>
 </head>
 
@@ -70,7 +69,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('unauthorized_list') }}">
-                    <img src="images/Qr Code.png" alt="">
+                    <img src="images/Driving Guidelines.png" alt="">
                     <span>Unauthorized Vehicles</span>
                 </a>
             </li>

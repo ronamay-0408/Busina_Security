@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
@@ -102,6 +102,51 @@
             <h3 class="per-title">UNAUTHORIZED VEHICLE</h3>
         </div>
 
+        <div class="content">
+            <div class="dropdown-month">
+                <label for="month-type">Month:</label>
+                <select id="month-type" name="month-type" required>
+                    <option value="0">ALL</option>
+                    <option value="1">JANUARY</option>
+                    <option value="2">FEBRUARY</option>
+                    <option value="3">MARCH</option>
+                    <option value="4">APRIL</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            <div class="export-tbn">
+                <button class="export-child">EXPORT</button>
+            </div>
+        </div>
+        <div class="search-bar">
+            <form action="#">
+                <input type="text" placeholder="Search.." name="search">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="head_view_unauthorized_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Plate No</th>
+                        <th>Full Name</th>
+                        <th>Purpose</th>
+                        <th>Date and Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($unauthorizedRecords as $record)
+                        <tr>
+                            <td>{{ $record->plate_no }}</td>
+                            <td>{{ $record->fullname }}</td>
+                            <td>{{ $record->purpose }}</td>
+                            <td>{{ $record->created_at->format('F j, Y, g:i a') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </main><!-- End #main -->
 
     <!-- Template Main JS File // NAVBAR // -->

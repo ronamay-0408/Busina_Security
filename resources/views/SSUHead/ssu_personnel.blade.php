@@ -14,8 +14,9 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
 </head>
 
 <body>
@@ -102,7 +103,146 @@
             <h3 class="per-title">SSU PERSONNELS</h3>
         </div>
 
+        <div class="content">
+            <div class="search-bar head-search">
+                <form action="#">
+                    <input type="text" placeholder="Search.." name="search">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="ssu-buttons">
+                <div class="export-tbn">
+                    <button class="export-child">EXPORT</button>
+                </div>
+
+                <div class="add-new">
+                    <img src="images/plus.png" alt="Add New">
+                </div>
+            </div>
+        </div>
+
+        @if ($errors->any())
+        <div class="main-error head-main-error">
+            <p id="errorMessage" class="error-message">
+                <span><i class="bi bi-exclamation-circle"></i></span>
+                {{ $errors->first() }}
+                <a class="cancel-button" onclick="hideErrorMessage()"><i class="bi bi-x"></i></a>
+            </p>
+        </div>
+        @endif
+
+        @if (session('error'))
+        <div class="main-error head-main-error">
+            <p id="errorMessage" class="error-message">
+                <span><i class="bi bi-exclamation-circle"></i></span>
+                {{ session('error') }}
+                <a class="cancel-button" onclick="hideErrorMessage()"><i class="bi bi-x"></i></a>
+            </p>
+        </div>
+        @endif
+
+        @if (session('success'))
+        <div class="main-success head-main-success">
+            <p id="successMessage" class="success-message">
+                <span><i class="bi bi-check-circle"></i></span>
+                {{ session('success') }}
+                <a class="cancel-button-success" onclick="hideSuccessMessage()"><i class="bi bi-x"></i></a>
+            </p>
+        </div>
+        @endif
+
+        <div class="head_view_ssu_table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Middle Name</th>
+                        <th>Contact Number</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($authorizedUsers as $user)
+                        <tr>
+                            <td>{{ $user->fname }}</td>
+                            <td>{{ $user->lname }}</td>
+                            <td>{{ $user->mname }}</td>
+                            <td>{{ $user->contact_no }}</td>
+                            <td>{{ $user->email }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <div class="blur-bg-overlay"></div>
+        <div class="form-popup">
+            <span class="close-btn">&times;</span>
+            <div class="form-box">
+                <div class="form-content">
+                    <h2>Add New User</h2>
+
+                    <form action="{{ route('ssu_personnel') }}" method="post" onsubmit="return validateEmail()">
+                        @csrf
+                        <div class="inputs1">
+                            <div class="input-form1">
+                                <label for="fname">First Name</label>
+                                <input type="text" placeholder="Juan" id="fname" name="fname" required>
+                            </div>
+
+                            <div class="input-form1">
+                                <label for="lname">Last Name</label>
+                                <input type="text" placeholder="Santos" id="lname" name="lname" required>
+                            </div>
+
+                            <div class="input-form1">
+                                <label for="mname">Middle Name</label>
+                                <input type="text" placeholder="Carlos" id="mname" name="mname">
+                            </div>
+
+                            <div class="input-form1">
+                                <label for="contact">Contact #</label>
+                                <input type="text" placeholder="Contact Number" id="contact" name="contact" required>
+                            </div>
+
+                            <div class="input-form1">
+                                <label for="email">Email</label>
+                                <input type="email" placeholder="juancarlossantos@gmail.com" id="email" name="email" pattern="[a-z0-9._%+-]+@gmail\.com$" required>
+                            </div>
+
+                            <div class="input-form2">
+                                <small id="email-error" class="error-message" style="display: none;">Please enter a valid Gmail email address.</small>
+                            </div>
+
+                            <div class="input-form1">
+                                <label for="user_type">User Type</label>
+                                <select id="user_type" name="user_type" required>
+                                    <option value="">Select User Type</option>
+                                    <option value="1">Motorpool Admin</option>
+                                    <option value="2">Security Personnel</option>
+                                    <option value="3">Head SSU</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                            </div>
+                            
+                            <div class="submit">
+                                <button type="submit" id="submit" class="done">SUBMIT</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </main><!-- End #main -->
+
+    <!-- ERROR AND SUCCESS -->
+    <script src="{{ asset('js/error_success_message.js') }}"></script>
+
+    <script src="{{ asset('js/validate_email.js') }}"></script>
+
+    <script src="{{ asset('js/adduser_popup.js') }}"></script>
 
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>

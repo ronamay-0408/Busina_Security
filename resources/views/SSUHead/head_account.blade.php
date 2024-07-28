@@ -47,7 +47,7 @@
 
         <ul class="sidebar-nav" id="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link hove" href="{{ route('head_index') }}">
+                <a class="nav-link" href="{{ route('head_index') }}">
                     <img src="images/Dashboard Layout.png" alt="">
                     <span>Dashboard</span>
                 </a>
@@ -77,7 +77,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('head_account') }}">
+                <a class="nav-link  hove" href="{{ route('head_account') }}">
                     <img src="images/Account.png" alt="">
                     <span>My Account</span>
                 </a>

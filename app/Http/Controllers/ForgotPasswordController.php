@@ -59,11 +59,11 @@ class ForgotPasswordController extends Controller
                              ->withInput();
         }
 
-        // Check if user_type is allowed to reset password
-        if ($authorizedUser->user_type != 2) {
+        // Check if user_type is allowed to reset the password
+        if ($authorizedUser->user_type != 2 && $authorizedUser->user_type != 3) {
             return redirect()->route('password.request')
-                             ->with('error', 'You are not authorized to reset the password on this site, maybe you are on the wrong site.')
-                             ->withInput();
+                            ->with('error', 'You are not authorized to reset the password on this site, maybe you are on the wrong site.')
+                            ->withInput();
         }
 
         // Generate a unique reset token

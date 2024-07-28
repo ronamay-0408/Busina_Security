@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
+use App\Http\Controllers\HeadViewViolationController;
+use App\Http\Controllers\HeadViewUnauthorizedController;
+use App\Http\Controllers\HeadViewSSUController;
+
 // Group routes that require authentication and email verification
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route to view the index page using a controller
@@ -80,25 +84,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         }
     })->name('head_index');
 
-    Route::get('/violation_list', function () {
-        // Check user_type and redirect accordingly
-        $user = Auth::user();
-        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-            return view('SSUHead.violation_list');
-        } else {
-            abort(403, 'Unauthorized action.');
-        }
-    })->name('violation_list');
+    // Route::get('/violation_list', function () {
+    //     // Check user_type and redirect accordingly
+    //     $user = Auth::user();
+    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+    //         return view('SSUHead.violation_list');
+    //     } else {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+    // })->name('violation_list');
 
-    Route::get('/unauthorized_list', function () {
-        // Check user_type and redirect accordingly
-        $user = Auth::user();
-        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-            return view('SSUHead.unauthorized_list');
-        } else {
-            abort(403, 'Unauthorized action.');
-        }
-    })->name('unauthorized_list');
+    Route::get('/violation_list', [HeadViewViolationController::class, 'index'])->name('violation_list');
+
+    // Route::get('/unauthorized_list', function () {
+    //     // Check user_type and redirect accordingly
+    //     $user = Auth::user();
+    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+    //         return view('SSUHead.unauthorized_list');
+    //     } else {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+    // })->name('unauthorized_list');
+
+    // Route to view the unauthorized list
+    Route::get('/unauthorized_list', [HeadViewUnauthorizedController::class, 'index'])->name('unauthorized_list');
 
     Route::get('/head_account', function () {
         // Check user_type and redirect accordingly
@@ -120,16 +129,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         }
     })->name('head_guidelines');
 
-    Route::get('/ssu_personnel', function () {
-        // Check user_type and redirect accordingly
-        $user = Auth::user();
-        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-            return view('SSUHead.ssu_personnel');
-        } else {
-            abort(403, 'Unauthorized action.');
-        }
-    })->name('ssu_personnel');
+    // Route::get('/ssu_personnel', function () {
+    //     // Check user_type and redirect accordingly
+    //     $user = Auth::user();
+    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+    //         return view('SSUHead.ssu_personnel');
+    //     } else {
+    //         abort(403, 'Unauthorized action.');
+    //     }
+    // })->name('ssu_personnel');
     
+    Route::get('/ssu_personnel', [HeadViewSSUController::class, 'index'])->name('ssu_personnel');
+    // Route to handle form submission to add a new user
+    Route::post('/ssu_personnel', [HeadViewSSUController::class, 'store'])->name('ssu_personnel');
 });
 
 // Routes that do not require authentication

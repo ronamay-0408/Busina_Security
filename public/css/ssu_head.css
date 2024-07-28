@@ -1,0 +1,229 @@
+/*--------------------------------------------------------------
+# SSU_PERSONNEL CSS
+--------------------------------------------------------------*/
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f4f4f4;
+}
+.head_view_ssu_table{
+    padding: 20px 0px;
+}
+.add-new img{
+    padding: 8.5px 10px;
+    background-color: rgba(80, 119, 165, 0.2);
+    border-radius: 5px;
+    cursor: pointer;
+}
+.ssu-buttons{
+    display: flex;
+    gap: 10px;
+}
+
+
+.form-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 1010;
+    width: 100%;
+    max-width: 720px;
+    background: #fff;
+    border: 2px solid #fff;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.show-popup .form-popup {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease, opacity 0.1s;
+}
+
+.form-popup .close-btn {
+    position: absolute;
+    top: 1px;
+    right: 12px;
+    color: #878484;
+    cursor: pointer;
+    font-size: 30px;
+}
+
+.blur-bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    /* backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px); */
+    transition: 0.1s ease;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.show-popup .blur-bg-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.form-content h2{
+    color: black;
+    text-align: center;
+}
+.inputs1{
+    margin-top: 2rem;
+}
+.input-form1{
+    margin-top: 1rem;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.input-form1 label {
+    flex: 1.6;
+    margin-right: 10px;
+    color: black;
+    text-align: end;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.input-form1 input,
+.input-form1 select {
+    flex: 5;
+    padding: 5px 5px 5px 10px;
+    border: 0.5px solid #80808066;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+    background: white;
+    color: black;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .input-form1 input,
+    .input-form1 select {
+        flex: 1.7;
+    }
+}
+
+.submit{
+    text-align: center;
+    padding: 20px;
+    margin-top: 1.5rem;
+}
+.submit button{
+    text-align: center;
+    padding: 5px 20px;
+    font-family: 'Poppins';
+    background-color: rgba(242, 117, 43, 0.2);
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(62, 62, 62, 1);
+}
+.submit button:hover{
+    color: #012970;
+}
+.close-btn:hover{
+    color: #012970;
+}
+
+.head-main-success{
+    padding: 0px;
+}
+
+.head-main-error{
+    padding: 0px;
+}
+
+
+/*--------------------------------------------------------------
+# UNAUTHORIZED_LIST CSS
+--------------------------------------------------------------*/
+.head_view_unauthorized_table{
+    padding: 20px 0px;
+}
+
+
+/*--------------------------------------------------------------
+# VIOLATION_LIST CSS
+--------------------------------------------------------------*/
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0px;
+    border: 1px solid #8886;
+    width: 50%;
+    border-radius: 10px;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    /* font-weight: bold; */
+    /* font-weight: bold; */
+    /* margin: 0; */
+    padding: 0px 10px;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.proof-content{
+    padding: 20px;
+}
+.proof-content img{
+    padding: 10px;
+    /* background-color: #888; */
+    border: 1px solid;
+}
+.head_view_violation_table{
+    padding: 20px 0px;
+}
+.view-btn{
+    background-color: rgba(242, 117, 43, 0.2);
+    border: none;
+    padding: 5px 15px;
+    font-family: 'POPPINS';
+    font-weight: 500;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.view-btn:hover{
+    background-color: rgba(80, 119, 165, 0.2);
+}

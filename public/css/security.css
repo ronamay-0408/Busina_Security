@@ -537,9 +537,10 @@ main{
     display: flex;
     justify-content: space-between;
     width: 100%;
+    gap: 10px;
 }
 select#month-type {
-    width: 90%;
+    /* width: 90%; */
     margin-left: -1px;
     border-radius: 0px 5px 5px 0px;
     padding: 0px 10px;
@@ -573,7 +574,7 @@ select#month-type {
     border-radius: 5px;
     background-color: rgba(80, 119, 165, 0.2);
     text-align: right;
-    padding: 7px 25px;
+    padding: 10px 25px;
     font-size: 15px;
     font-weight: 600;
     color: rgba(62, 62, 62, 1);
@@ -584,6 +585,10 @@ select#month-type {
     width: 100%;
     max-width: 800px; /* Adjust as needed */
     margin-top: 15px;
+}
+
+.head-search {
+    margin-top: 0px;
 }
 
 .search-bar form {
