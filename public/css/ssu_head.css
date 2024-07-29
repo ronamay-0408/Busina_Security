@@ -28,7 +28,10 @@ th {
     gap: 10px;
 }
 
-
+.search-bar input{
+    width: 100%;
+    border-radius: 5px !important;
+}
 .form-popup {
     display: none;
     position: fixed;

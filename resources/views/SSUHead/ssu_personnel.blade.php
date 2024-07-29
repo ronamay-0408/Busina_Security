@@ -16,7 +16,22 @@
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
     <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
+    <style>
+        /* Style the select to look disabled */
+        .disabled-dropdown {
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            color: #666;
+            cursor: not-allowed; /* Show a not-allowed cursor */
+            pointer-events: none; /* Disable interaction */
+            /* Optional: Remove default styling */
+            -webkit-appearance: none;
+            appearance: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 
 <body>
@@ -105,10 +120,7 @@
 
         <div class="content">
             <div class="search-bar head-search">
-                <form action="#">
-                    <input type="text" placeholder="Search.." name="search">
-                    <button type="submit">Search</button>
-                </form>
+                <input type="text" id="searchInputSSU" placeholder="Search.." name="search">
             </div>
             <div class="ssu-buttons">
                 <div class="export-tbn">
@@ -152,7 +164,7 @@
         @endif
 
         <div class="head_view_ssu_table">
-            <table>
+            <table id="ssuTable">
                 <thead>
                     <tr>
                         <th>First Name</th>
@@ -217,11 +229,8 @@
 
                             <div class="input-form1">
                                 <label for="user_type">User Type</label>
-                                <select id="user_type" name="user_type" required>
-                                    <option value="">Select User Type</option>
-                                    <option value="1">Motorpool Admin</option>
-                                    <option value="2">Security Personnel</option>
-                                    <option value="3">Head SSU</option>
+                                <select id="user_type" name="user_type" class="disabled-dropdown" required>
+                                    <option value="2" selected>Security Personnel</option>
                                     <!-- Add more options as needed -->
                                 </select>
                             </div>
@@ -236,6 +245,38 @@
         </div>
 
     </main><!-- End #main -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInputSSU');
+            const table = document.getElementById('ssuTable');
+            const rows = table.querySelectorAll('tbody tr');
+
+            searchInput.addEventListener('keyup', function() {
+                const query = searchInput.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const cells = row.getElementsByTagName('td');
+                    let match = false;
+
+                    for (let i = 0; i < cells.length; i++) {
+                        const cell = cells[i].textContent.toLowerCase();
+                        if (cell.includes(query)) {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    if (match) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
 
     <!-- ERROR AND SUCCESS -->
     <script src="{{ asset('js/error_success_message.js') }}"></script>

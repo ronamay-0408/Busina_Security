@@ -30,4 +30,10 @@ class AuthorizedUser extends Model
     {
         return $this->hasMany(Violation::class, 'reported_by');
     }
+
+    // Define the relationship with the User model
+    public function user()
+    {
+        return $this->hasOne(Users::class, 'authorized_user_id');
+    }
 }

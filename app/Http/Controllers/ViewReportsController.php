@@ -11,7 +11,7 @@ class ViewReportsController extends Controller
     public function index()
     {
         // Get the ID of the currently authenticated user
-        $userId = Auth::id();
+        $userId = Auth::user()->authorized_user_id; // Retrieve the authorized_user_id from the authenticated user
 
         // Fetch violation reports created by the current user
         $violations = Violation::where('reported_by', $userId)

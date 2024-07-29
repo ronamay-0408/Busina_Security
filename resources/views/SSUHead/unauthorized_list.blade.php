@@ -119,14 +119,11 @@
             </div>
         </div>
         <div class="search-bar">
-            <form action="#">
-                <input type="text" placeholder="Search.." name="search">
-                <button type="submit">Search</button>
-            </form>
+            <input type="text" id="searchInputUnauthorized" placeholder="Search.." name="search">
         </div>
 
         <div class="head_view_unauthorized_table">
-            <table>
+            <table id="unauthorizedTable">
                 <thead>
                     <tr>
                         <th>Plate No</th>
@@ -148,6 +145,37 @@
             </table>
         </div>
     </main><!-- End #main -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInputUnauthorized');
+            const table = document.getElementById('unauthorizedTable');
+            const rows = table.querySelectorAll('tbody tr');
+
+            searchInput.addEventListener('keyup', function() {
+                const query = searchInput.value.toLowerCase();
+
+                rows.forEach(row => {
+                    const cells = row.getElementsByTagName('td');
+                    let match = false;
+
+                    for (let i = 0; i < cells.length; i++) {
+                        const cell = cells[i].textContent.toLowerCase();
+                        if (cell.includes(query)) {
+                            match = true;
+                            break;
+                        }
+                    }
+
+                    if (match) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+
 
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>

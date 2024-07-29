@@ -107,7 +107,7 @@
 
         <!-- resources/views/view_reports.blade.php -->
         <div class="myreports">
-            @foreach($violations as $violation)
+            @forelse($violations as $violation)
                 <div class="filed-child">
                     <div class="myfiled">
                         <h3><a href="{{ route('violation.show', $violation->id) }}">{{ $violation->plate_no }}</a></h3>
@@ -117,11 +117,9 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
-
-            @if($violations->isEmpty())
+            @empty
                 <p class="no-result">No results found.</p>
-            @endif
+            @endforelse
         </div>
     </main><!-- End #main -->
 
