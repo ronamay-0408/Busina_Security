@@ -26,7 +26,7 @@
         </div>
         
         <div class="logo">
-            <img src="images/BUsina logo (1) 2.png" alt="">
+            <img src="{{ asset('images/BUsina logo (1) 2.png') }}" alt="">
         </div>
     </header><!-- End Header -->
 
@@ -48,37 +48,37 @@
         <ul class="sidebar-nav" id="sidebar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('index') }}">
-                    <img src="images/Dashboard Layout.png" alt="">
+                    <img src="{{ asset('images/Dashboard Layout.png') }}" alt="">
                     <span>Dashboard</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('view_reports') }}">
-                    <img src="images/Foul.png" alt="">
+                <a class="nav-link hove" href="{{ route('view_reports') }}">
+                    <img src="{{ asset('images/Foul.png') }}" alt="">
                     <span>My Reports</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('scanned_qr') }}">
-                    <img src="images/Qr Code.png" alt="">
+                    <img src="{{ asset('images/Qr Code.png') }}" alt="">
                     <span>Scanned QR Code</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('guidelines') }}">
-                    <img src="images/Driving Guidelines.png" alt="">
+                    <img src="{{ asset('images/Driving Guidelines.png') }}" alt="">
                     <span>Guidelines</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('myaccount') }}">
-                    <img src="images/Account.png" alt="">
+                    <img src="{{ asset('images/Account.png') }}" alt="">
                     <span>My Account</span>
                 </a>
             </li>
             <li class="nav-item last">
                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="images/Open Pane.png" alt="">
+                    <img src="{{ asset('images/Open Pane.png') }}" alt="">
                     <span>Log Out</span>
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">

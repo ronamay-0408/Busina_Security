@@ -97,29 +97,13 @@
             <h3>MY REPORTS</h3>
         </div>
 
-        
-        <div class="content">
-            <div class="dropdown-month">
-                <label for="month-type">Month:</label>
-                <select id="month-type" name="month-type" required>
-                    <option value="0">ALL</option>
-                    <option value="1">JANUARY</option>
-                    <option value="2">FEBRUARY</option>
-                    <option value="3">MARCH</option>
-                    <option value="4">APRIL</option>
-                    <!-- Add more options as needed -->
-                </select>
-            </div>
-            <div class="export-tbn">
-                <button class="export-child">EXPORT</button>
-            </div>
-        </div>
         <div class="search-bar">
-            <form action="#">
-                <input type="text" placeholder="Search.." name="search">
+            <form action="{{ route('violations.index') }}" method="GET">
+                <input type="text" placeholder="Search.." name="search" value="{{ request('search') }}">
                 <button type="submit">Search</button>
             </form>
         </div>
+
 
         <!-- resources/views/view_reports.blade.php -->
         <div class="myreports">
@@ -134,6 +118,10 @@
                     </div>
                 </div>
             @endforeach
+
+            @if($violations->isEmpty())
+                <p class="no-result">No results found.</p>
+            @endif
         </div>
     </main><!-- End #main -->
 

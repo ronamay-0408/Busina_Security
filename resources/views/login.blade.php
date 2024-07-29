@@ -10,30 +10,29 @@
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/security.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/head_login.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
-    <main class="main1">
-        <div class="child-main">
-            <div class="login-con">
-                <div class="login-asset">
-                    <img src="{{ asset('images/Asset1.png') }}" alt="">
+<div class="semi-body">
+        <div class="container">
+            <div class="cover">
+                <div class="login-name">
+                    <h3>BICOL <span>UNIVERSITY</span></h3>
+                    <h1>SECURITY SECTION</h1>
                 </div>
-                <div class="spare-login-name">
-                    <div class="login-name">
-                        <h3>BICOL <span>UNIVERSITY</span></h3>
-                        <h1>SECURITY</h1>
-                    </div>
+                <div class="login-asset">
+                    <img src="{{ asset('images/Asset2.png') }}">
                 </div>
             </div>
 
-            <div class="login-info">
+            <div class="forms">
                 <div class="login-title">
                     <h2>LOG IN</h2>
                 </div>
+
                 <form action="{{ route('login') }}" method="post" class="login-form" id="loginForm">
                     @csrf
                     @if ($errors->any())
@@ -89,7 +88,7 @@
                 </form>
             </div>
         </div>
-    </main>
+    </div>
     
     <script src="{{ asset('js/disableForm.js') }}"></script>
     <script src="{{ asset('js/login_toggle_password.js') }}"></script>

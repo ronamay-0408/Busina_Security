@@ -72,6 +72,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // routes/web.php
     Route::get('/violation/{id}', [ViolationController::class, 'show'])->name('violation.show');
+    // In routes/web.php
+    Route::get('/violations', [ViolationController::class, 'index'])->name('violations.index');
 
 
     Route::get('/head_index', function () {

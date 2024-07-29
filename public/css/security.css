@@ -651,7 +651,9 @@ select#month-type {
     margin: 0;
     margin-top: 5px;
 }
-
+.no-result{
+    margin: 0;
+}
 
 /*--------------------------------------------------------------
 # VIEW PER REPORT PAGE MAIN DIV CSS
