@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
     <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
 </head>
 
 <body>
@@ -102,25 +103,34 @@
 
         <div class="content">
             <div class="dropdown-month">
-                <label for="month-type">Month:</label>
-                <select id="month-type" name="month-type" required>
-                    <option value="0">ALL</option>
-                    <option value="1">JANUARY</option>
-                    <option value="2">FEBRUARY</option>
-                    <option value="3">MARCH</option>
-                    <option value="4">APRIL</option>
-                    <!-- Add more options as needed -->
-                </select>
+                <label>FILTERING FIELDS</label>
+
+                <div class="filter-container">
+                    <div class="filter-item">
+                        <label>YEAR</label>
+                        <input class="filter-year" type="text" id="year-filter" placeholder="Select Year" readonly>
+                        <button class="btn btn-secondary btn-clear" id="clear-year">Clear</button>
+                    </div>
+                    <div class="filter-item">
+                        <label>MONTH</label>
+                        <input class="filter-month" type="text" id="month-filter" placeholder="Select Month" readonly>
+                        <button class="btn btn-secondary btn-clear" id="clear-month">Clear</button>
+                    </div>
+                    <div class="filter-item">
+                        <label>DAY</label>
+                        <input class="filter-day" type="text" id="day-filter" placeholder="Select Day" readonly>
+                        <button class="btn btn-secondary btn-clear" id="clear-day">Clear</button>
+                    </div>
+                </div>
             </div>
             <div class="export-tbn">
-                <button class="export-child">EXPORT</button>
+                <button class="export-child btn btn-primary">EXPORT</button>
             </div>
         </div>
 
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search..">
         </div>
-
         <div class="head_view_violation_table">
             <table id="violationTable"> <!-- Added id here -->
                 <thead>
@@ -130,6 +140,7 @@
                         <th>Violation Type</th>
                         <th>Reported By</th>
                         <th>Remarks</th>
+                        <th>Date & Time</th>
                         <th>Proof Image</th>
                     </tr>
                 </thead>
@@ -141,6 +152,7 @@
                             <td>{{ $violation->violationType->violation_name }}</td> <!-- Violation Type -->
                             <td>{{ $violation->reportedBy->fullName }}</td> <!-- Reported By -->
                             <td>{{ $violation->remarks }}</td>
+                            <td>{{ $violation->created_at->format('F j, Y, g:i a') }}</td>
                             <td>
                                 @if($violation->proof_image)
                                     <button class="view-btn" data-image="{{ asset('storage/' . $violation->proof_image) }}">View</button>
@@ -164,64 +176,15 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            // Modal functionality
-            var modal = document.getElementById("myModal");
-            var img = document.getElementById("modal-image");
-            var btns = document.querySelectorAll(".view-btn");
-            var span = document.getElementsByClassName("close")[0];
-
-            btns.forEach(function(btn) {
-                btn.onclick = function() {
-                    img.src = this.getAttribute("data-image");
-                    modal.style.display = "block";
-                }
-            });
-
-            span.onclick = function() {
-                modal.style.display = "none";
-            }
-
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
-        </script>
     </main><!-- End #main -->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const table = document.getElementById('violationTable');
-            const rows = table.querySelectorAll('tbody tr');
+    <!-- MODAL AND SEARCH JS -->
+    <script src="{{ asset('js/head_violation_modal.js') }}"></script>
 
-            searchInput.addEventListener('keyup', function() {
-                const query = searchInput.value.toLowerCase();
-
-                rows.forEach(row => {
-                    const cells = row.getElementsByTagName('td');
-                    let match = false;
-
-                    for (let i = 0; i < cells.length; i++) {
-                        const cell = cells[i].textContent.toLowerCase();
-                        if (cell.includes(query)) {
-                            match = true;
-                            break;
-                        }
-                    }
-
-                    if (match) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
-
+    <!-- Filtering JS File -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="{{ asset('js/head_violation_filtering.js') }}"></script>
 
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>

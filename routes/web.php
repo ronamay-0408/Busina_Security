@@ -82,7 +82,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
             return view('SSUHead.head_index');
         } else {
-            abort(403, 'Unauthorized action.');
+            // abort(403, 'Unauthorized action.');
+
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('index');
         }
     })->name('head_index');
 
@@ -117,7 +120,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
             return view('SSUHead.head_account');
         } else {
-            abort(403, 'Unauthorized action.');
+            // abort(403, 'Unauthorized action.');
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('index');
         }
     })->name('head_account');
 
@@ -127,7 +132,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
             return view('SSUHead.head_guidelines');
         } else {
-            abort(403, 'Unauthorized action.');
+            // abort(403, 'Unauthorized action.');
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('index');
         }
     })->name('head_guidelines');
 

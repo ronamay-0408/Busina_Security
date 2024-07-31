@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/HeadViewViolationController.php
 namespace App\Http\Controllers;
 
 use App\Models\Violation;
@@ -14,10 +13,16 @@ class HeadViewViolationController extends Controller
     {
         $user = Auth::user();
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-            $violations = Violation::with('violationType', 'vehicle', 'reportedBy')->get();
+            // Order violations by created_at in descending order
+            $violations = Violation::with('violationType', 'vehicle', 'reportedBy')
+                                    ->orderBy('created_at', 'desc')
+                                    ->get();
             return view('SSUHead.violation_list', compact('violations'));
         } else {
-            abort(Response::HTTP_FORBIDDEN, 'Unauthorized action.');
+            // abort(Response::HTTP_FORBIDDEN, 'Unauthorized action.');
+
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('index');
         }
     }
 }

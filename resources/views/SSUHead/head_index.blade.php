@@ -130,28 +130,24 @@
             <a href="">
                 <div class="filed2">
                     <h3>5</h3>
-                    <p>Recorded Unauthorized Entries</p>
+                    <p>Unauthorized Entries Today</p>
                 </div>
             </a>
         </div>
-
-        <div class="btn1">
-            <a class="nav-link" href="{{ url('report_vehicle') }}">CREATE A REPORT</a>
-        </div>
-
-        <div class="upload">
-            <div class="child">
-                <div class="violation">
-                <a class="nav-link" href="{{ url('report_vehicle') }}"><img src="images/Foul2.png"></a>
+        <div class="reports">
+            <a href="">
+                <div class="filed">
+                    <h3>10</h3>
+                    <p>SSU Personnels</p>
                 </div>
-                <p>Violation Report</p>
-            </div>
-            <div class="child2">
-                <div class="unauthorize">
-                    <a class="nav-link" href="{{ url('unauthorized') }}"><img src="images/Box Important.png" alt=""></a>
+            </a>
+            
+            <a href="">
+                <div class="filed2">
+                    <h3>5</h3>
+                    <p>Unauthorized Entries Today</p>
                 </div>
-                <p>Unauthorized Vehicle</p>
-            </div>
+            </a>
         </div>
     </main><!-- End #main -->
 

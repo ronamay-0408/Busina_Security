@@ -126,7 +126,7 @@
             <a href="{{ route('unauthorized') }}">
                 <div class="filed2">
                     <h3>{{ $unauthorizedEntriesToday }}</h3>
-                    <p>Recorded Unauthorized Entries</p>
+                    <p>Unauthorized Entries</p>
                 </div>
             </a>
         </div>

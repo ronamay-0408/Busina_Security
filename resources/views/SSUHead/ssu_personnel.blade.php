@@ -124,7 +124,7 @@
             </div>
             <div class="ssu-buttons">
                 <div class="export-tbn">
-                    <button class="export-child">EXPORT</button>
+                    <button class="export-child" onclick="exportTableToCSV()">EXPORT</button>
                 </div>
 
                 <div class="add-new">
@@ -246,37 +246,9 @@
 
     </main><!-- End #main -->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInputSSU');
-            const table = document.getElementById('ssuTable');
-            const rows = table.querySelectorAll('tbody tr');
+    <script src="{{ asset('js/head_ssu_search.js') }}"></script>
 
-            searchInput.addEventListener('keyup', function() {
-                const query = searchInput.value.toLowerCase();
-
-                rows.forEach(row => {
-                    const cells = row.getElementsByTagName('td');
-                    let match = false;
-
-                    for (let i = 0; i < cells.length; i++) {
-                        const cell = cells[i].textContent.toLowerCase();
-                        if (cell.includes(query)) {
-                            match = true;
-                            break;
-                        }
-                    }
-
-                    if (match) {
-                        row.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-            });
-        });
-    </script>
-
+    <script src="{{ asset('js/ssu_export.js') }}"></script>
 
     <!-- ERROR AND SUCCESS -->
     <script src="{{ asset('js/error_success_message.js') }}"></script>

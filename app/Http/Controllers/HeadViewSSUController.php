@@ -38,8 +38,11 @@ class HeadViewSSUController extends Controller
             // Return the view with the data
             return view('SSUHead.ssu_personnel', compact('authorizedUsers'));
         } else {
-            // If the user is not authorized, return a 403 Forbidden response
-            abort(Response::HTTP_FORBIDDEN, 'Unauthorized action.');
+            // // If the user is not authorized, return a 403 Forbidden response
+            // abort(Response::HTTP_FORBIDDEN, 'Unauthorized action.');
+
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('index');
         }
     }
 
@@ -51,6 +54,9 @@ class HeadViewSSUController extends Controller
      */
     public function store(Request $request)
     {
+        // Set the timezone to Asia/Manila
+        date_default_timezone_set('Asia/Manila');
+        
         // Validate the request
         $request->validate([
             'fname' => 'required|string|max:255',
@@ -123,13 +129,13 @@ class HeadViewSSUController extends Controller
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';  // SMTP server
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'ronabalangat2003@gmail.com'; // SMTP username
-            $mail->Password   = 'dsae bzxj zikj tbxy';   // SMTP password
+            $mail->Username   = 'businabicoluniversity@gmail.com'; // SMTP username
+            $mail->Password   = 'jpic klzq vxkd cwwc';   // SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;  // TCP port to connect to
 
             // Recipients
-            $mail->setFrom('busina@example.com', 'BUsina');
+            $mail->setFrom('businabicoluniversity@gmail.com', 'BUsina');
             $mail->addAddress($email);  // Add recipient email
 
             // Content
@@ -151,13 +157,13 @@ class HeadViewSSUController extends Controller
                             <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Here are your login details:</p>
                             <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Email:</strong> {$email}</p>
                             <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Password:</strong> {$password}</p>
-                            <p style='margin: 10px 0; color: #666666; font-size: 14px;'>If you have any questions or need further assistance, please don't hesitate to contact us at <a href='mailto:busina@gmail.com' style='color: #161a39; text-decoration: none;'>busina@gmail.com</a>.</p>
+                            <p style='margin: 10px 0; color: #666666; font-size: 14px;'>If you have any questions or need further assistance, please don't hesitate to contact us at <a href='mailto:businabicoluniversity@gmail.com' style='color: #161a39; text-decoration: none;'>busina@gmail.com</a>.</p>
                             <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Best regards,<br><span style='font-weight: 600;'>Bicol University BUsina</span></p>
                         </div>
                         <div style='background-color: #161a39; padding: 20px 20px 5px 20px;'>
                             <div style='color: #f4f4f4; font-size: 12px;'>
                                 <p><span style='font-size: 14px; font-weight: 600;'>Contact</span></p>
-                                <p>busina@gmail.com</p>
+                                <p>businabicoluniversity@gmail.com</p>
                                 <p>Legazpi City, Albay, Philippines 13°08′39″N 123°43′26″E</p>
                             </div>
                             <div style='text-align: center;'>

@@ -25,8 +25,8 @@ class ForgotPasswordController extends Controller
 
         if ($validator->fails()) {
             return redirect()->route('password.request')
-                             ->withErrors($validator)
-                             ->withInput();
+                            ->withErrors($validator)
+                            ->withInput();
         }
 
         // Fetch employee details using Query Builder
@@ -35,8 +35,8 @@ class ForgotPasswordController extends Controller
         // Check if employee exists
         if (!$employee) {
             return redirect()->route('password.request')
-                             ->with('error', 'Employee not found.')
-                             ->withInput();
+                            ->with('error', 'Employee not found.')
+                            ->withInput();
         }
         
         // Fetch associated authorized_user record using emp_id
@@ -45,8 +45,8 @@ class ForgotPasswordController extends Controller
         // Check if authorized_user exists
         if (!$authorizedUser) {
             return redirect()->route('password.request')
-                             ->with('error', 'User information not found for this employee.')
-                             ->withInput();
+                            ->with('error', 'User information not found for this employee.')
+                            ->withInput();
         }
 
         // Fetch associated users record using authorized_user_id
@@ -55,8 +55,8 @@ class ForgotPasswordController extends Controller
         // Check if users exists
         if (!$user) {
             return redirect()->route('password.request')
-                             ->with('error', 'Login information not found for this user.')
-                             ->withInput();
+                            ->with('error', 'Login information not found for this user.')
+                            ->withInput();
         }
 
         // Check if user_type is allowed to reset the password
@@ -66,15 +66,30 @@ class ForgotPasswordController extends Controller
                             ->withInput();
         }
 
+        // Check if there is an existing reset request
+        $existingReset = DB::table('password_resets')
+                        ->where('emp_no', $request->emp_no)
+                        ->where('expiration', '>', now())
+                        ->where('used_reset_token', 0)
+                        ->first();
+
+        if ($existingReset) {
+            // Notify user that reset URL is still valid
+            return redirect()->route('password.request')
+                            ->with('error', 'Your requested URL hasn\'t expired yet, you can still use it to reset your password.')
+                            ->withInput();
+        }
+
         // Generate a unique reset token
         $resetToken = Str::random(60);
 
-        // Store the token in the password_resets table
+        // Store the new token in the password_resets table
         DB::table('password_resets')->insert([
             'emp_no' => $request->emp_no,
             'users_id' => $user->id,
             'reset_token' => $resetToken,
-            'expiration' => now()->addMinutes(20), // Set expiration to 20 minutes
+            'expiration' => now()->addMinutes(10), // Set expiration to 10 minutes
+            'used_reset_token' => 0
         ]);
 
         // Generate reset link using the named route with emp_no parameter
@@ -88,13 +103,13 @@ class ForgotPasswordController extends Controller
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'ronabalangat2003@gmail.com'; // Your Gmail address
-            $mail->Password   = 'dsae bzxj zikj tbxy';        // Your Gmail password
+            $mail->Username   = 'businabicoluniversity@gmail.com'; // Your Gmail address
+            $mail->Password   = 'jpic klzq vxkd cwwc';        // Your Gmail password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
 
             // Recipients
-            $mail->setFrom('busina@example.com', 'BUsina');
+            $mail->setFrom('businabicoluniversity@gmail.com', 'BUsina');
             $mail->addAddress($user->email);  // Add recipient email
 
             // Content
@@ -118,13 +133,13 @@ class ForgotPasswordController extends Controller
                             <a href='{$resetLink}' style='background-color: #161a39; border: none; color: white; padding: 10px 30px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease;'>Reset Password</a>
                         </div>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'>If the button above does not work, you can ignore this email, and your password will remain unchanged.</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>If you have any questions or need further assistance, please don't hesitate to contact us at <a href='mailto:busina@gmail.com' style='color: #161a39; text-decoration: none;'>busina@gmail.com</a>.</p>
+                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>If you have any questions or need further assistance, please don't hesitate to contact us at <a href='mailto:businabicoluniversity@gmail.com' style='color: #161a39; text-decoration: none;'>busina@gmail.com</a>.</p>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Best regards,<br><span style='font-weight: 600;'>Bicol University BUsina</span></p>
                     </div>
                     <div style='background-color: #161a39; padding: 20px 20px 5px 20px;'>
                         <div style='color: #f4f4f4; font-size: 12px;'>
                             <p><span style='font-size: 14px; font-weight: 600;'>Contact</span></p>
-                            <p>busina@gmail.com</p>
+                            <p>businabicoluniversity@gmail.com</p>
                             <p>Legazpi City, Albay, Philippines 13°08′39″N 123°43′26″E</p>
                         </div>
                         <div style='text-align: center;'>
@@ -146,8 +161,8 @@ class ForgotPasswordController extends Controller
             return redirect()->route('pass_emailed')->with('success', $success);
         } catch (Exception $e) {
             return redirect()->route('password.request')
-                             ->with('error', "Failed to send reset link. Mailer Error: {$mail->ErrorInfo}")
-                             ->withInput();
+                            ->with('error', "Failed to send reset link. Mailer Error: {$mail->ErrorInfo}")
+                            ->withInput();
         }
     }
 }

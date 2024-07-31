@@ -297,7 +297,8 @@ main{
 }
 .reports{
     display: flex;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
+    gap: 10px;
 }
 .filed{
     background-color: white;
@@ -327,7 +328,7 @@ main{
     padding: 5px;
     display: flex;
     /* width: 50%; */
-    margin-left: 10px;
+    /* margin-left: 10px; */
     border: 0.1px solid #80808061;
 }
 .filed2 h3{
@@ -340,6 +341,7 @@ main{
     font-weight: 600;
     color: rgba(97, 103, 121, 1);
     font-size: 14px;
+    padding: 10px 0px 5px 0px;
 }
 
 .btn1 {
@@ -558,15 +560,47 @@ select#month-type {
 }
 .dropdown-month{
     display: flex;
-    flex: 2;
+    gap: 10px;
+    padding: 5px 10px;
+    border-width: 2px;
+    border-style: dashed;
 }
 .dropdown-month label{
-    z-index: 10;
-    background-color: rgba(80, 119, 165, 0.2);
-    padding: 3px 12px;
-    border-radius: 5px 0px 0px 5px;
+    /* z-index: 10; */
+    /* background-color: rgba(80, 119, 165, 0.2); */
+    /* padding: 3px 12px; */
+    /* border-radius: 5px 0px 0px 5px; */
     color: rgba(97, 103, 121, 1);
 }
+.filter-year label{
+    background-color: rgba(80, 119, 165, 0.2);
+    padding: 3px 0px 3px 10px;
+}
+
+.filter-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.filter-item label {
+    font-weight: bold;
+    white-space: nowrap;
+}
+.filter-item .filter-day {
+    width: 200px;
+}
+.filter-item input {
+    width: 120px;
+}
+.filter-item button {
+    cursor: pointer;
+}
+
 .export-tbn{
     flex: 0;
 }
@@ -579,6 +613,7 @@ select#month-type {
     font-weight: 600;
     color: rgba(62, 62, 62, 1);
     border: none;
+    cursor: pointer;
 }
 
 .search-bar {
