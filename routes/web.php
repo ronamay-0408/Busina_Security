@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use App\Http\Controllers\HeadViewViolationController;
 use App\Http\Controllers\HeadViewUnauthorizedController;
 use App\Http\Controllers\HeadViewSSUController;
+use App\Http\Controllers\HeadReportsController;
 
 // Group routes that require authentication and email verification
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -76,18 +77,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/violations', [ViolationController::class, 'index'])->name('violations.index');
 
 
-    Route::get('/head_index', function () {
-        // Check user_type and redirect accordingly
-        $user = Auth::user();
-        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-            return view('SSUHead.head_index');
-        } else {
-            // abort(403, 'Unauthorized action.');
+    // Route::get('/head_index', function () {
+    //     // Check user_type and redirect accordingly
+    //     $user = Auth::user();
+    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+    //         return view('SSUHead.head_index');
+    //     } else {
+    //         // abort(403, 'Unauthorized action.');
 
-            // If the user is not authorized, redirect to the index view
-            return redirect()->route('index');
-        }
-    })->name('head_index');
+    //         // If the user is not authorized, redirect to the index view
+    //         return redirect()->route('index');
+    //     }
+    // })->name('head_index');
+
+    Route::get('/head_index', [HeadReportsController::class, 'index'])->name('head_index');
 
     // Route::get('/violation_list', function () {
     //     // Check user_type and redirect accordingly
