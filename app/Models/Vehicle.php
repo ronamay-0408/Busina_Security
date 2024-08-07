@@ -43,8 +43,8 @@ class Vehicle extends Model
     // }
 
     // Define relationship with VehicleType
-    // public function vehicleType()
-    // {
-        // return $this->belongsTo(VehicleType::class, 'vehicle_type_id');
-    // }
+    public function vehicleType()
+    {
+        return $this->belongsTo(VehicleType::class, 'vehicle_type_id');
+    }
 }

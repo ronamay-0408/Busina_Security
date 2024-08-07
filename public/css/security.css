@@ -907,7 +907,7 @@ select#month-type {
 # REGISTRATION NOT FOUND MAIN DIV CSS
 --------------------------------------------------------------*/
 .reg_not_found{
-    background-color: rgba(232, 232, 232, 1);
+    /* background-color: rgba(232, 232, 232, 1); */
     padding: 10px;
     margin-top: 20px;
     border-radius: 10px;
@@ -1409,4 +1409,36 @@ select#month-type {
     padding: 10px 10px 12px 10px;
     border-radius: 0px 10px 10px 0px;
 
+}
+
+/*--------------------------------------------------------------
+# SCANNED RESULT MAIN DIV CSS
+--------------------------------------------------------------*/
+.registered_vehicle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-bottom: 20px;
+}
+.vehicle_info {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -1px rgba(0, 0, 0, .06);
+    letter-spacing: 1px;
+}
+.vehicle_info h3{
+    margin: 0;
+    font-size: 16px;
+}
+.vehicle_info p{
+    margin: 0;
+    padding: 5px 0px 0px 0px;
+    font-weight: 500;
+}
+
+@media (max-width: 650px) {
+    .registered_vehicle {
+        width: 100%;
+    }
 }

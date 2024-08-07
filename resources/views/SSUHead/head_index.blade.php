@@ -342,7 +342,7 @@
                     <div class="chart-subsub-box">
                         <div class="chart-sub3-box">
                             <div class="chart-title">
-                                <h3>Violation Reports Over the Last Week</h3>
+                                <h3>Violation Reports Over the Last Year</h3>
                             </div>
                             <div class="chart-option">
                                 <select id="timeRange" class="chart-dropdown">
@@ -363,7 +363,7 @@
                     <div class="chart-subsub-box">
                         <div class="chart-sub3-box">
                             <div class="chart-title">
-                                <h3>Unauthorized Vehicles Over the Last Week</h3>
+                                <h3>Unauthorized Vehicles Over the Last Year</h3>
                             </div>
                             <div class="chart-option">
                                 <select id="timeRangeUnauthorized" class="chart-dropdown">
@@ -387,15 +387,19 @@
                 dates: <?php echo json_encode($dates); ?>,
                 violationCounts: <?php echo json_encode($violationCounts); ?>,
                 unauthorizedCounts: <?php echo json_encode($unauthorizedCounts); ?>,
+                months: <?php echo json_encode($months); ?>,
+                monthlyViolationCounts: <?php echo json_encode($monthlyViolationCounts); ?>,
+                monthlyUnauthorizedCounts: <?php echo json_encode($monthlyUnauthorizedCounts); ?>
             };
         </script>
 
         <!-- Add these scripts before the closing </body> tag -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.7.0/chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
         <script>
-            const { dates, violationCounts, unauthorizedCounts } = window.chartData;
+            const { dates, violationCounts, unauthorizedCounts, months, monthlyViolationCounts, monthlyUnauthorizedCounts } = window.chartData;
 
             const ctxViolation = document.getElementById('violationChart').getContext('2d');
             const ctxUnauthorized = document.getElementById('unauthorizedChart').getContext('2d');
@@ -492,63 +496,38 @@
                 }
             });
 
-            function aggregateDataByMonth(dates, counts) {
-                const months = Array(12).fill(0);
-                dates.forEach((date, index) => {
-                    const month = new Date(date).getMonth();
-                    months[month] += counts[index];
-                });
-                return months;
+            function updateChart(chart, labels, data, chartType) {
+                chart.data.labels = labels;
+                chart.data.datasets[0].data = data;
+                chart.update();
             }
 
-            function updateViolationChart(labels, data) {
-                violationChart.data.labels = labels;
-                violationChart.data.datasets[0].data = data;
-                violationChart.update();
-            }
-
-            function updateUnauthorizedChart(labels, data) {
-                unauthorizedChart.data.labels = labels;
-                unauthorizedChart.data.datasets[0].data = data;
-                unauthorizedChart.update();
-            }
-
-            function handleViolationTimeRangeChange() {
+            function handleTimeRangeChange() {
                 const timeRange = document.getElementById('timeRange').value;
-
-                if (timeRange === 'month') {
-                    const monthLabels = Array.from({ length: 12 }, (v, i) => new Date(0, i).toLocaleString('default', { month: 'short' }));
-                    const monthlyViolationCounts = aggregateDataByMonth(dates, violationCounts);
-                    updateViolationChart(monthLabels, monthlyViolationCounts);
-
-                    document.querySelector('.chart-title h3').textContent = 'Violation Reports Over the Last Year';
-                } else {
-                    updateViolationChart(dates, violationCounts);
-                    document.querySelector('.chart-title h3').textContent = 'Violation Reports Over the Last Week';
-                }
-            }
-
-            function handleUnauthorizedTimeRangeChange() {
                 const timeRangeUnauthorized = document.getElementById('timeRangeUnauthorized').value;
 
-                if (timeRangeUnauthorized === 'month') {
-                    const monthLabels = Array.from({ length: 12 }, (v, i) => new Date(0, i).toLocaleString('default', { month: 'short' }));
-                    const monthlyUnauthorizedCounts = aggregateDataByMonth(dates, unauthorizedCounts);
-                    updateUnauthorizedChart(monthLabels, monthlyUnauthorizedCounts);
+                if (timeRange === 'month') {
+                    updateChart(violationChart, months, monthlyViolationCounts, 'violation');
+                    document.querySelector('.chart-title h3').textContent = 'Violation Reports Over the Last Year';
+                } else {
+                    updateChart(violationChart, dates, violationCounts, 'violation');
+                    document.querySelector('.chart-title h3').textContent = 'Violation Reports Over the Last Week';
+                }
 
+                if (timeRangeUnauthorized === 'month') {
+                    updateChart(unauthorizedChart, months, monthlyUnauthorizedCounts, 'unauthorized');
                     document.querySelectorAll('.chart-title h3')[1].textContent = 'Unauthorized Vehicles Over the Last Year';
                 } else {
-                    updateUnauthorizedChart(dates, unauthorizedCounts);
+                    updateChart(unauthorizedChart, dates, unauthorizedCounts, 'unauthorized');
                     document.querySelectorAll('.chart-title h3')[1].textContent = 'Unauthorized Vehicles Over the Last Week';
                 }
             }
 
-            document.getElementById('timeRange').addEventListener('change', handleViolationTimeRangeChange);
-            document.getElementById('timeRangeUnauthorized').addEventListener('change', handleUnauthorizedTimeRangeChange);
+            document.getElementById('timeRange').addEventListener('change', handleTimeRangeChange);
+            document.getElementById('timeRangeUnauthorized').addEventListener('change', handleTimeRangeChange);
 
             // Initialize with the default time range
-            handleViolationTimeRangeChange();
-            handleUnauthorizedTimeRangeChange();
+            handleTimeRangeChange();
 
             async function exportChart(chart, chartType) {
                 const { jsPDF } = window.jspdf;
@@ -568,24 +547,15 @@
 
                 // Add title, chart content, and date/time to the PDF
                 doc.text(title, 10, 10);
-                doc.text(`Chart Content: ${contentDescription}`, 10, 20);
-                doc.text(`Date: ${new Date().toLocaleString()}`, 10, 30);
+                doc.text(contentDescription, 10, 20);
+                doc.text(`Generated on: ${new Date().toLocaleString()}`, 10, 30);
+                doc.addImage(imgData, 'PNG', 10, 40, 180, 100);
 
-                // Add chart image to the PDF
-                doc.addImage(imgData, 'PNG', 10, 40, 190, 100);
-
-                // Generate filename with chart type, content, and date
-                const fileName = `${chartType === 'violation' ? 'Violation' : 'Unauthorized'}-${contentDescription}-${new Date().toISOString().split('T')[0]}.pdf`;
-                doc.save(fileName);
+                doc.save(`${title.replace(/\s+/g, '_')}.pdf`);
             }
 
-            document.getElementById('chart-violation-export').addEventListener('click', () => {
-                exportChart(violationChart, 'violation');
-            });
-
-            document.getElementById('chart-unauthorized-export').addEventListener('click', () => {
-                exportChart(unauthorizedChart, 'unauthorized');
-            });
+            document.getElementById('chart-violation-export').addEventListener('click', () => exportChart(violationChart, 'violation'));
+            document.getElementById('chart-unauthorized-export').addEventListener('click', () => exportChart(unauthorizedChart, 'unauthorized'));
         </script>
     </main><!-- End #main -->
 

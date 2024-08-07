@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Busina Security - Register User Vehicle Info</title>
+    <title>Busina Security - Scanned Result</title>
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     <meta content="" name="description">
     <meta content="" name="keywords">
@@ -26,7 +26,7 @@
         </div>
         
         <div class="logo">
-            <img src="images/BUsina logo (1) 2.png" alt="">
+            <img src="{{ asset('images/BUsina logo (1) 2.png') }}" alt="">
         </div>
     </header><!-- End Header -->
 
@@ -90,83 +90,45 @@
     </aside><!-- End Sidebar-->
 
     <main id="main" class="main">
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="date-time">
         </div>
 
-        <div class="per_report">
-            <h3 class="per-title">REGISTRATION NO.:  <span>[No.]</span></h3>
-            
-            <form action="">
-                <div class="inputs">
+        <div class="title">
+            <h3>NAME : <span>{{ $vehicleOwner->fname }} {{ $vehicleOwner->mname }} {{ $vehicleOwner->lname }}</span></h3>
+        </div>
 
-                    <div class="input-form">
-                        <label for="name">Name</label>
-                        <input type="text" placeholder=""  required>
+        <div class="title">
+            <h3>REGISTERED VEHICLE</h3>
+        </div>
+        <!-- resources/views/view_reports.blade.php -->
+        <div class="registered_vehicle">
+            @foreach($vehicles as $vehicle)
+                <div class="vehicle_con">
+                    <div class="vehicle_info">
+                        <h3>
+                            REGISTRATION NUMBER .: 
+                            <a href="{{ route('vehicle.info', ['registration_no' => $vehicle->registration_no]) }}" class="btn btn-primary">
+                                {{ $vehicle->registration_no }}
+                            </a>
+                        </h3>
+                        <p>PLATE NUMBER .: <span>{{ $vehicle->plate_no }}</span></p>
+                        <p>STICKER EXPIRY .: <span>{{ $vehicle->sticker_expiry }}</span></p>
                     </div>
-
-                    <div class="input-form">
-                        <label for="emp-id">Employee ID</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="type">Type</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="Model">Model</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="color">Color</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="plate_num">Plate No.</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="or-cr-num">OR/CR No.</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="expiry_date">Expiration Date</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="dl_num">Driver’s License No.</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="dl_expiry_date">Expiration Date</label>
-                        <input type="text" placeholder=""  required>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="cor_copy">Copy of COR</label>
-                        <input type="text" placeholder=""  required>
-                        <button class="view">View</button>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="date_issued">Date Issued</label>
-                        <input type="text" placeholder=""  required>
-                    </div>                    
                 </div>
-            </form>
+            @endforeach
+        </div>
 
-            <div class="back-btn3">
-                <a class="nav-link" href="{{ url('/index') }}">BACK</a>
-            </div>
+        <div class="back-btn3">
+            <a class="nav-link" href="{{ url('/scanned_qr') }}">SCANNER</a>
         </div>
     </main><!-- End #main -->
+
 
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>

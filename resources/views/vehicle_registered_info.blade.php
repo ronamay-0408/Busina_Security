@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Busina Security - Registration Not Found</title>
+    <title>Busina Security - Register User Vehicle Info</title>
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     <meta content="" name="description">
     <meta content="" name="keywords">
@@ -92,19 +92,52 @@
     <main id="main" class="main">
         <div class="date-time">
         </div>
-        
-        <div class="reg_not_found">
-            <h3>REGISTRATION NOT FOUND</h3>
 
-            <div class="note">
-                <p>Please contact the BU Motorpool Services for more information </p>
-            </div>
+        <div class="per_report">
+            <h3 class="per-title">REGISTRATION NO.:  <span>{{ $vehicle->registration_no }}</span></h3>
+            <form>
+                <div class="inputs">
+                    <div class="input-form">
+                        <label for="name">Name</label>
+                        <input type="text" value="{{ $vehicleOwner->fname }} {{ $vehicleOwner->mname }} {{ $vehicleOwner->lname }}" readonly>
+                    </div>
 
-            <div class="back-btn2">
-                <a class="nav-link" href="{{ url('/scanned_qr') }}">BACK</a>
+                    <div class="input-form">
+                        <label for="type">Vehicle Type</label>
+                        <input type="text" value="{{ $vehicle->vehicleType->vehicle_type }}" readonly>
+                    </div>
+
+                    <div class="input-form">
+                        <label for="Model-Color">Model & Color</label>
+                        <input type="text" value="{{ $vehicle->model_color }}" readonly>
+                    </div>
+
+                    <div class="input-form">
+                        <label for="plate_num">Plate No.</label>
+                        <input type="text" value="{{ $vehicle->plate_no }}" readonly>
+                    </div>
+
+                    <div class="input-form">
+                        <label for="expiry_date">Registration Expiration Date</label>
+                        <input type="text" value="{{ $vehicle->sticker_expiry }}" readonly>
+                    </div>
+
+                    <div class="input-form">
+                        <label for="date_issued">Date Issued</label>
+                        <input type="text" value="{{ $vehicle->issued_date }}" readonly>
+                    </div>                    
+                </div>
+            </form>
+
+            <div class="back-btn3">
+                <a class="nav-link" onclick="goBack()">BACK</a>
             </div>
+            <script>
+                function goBack() {
+                    window.history.back();
+                }
+            </script>
         </div>
-
     </main><!-- End #main -->
 
     <!-- Template Main JS File // NAVBAR // -->

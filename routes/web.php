@@ -21,6 +21,8 @@ use App\Http\Controllers\HeadViewUnauthorizedController;
 use App\Http\Controllers\HeadViewSSUController;
 use App\Http\Controllers\HeadReportsController;
 
+use App\Http\Controllers\QRController;
+
 // Group routes that require authentication and email verification
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route to view the index page using a controller
@@ -34,10 +36,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/view_reports', [ViewReportsController::class, 'index'])->name('view_reports');
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-    Route::get('/scanned_qr', function () {
-        return view('scanned_qr');
-    })->name('scanned_qr');
 
     Route::get('/guidelines', function () {
         return view('guidelines');
@@ -63,9 +61,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('reg_not_found');
     })->name('reg_not_found');
 
-    Route::get('/user_info', function () {
-        return view('user_info');
-    })->name('user_info');
+    Route::get('/vehicle_registered_info', function () {
+        return view('vehicle_registered_info');
+    })->name('vehicle_registered_info');
+
+    // Route::get('/scanned_qr', function () {
+    //     return view('scanned_qr');
+    // })->name('scanned_qr');
+
+    // Route::get('/scanned_result', function () {
+    //     return view('scanned_result');
+    // })->name('scanned_result');
+
+    // routes/web.php
+
+    // Route to display scanned QR code page
+    Route::get('/scanned_qr', function () {
+        return view('scanned_qr');
+    })->name('scanned_qr');
+
+    // Route to display scanned QR code result
+    Route::get('/scanned_result', [QRController::class, 'showResult'])->name('scanned.result');
+
+    // Route to handle QR code scanning
+    Route::post('/scan/qr', [QRController::class, 'scanQR'])->name('scan.qr');
+
+    // Route to display specific vehicle information
+    Route::get('/vehicle-info/{registration_no}', [QRController::class, 'showVehicleInfo'])->name('vehicle.info');
+
 
     Route::get('/view_per_report', function () {
         return view('view_per_report');
