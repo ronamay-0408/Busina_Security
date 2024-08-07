@@ -157,7 +157,11 @@ a:hover {
     font-weight: 700;
 }
 .sidebar-nav .last{
-    margin-top: 11.5rem;
+    margin-top: 9rem;
+}
+
+.sidebar-nav .sub_last{
+    margin-top: 2rem;
 }
 
 .sidebar-nav .nav-heading {
@@ -1439,6 +1443,52 @@ select#month-type {
 
 @media (max-width: 650px) {
     .registered_vehicle {
+        width: 100%;
+    }
+}
+
+/*--------------------------------------------------------------
+# GATE SCANNER CSS
+--------------------------------------------------------------*/
+.gate-scanner{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.gate-scanner2{
+    width: calc(100% / 2 - 10px);
+}
+.side_vehicle_info{
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 0.1px solid #80808061;
+    width: calc(100% / 2 - 10px);
+}
+.not-found h3 {
+    text-align: center;
+    font-size: 25px;
+    justify-content: center;
+    font-weight: 550;
+}
+.side_vehicle_info.found {
+    /* background-color: #5A9F68; */
+    border: 5px solid;
+    border-image: linear-gradient(45deg, rgb(0, 143, 104), rgb(250, 224, 66)) 1;
+}
+.side_vehicle_info.not-found {
+    border: 5px solid;
+    border-image: linear-gradient(45deg, rgb(238, 148, 133), rgb(255, 48, 7)) 1;
+}
+.vehicle_info {
+    margin-bottom: 10px;
+}
+@media (max-width: 650px) {
+    .gate-scanner2{
+        width: 100%;
+    }
+    .side_vehicle_info{
         width: 100%;
     }
 }

@@ -39,4 +39,9 @@ class VehicleOwner extends Model
     // {
     //     return $this->belongsTo(Student::class, 'std_id');
     // }
+
+    public function userLogs()
+    {
+        return $this->hasMany(UserLog::class, 'vehicle_owner_id');
+    }
 }

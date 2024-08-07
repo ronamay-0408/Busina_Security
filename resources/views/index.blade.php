@@ -87,6 +87,14 @@
                     <span>My Account</span>
                 </a>
             </li>
+
+            <li class="nav-item sub_last">
+                <a class="nav-link" href="{{ route('gate_scanner') }}">
+                    <img src="images/gate_scanner.png" alt="">
+                    <span>Gate Scanner</span>
+                </a>
+            </li>
+
             <li class="nav-item last">
                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <img src="images/Open Pane.png" alt="">

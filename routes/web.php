@@ -22,6 +22,7 @@ use App\Http\Controllers\HeadViewSSUController;
 use App\Http\Controllers\HeadReportsController;
 
 use App\Http\Controllers\QRController;
+use App\Http\Controllers\GateScannerController;
 
 // Group routes that require authentication and email verification
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -64,6 +65,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/vehicle_registered_info', function () {
         return view('vehicle_registered_info');
     })->name('vehicle_registered_info');
+
+    Route::get('/gate_scanner', function () {
+        return view('gate_scanner');
+    })->name('gate_scanner');
+    
+    Route::post('/scan-qr', [GateScannerController::class, 'scanQR'])->name('gate_scanner.scan');
 
     // Route::get('/scanned_qr', function () {
     //     return view('scanned_qr');
