@@ -7,6 +7,7 @@ use App\Models\VehicleOwner;
 use App\Models\Vehicle;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session; // Import the Session facade
+use App\Models\Transaction; // Import the Transaction model
 
 class QRController extends Controller
 {
@@ -56,28 +57,40 @@ class QRController extends Controller
             return redirect()->route('scanned_qr')->with('error', 'Vehicle owner not found.');
         }
 
-        $vehicles = Vehicle::where('vehicle_owner_id', $vehicleOwnerId)->get();
-
-        // Optionally clear session data
-        // Session::forget('vehicle_owner_id');
+        // Get transactions associated with the vehicle owner
+        $transactions = Transaction::whereHas('vehicle', function ($query) use ($vehicleOwnerId) {
+            $query->where('vehicle_owner_id', $vehicleOwnerId);
+        })->get();
 
         return view('scanned_result', [
             'vehicleOwner' => $vehicleOwner,
-            'vehicles' => $vehicles
+            'transactions' => $transactions
         ]);
     }
 
+
     public function showVehicleInfo($registration_no)
     {
-        $vehicle = Vehicle::with('vehicleType')->where('registration_no', $registration_no)->first();
+        // Fetch the transaction by registration number
+        $transaction = Transaction::where('registration_no', $registration_no)->first();
+
+        if (!$transaction) {
+            return redirect()->route('scanned.result')->with('error', 'Vehicle not found.');
+        }
+
+        // Fetch the vehicle associated with the transaction
+        $vehicle = Vehicle::find($transaction->vehicle_id);
+
         if (!$vehicle) {
             return redirect()->route('scanned.result')->with('error', 'Vehicle not found.');
         }
 
         $vehicleOwner = VehicleOwner::find($vehicle->vehicle_owner_id);
+
         return view('vehicle_registered_info', [
             'vehicle' => $vehicle,
-            'vehicleOwner' => $vehicleOwner
+            'vehicleOwner' => $vehicleOwner,
+            'transaction' => $transaction
         ]);
     }
 }

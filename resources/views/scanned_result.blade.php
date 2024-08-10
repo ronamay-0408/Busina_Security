@@ -106,24 +106,24 @@
         <div class="title">
             <h3>REGISTERED VEHICLE</h3>
         </div>
-        <!-- resources/views/view_reports.blade.php -->
+        <!-- resources/views/scanned_result.blade.php -->
         <div class="registered_vehicle">
-            @foreach($vehicles as $vehicle)
+            @foreach($transactions as $transaction)
                 <div class="vehicle_con">
                     <div class="vehicle_info">
                         <h3>
                             REGISTRATION NUMBER .: 
-                            <a href="{{ route('vehicle.info', ['registration_no' => $vehicle->registration_no]) }}" class="btn btn-primary">
-                                {{ $vehicle->registration_no }}
+                            <a href="{{ route('vehicle.info', ['registration_no' => $transaction->registration_no]) }}" class="btn btn-primary">
+                                {{ $transaction->registration_no }}
                             </a>
                         </h3>
-                        <p>PLATE NUMBER .: <span>{{ $vehicle->plate_no }}</span></p>
-                        <p>STICKER EXPIRY .: <span>{{ $vehicle->sticker_expiry }}</span></p>
+                        <p>PLATE NUMBER .: <span>{{ $transaction->vehicle->plate_no }}</span></p>
+                        <p>STICKER EXPIRY .: <span>{{ $transaction->sticker_expiry }}</span></p>
                     </div>
                 </div>
             @endforeach
         </div>
-
+        
         <div class="back-btn3">
             <a class="nav-link" href="{{ url('/scanned_qr') }}">SCANNER</a>
         </div>

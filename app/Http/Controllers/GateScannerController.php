@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\VehicleOwner;
 use App\Models\Vehicle;
+use App\Models\Transaction; // Import the Transaction model
 use App\Models\UserLog; // Import the UserLog model
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 
 class GateScannerController extends Controller
 {
@@ -17,6 +17,7 @@ class GateScannerController extends Controller
         Log::info('Received QR code data: ' . $qrCodeData);
         
         try {
+            // Find the vehicle owner
             $vehicleOwner = VehicleOwner::where('id', $qrCodeData)->first();
             Log::info('Vehicle owner found: ' . ($vehicleOwner ? 'Yes' : 'No'));
 
@@ -28,9 +29,21 @@ class GateScannerController extends Controller
                 ]);
             }
 
-            // Store vehicle owner ID in session
-            session(['vehicle_owner_id' => $vehicleOwner->id]);
-            Log::info('Vehicle owner ID stored in session: ' . $vehicleOwner->id);
+            // Get vehicles associated with the owner
+            $vehicles = Vehicle::where('vehicle_owner_id', $vehicleOwner->id)->get();
+            
+            // Fetch transactions for these vehicles
+            $transactions = Transaction::whereIn('vehicle_id', $vehicles->pluck('id'))->get();
+
+            // Extract the relevant details
+            $vehicleData = $vehicles->map(function($vehicle) use ($transactions) {
+                $transaction = $transactions->firstWhere('vehicle_id', $vehicle->id);
+                return [
+                    'plate_no' => $vehicle->plate_no,
+                    'registration_no' => $transaction ? $transaction->registration_no : 'N/A',
+                    'sticker_expiry' => $transaction ? $transaction->sticker_expiry : 'N/A'
+                ];
+            });
 
             // Get current time
             $currentDate = now()->toDateString();
@@ -50,7 +63,7 @@ class GateScannerController extends Controller
             return response()->json([
                 'success' => true,
                 'vehicleOwner' => $vehicleOwner,
-                'vehicles' => Vehicle::where('vehicle_owner_id', $vehicleOwner->id)->get()
+                'vehicles' => $vehicleData
             ]);
 
         } catch (\Exception $e) {

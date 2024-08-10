@@ -94,7 +94,7 @@
         </div>
 
         <div class="per_report">
-            <h3 class="per-title">REGISTRATION NO.:  <span>{{ $vehicle->registration_no }}</span></h3>
+            <h3 class="per-title">REGISTRATION NO.:  <span>{{ $transaction->registration_no }}</span></h3>
             <form>
                 <div class="inputs">
                     <div class="input-form">
@@ -119,13 +119,13 @@
 
                     <div class="input-form">
                         <label for="expiry_date">Registration Expiration Date</label>
-                        <input type="text" value="{{ $vehicle->sticker_expiry }}" readonly>
+                        <input type="text" value="{{ $vehicle->expiry_date ? \Carbon\Carbon::parse($vehicle->expiry_date)->toDateString() : 'N/A' }}" readonly>
                     </div>
 
                     <div class="input-form">
                         <label for="date_issued">Date Issued</label>
-                        <input type="text" value="{{ $vehicle->issued_date }}" readonly>
-                    </div>                    
+                        <input type="text" value="{{ $transaction->issued_date ? \Carbon\Carbon::parse($transaction->issued_date)->toDateString() : 'N/A' }}" readonly>
+                    </div>
                 </div>
             </form>
 

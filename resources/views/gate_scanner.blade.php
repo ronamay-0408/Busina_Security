@@ -232,11 +232,11 @@
                                             <h3>
                                                 REGISTRATION NUMBER: 
                                                 <a href="/vehicle-info/${encodeURIComponent(vehicle.registration_no)}" class="vehicle-link">
-                                                    ${vehicle.registration_no}
+                                                    ${vehicle.registration_no || 'N/A'}
                                                 </a>
                                             </h3>
-                                            <p>PLATE NUMBER: <span>${vehicle.plate_no}</span></p>
-                                            <p>STICKER EXPIRY: <span>${vehicle.sticker_expiry}</span></p>
+                                            <p>PLATE NUMBER: <span>${vehicle.plate_no || 'N/A'}</span></p>
+                                            <p>STICKER EXPIRY: <span>${vehicle.sticker_expiry ? new Date(vehicle.sticker_expiry).toLocaleDateString() : 'N/A'}</span></p>
                                         </div>
                                     </div>
                                 `).join('')}
