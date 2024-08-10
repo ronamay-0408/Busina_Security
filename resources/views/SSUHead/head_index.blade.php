@@ -238,7 +238,7 @@
                     <span>My Account</span>
                 </a>
             </li>
-            <li class="nav-item last">
+            <li class="nav-item last head-last">
                 <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <img src="images/Open Pane.png" alt="">
                     <span>Log Out</span>
