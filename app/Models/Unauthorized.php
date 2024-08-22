@@ -12,11 +12,15 @@ class Unauthorized extends Model
     // Define the table name if it's not the plural form of the model
     protected $table = 'unauthorized';
 
+    // Disable timestamps if they are not present in the table
+    public $timestamps = false;
+
     // Define the fillable fields
     protected $fillable = [
+        'qrcode',
         'plate_no',
-        'fullname',
-        'purpose',
-        'count',
+        'log_date',
+        'time_in',
+        'time_out',
     ];
 }

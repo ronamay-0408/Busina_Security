@@ -131,7 +131,7 @@
                 </div>
             </a>
             
-            <a href="{{ route('unauthorized') }}">
+            <a href="{{ route('visitor_scanner') }}">
                 <div class="filed2">
                     <h3>{{ $unauthorizedEntriesToday }}</h3>
                     <p>Unauthorized Entries</p>
@@ -152,7 +152,7 @@
             </div>
             <div class="child2">
                 <div class="unauthorize">
-                    <a class="nav-link" href="{{ url('unauthorized') }}"><img src="images/Box Important.png" alt=""></a>
+                    <a class="nav-link" href="{{ url('visitor_scanner') }}"><img src="images/Box Important.png" alt=""></a>
                 </div>
                 <p>Unauthorized Vehicle</p>
             </div>

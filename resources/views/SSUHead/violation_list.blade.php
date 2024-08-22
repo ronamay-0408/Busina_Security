@@ -135,24 +135,24 @@
             <table id="violationTable"> <!-- Added id here -->
                 <thead>
                     <tr>
+                        <th>Date & Time</th>
                         <th>Plate No</th>
-                        <th>Location</th>
                         <th>Violation Type</th>
+                        <th>Location</th>
                         <th>Reported By</th>
                         <th>Remarks</th>
-                        <th>Date & Time</th>
                         <th>Proof Image</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($violations as $violation)
                         <tr>
+                            <td>{{ $violation->created_at->format('F j, Y, g:i a') }}</td>
                             <td>{{ $violation->plate_no }}</td>
-                            <td>{{ $violation->location }}</td>
                             <td>{{ $violation->violationType->violation_name }}</td> <!-- Violation Type -->
+                            <td>{{ $violation->location }}</td>
                             <td>{{ $violation->reportedBy->fullName }}</td> <!-- Reported By -->
                             <td>{{ $violation->remarks }}</td>
-                            <td>{{ $violation->created_at->format('F j, Y, g:i a') }}</td>
                             <td>
                                 @if($violation->proof_image)
                                     <button class="view-btn" data-image="{{ asset('storage/' . $violation->proof_image) }}">View</button>

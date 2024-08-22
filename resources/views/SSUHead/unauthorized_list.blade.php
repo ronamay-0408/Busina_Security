@@ -138,19 +138,19 @@
             <table id="unauthorizedTable">
                 <thead>
                     <tr>
+                        <th>Date</th>
                         <th>Plate No</th>
-                        <th>Full Name</th>
-                        <th>Purpose</th>
-                        <th>Date and Time</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($unauthorizedRecords as $record)
                         <tr>
+                            <td>{{ $record->log_date }}</td>
                             <td>{{ $record->plate_no }}</td>
-                            <td>{{ $record->fullname }}</td>
-                            <td>{{ $record->purpose }}</td>
-                            <td>{{ $record->created_at->format('F j, Y, g:i a') }}</td>
+                            <td>{{ $record->time_in }}</td>
+                            <td>{{ $record->time_out }}</td>
                         </tr>
                     @endforeach
                 </tbody>

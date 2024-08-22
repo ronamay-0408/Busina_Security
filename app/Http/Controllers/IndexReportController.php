@@ -16,7 +16,11 @@ class IndexReportController extends Controller
         $today = Carbon::today();
 
         $filedReportsToday = Violation::whereDate('created_at', $today)->count();
-        $unauthorizedEntriesToday = Unauthorized::whereDate('created_at', $today)->count();
+        // $unauthorizedEntriesToday = Unauthorized::whereDate('created_at', $today)->count();
+
+        // Count the number of unauthorized entries today using log_date
+        $unauthorizedEntriesToday = Unauthorized::whereDate('log_date', $today)->count();
+
 
         return view('index', compact('filedReportsToday', 'unauthorizedEntriesToday'));
     }

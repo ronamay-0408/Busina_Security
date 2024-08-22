@@ -30,14 +30,14 @@ class HeadReportsController extends Controller
         for ($date = $startOfWeek; $date <= $endOfWeek; $date = date('Y-m-d', strtotime($date . ' +1 day'))) {
             $dates[] = $date;
             $violationCounts[] = Violation::whereDate('created_at', $date)->count();
-            $unauthorizedCounts[] = Unauthorized::whereDate('created_at', $date)->count();
+            $unauthorizedCounts[] = Unauthorized::whereDate('log_date', $date)->count();
         }
 
         // Fetch today's and yesterday's report data
         $totalViolationsToday = Violation::whereDate('created_at', $today)->count();
         $totalViolationsYesterday = Violation::whereDate('created_at', now()->subDay()->format('Y-m-d'))->count();
-        $totalUnauthorizedVehiclesToday = Unauthorized::whereDate('created_at', $today)->count();
-        $totalUnauthorizedVehiclesYesterday = Unauthorized::whereDate('created_at', now()->subDay()->format('Y-m-d'))->count();
+        $totalUnauthorizedVehiclesToday = Unauthorized::whereDate('log_date', $today)->count();
+        $totalUnauthorizedVehiclesYesterday = Unauthorized::whereDate('log_date', now()->subDay()->format('Y-m-d'))->count();
 
         // Fetch the count of authorized users with user_type_id = 2
         $totalAuthorizedUsers = AuthorizedUser::where('authorized_user.user_type', 2)->count();
@@ -63,7 +63,7 @@ class HeadReportsController extends Controller
 
             $months[] = now()->month($month)->format('F'); // Get the full month name
             $monthlyViolationCounts[] = Violation::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
-            $monthlyUnauthorizedCounts[] = Unauthorized::whereBetween('created_at', [$startOfMonth, $endOfMonth])->count();
+            $monthlyUnauthorizedCounts[] = Unauthorized::whereBetween('log_date', [$startOfMonth, $endOfMonth])->count();
         }
 
         // Return the view with the data

@@ -24,6 +24,8 @@ use App\Http\Controllers\HeadReportsController;
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\GateScannerController;
 
+use App\Http\Controllers\VisitorScannerController;
+
 // Group routes that require authentication and email verification
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route to view the index page using a controller
@@ -51,12 +53,41 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('report_vehicle');
 
     Route::get('/report_vehicle', [ReportVehicleController::class, 'showForm'])->name('report.vehicle.form');
-    Route::post('/report_vehicle', [ReportVehicleController::class, 'store'])->name('report.vehicle.store');    
+    Route::post('/report_vehicle', [ReportVehicleController::class, 'store'])->name('report.vehicle.store');
+    
+    // Route::get('/visitor_scanner', function () {
+    //     return view('visitor_scanner');
+    // })->name('visitor_scanner');
 
+    // Route::post('/scan-qr', [VisitorScannerController::class, 'scan'])->name('scan.qr');
+
+    // Route::get('/unauthorized', function () {
+    //     $qrCode = session('qr', 'Unknown QR Code');
+    //     return view('unauthorized', compact('qrCode'));
+    // })->name('unauthorized');    
+    // // Route::post('/store_unauthorized', [UnauthorizedController::class, 'store'])->name('store_unauthorized');
+
+    // Route::get('/visitorcode_notfound', function () {
+    //     return view('visitorcode_notfound');
+    // })->name('visitorcode_notfound');
+
+    Route::get('/visitor_scanner', function () {
+        return view('visitor_scanner');
+    })->name('visitor_scanner');
+    
+    Route::post('/visitor-scan-qr', [VisitorScannerController::class, 'scan'])->name('visitor-scan.qr');
+    
     Route::get('/unauthorized', function () {
-        return view('unauthorized');
+        $qrCode = session('qr', 'Unknown QR Code');
+        return view('unauthorized', compact('qrCode'));
     })->name('unauthorized');
+
     Route::post('/store_unauthorized', [UnauthorizedController::class, 'store'])->name('store_unauthorized');
+    
+    Route::get('/visitorcode_notfound', function () {
+        return view('visitorcode_notfound');
+    })->name('visitorcode_notfound');
+
 
     Route::get('/reg_not_found', function () {
         return view('reg_not_found');
