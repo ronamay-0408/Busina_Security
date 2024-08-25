@@ -18,21 +18,6 @@
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <style>
-        .alert {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: red;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-    </style>
 </head>
 
 <body>
@@ -110,27 +95,32 @@
         <div class="date-time">
         </div>
 
+        @if (session('error'))
+            <div class="main-error unauthorized_report_error">
+                <p id="errorMessage" class="error-message">
+                    <span><i class="bi bi-exclamation-circle"></i></span>
+                    {{ session('error') }}
+                    <a class="cancel-button" onclick="hideMessage('errorMessage')"><i class="bi bi-x"></i></a>
+                </p>
+            </div>
+        @endif
+
+        @if (session('success'))
+            <div class="main-success unauthorized_report_success">
+                <p id="successMessage" class="success-message">
+                    <span><i class="bi bi-check-circle"></i></span>
+                    {{ session('success') }}
+                    <a class="cancel-button-success" onclick="hideMessage('successMessage')"><i class="bi bi-x"></i></a>
+                </p>
+            </div>
+        @endif
+
+        <!-- Display messages if present in local storage -->
+        <div id="message-container" style="display: none;">
+            <p id="message-text"></p>
+        </div>
+    
         <div class="scanner">
-            @if (session('error'))
-                <div class="main-error unauthorized_report_error">
-                    <p id="errorMessage" class="error-message">
-                        <span><i class="bi bi-exclamation-circle"></i></span>
-                        {{ session('error') }}
-                        <a class="cancel-button" onclick="hideMessage('errorMessage')"><i class="bi bi-x"></i></a>
-                    </p>
-                </div>
-            @endif
-
-            @if (session('success'))
-                <div class="main-success unauthorized_report_success">
-                    <p id="successMessage" class="success-message">
-                        <span><i class="bi bi-check-circle"></i></span>
-                        {{ session('success') }}
-                        <a class="cancel-button-success" onclick="hideMessage('successMessage')"><i class="bi bi-x"></i></a>
-                    </p>
-                </div>
-            @endif
-
             <h3>VISITOR SCAN QR CODE</h3>
             <div class="body-container">
                 <div id="video-container">
@@ -156,6 +146,25 @@
     
         <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
         <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                // Retrieve and display message from local storage if available
+                const message = localStorage.getItem('message');
+                if (message) {
+                    const messageContainer = document.getElementById('message-container');
+                    const messageText = document.getElementById('message-text');
+                    
+                    messageText.innerText = message;
+                    messageContainer.style.display = 'block';
+
+                    // Hide the message after 5 seconds
+                    setTimeout(() => {
+                        messageContainer.style.display = 'none';
+                    }, 5000); // 5000 milliseconds = 5 seconds
+
+                    localStorage.removeItem('message'); // Clear message after displaying
+                }
+            });
+
             const video = document.getElementById('video');
             const canvas = document.getElementById('canvas');
             const context = canvas.getContext('2d');
@@ -232,10 +241,10 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log('Server Response:', data);
-                    if (data.message) {
-                        alert(data.message); // Simple alert for the message
 
-                        // showSuccessMessage(data.message); // Display the message in the successMessage element
+                    // Store message and redirect URL in local storage
+                    if (data.message) {
+                        localStorage.setItem('message', data.message);
                     }
                     if (data.redirect) {
                         window.location.href = data.redirect;
@@ -243,8 +252,15 @@
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    alert("Error occurred while scanning QR code.");
+                    alert("Error occurred while scanning QR code: " + error.message);
                 });
+            }
+
+            function hideMessage(id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.display = 'none';
+                }
             }
         </script>
     </main><!-- End #main -->

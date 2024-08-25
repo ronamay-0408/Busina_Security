@@ -176,7 +176,7 @@
                         inversionAttempts: "dontInvert",
                     });
 
-                    if (code) {
+                    if (code && code.data) {
                         // QR Code detected
                         if (code.data !== lastScannedQR) {
                             console.log("QR Code found:", code.data);

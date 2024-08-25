@@ -104,7 +104,7 @@
 
         <div class="gate-scanner">
             <div class="scanner gate-scanner2">
-                <h3>SCAN QR CODE</h3>
+                <h3>VEHICLE OWNER LOGS</h3>
                 <div class="body-container">
                     <div id="video-container">
                         <video id="video" autoplay></video>
@@ -162,6 +162,7 @@
             startCamera();
 
             let lastScannedQR = null;
+            let qrResetTimeout = null;
 
             function tick() {
                 if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -180,6 +181,14 @@
                             console.log("QR Code found:", code.data);
                             output.textContent = `QR Code Data: ${code.data}`;
                             sendQRCodeDataToServer(code.data);
+
+                            // Set a timeout to reset the lastScannedQR after 5 seconds
+                            if (qrResetTimeout) {
+                                clearTimeout(qrResetTimeout);
+                            }
+                            qrResetTimeout = setTimeout(() => {
+                                lastScannedQR = null;
+                            }, 5000); // 5000 milliseconds = 5 seconds
                         }
                     } else if (!code) {
                         output.textContent = "Scanning for QR code...";
@@ -189,7 +198,6 @@
             }
 
             function isValidQRCode(data) {
-                // Add any additional validation if needed (e.g., length checks, format checks)
                 return data && data.trim().length > 0;
             }
 
@@ -213,44 +221,46 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log('Server response:', data);
-                    // Clear existing content
                     sideVehicleInfo.innerHTML = '';
                     if (data.success) {
-                        // Update side vehicle info for found user
-                        sideVehicleInfo.className = 'side_vehicle_info found'; // Set background to green gradient
-                        sideVehicleInfo.innerHTML = `
-                            <div class="title">
-                                <h3>NAME: <span>${data.vehicleOwner.fname} ${data.vehicleOwner.mname} ${data.vehicleOwner.lname}</span></h3>
-                            </div>
-                            <div class="title">
-                                <h3>REGISTERED VEHICLE</h3>
-                            </div>
-                            <div class="registered_vehicle">
-                                ${data.vehicles.map(vehicle => `
-                                    <div class="vehicle_con">
-                                        <div class="vehicle_info">
-                                            <h3>
-                                                REGISTRATION NUMBER: 
-                                                <a href="/vehicle-info/${encodeURIComponent(vehicle.registration_no)}" class="vehicle-link">
-                                                    ${vehicle.registration_no || 'N/A'}
-                                                </a>
-                                            </h3>
-                                            <p>PLATE NUMBER: <span>${vehicle.plate_no || 'N/A'}</span></p>
-                                            <p>STICKER EXPIRY: <span>${vehicle.sticker_expiry ? new Date(vehicle.sticker_expiry).toLocaleDateString() : 'N/A'}</span></p>
+                        if (data.message) {
+                            sideVehicleInfo.className = 'side_vehicle_info found vehicle-out';
+                            sideVehicleInfo.innerHTML = data.message;
+                        } else if (data.vehicleOwner) {
+                            sideVehicleInfo.className = 'side_vehicle_info found';
+                            sideVehicleInfo.innerHTML = `
+                                <div class="title">
+                                    <h3>NAME: <span>${data.vehicleOwner.fname} ${data.vehicleOwner.mname} ${data.vehicleOwner.lname}</span></h3>
+                                </div>
+                                <div class="title">
+                                    <h3>REGISTERED VEHICLE</h3>
+                                </div>
+                                <div class="registered_vehicle">
+                                    ${data.vehicles.map(vehicle => `
+                                        <div class="vehicle_con">
+                                            <div class="vehicle_info">
+                                                <h3>
+                                                    REGISTRATION NUMBER: 
+                                                    <a href="/vehicle-info/${encodeURIComponent(vehicle.registration_no)}" class="vehicle-link">
+                                                        ${vehicle.registration_no || 'N/A'}
+                                                    </a>
+                                                </h3>
+                                                <p>PLATE NUMBER: <span>${vehicle.plate_no || 'N/A'}</span></p>
+                                                <p>STICKER EXPIRY: <span>${vehicle.sticker_expiry ? new Date(vehicle.sticker_expiry).toLocaleDateString() : 'N/A'}</span></p>
+                                            </div>
                                         </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        `;
+                                    `).join('')}
+                                </div>
+                            `;
+                        }
                     } else {
-                        // Update side vehicle info for not found
-                        sideVehicleInfo.className = 'side_vehicle_info not-found'; // Set background to red gradient
+                        sideVehicleInfo.className = 'side_vehicle_info not-found';
                         sideVehicleInfo.innerHTML = `<h3>Error: ${data.message || "Vehicle owner not found."}</h3>`;
                     }
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    sideVehicleInfo.className = 'side_vehicle_info not-found'; // Set background to red gradient
+                    sideVehicleInfo.className = 'side_vehicle_info not-found';
                     sideVehicleInfo.innerHTML = `<h3>Error occurred while scanning QR code.</h3>`;
                 });
             }, 500);

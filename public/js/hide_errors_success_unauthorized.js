@@ -13,12 +13,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (errorMessage) {
         setTimeout(() => {
             errorMessage.style.display = 'none';
-        }, 10000); // 5000 milliseconds = 5 seconds
+        }, 5000); // 5000 milliseconds = 5 seconds
     }
     
     if (successMessage) {
         setTimeout(() => {
             successMessage.style.display = 'none';
-        }, 10000); // 5000 milliseconds = 5 seconds
+        }, 5000); // 5000 milliseconds = 5 seconds
     }
 });

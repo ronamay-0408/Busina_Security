@@ -137,20 +137,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // In routes/web.php
     Route::get('/violations', [ViolationController::class, 'index'])->name('violations.index');
 
-
-    // Route::get('/head_index', function () {
-    //     // Check user_type and redirect accordingly
-    //     $user = Auth::user();
-    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-    //         return view('SSUHead.head_index');
-    //     } else {
-    //         // abort(403, 'Unauthorized action.');
-
-    //         // If the user is not authorized, redirect to the index view
-    //         return redirect()->route('index');
-    //     }
-    // })->name('head_index');
-
     Route::get('/head_index', [HeadReportsController::class, 'index'])->name('head_index');
 
     // Route::get('/violation_list', function () {

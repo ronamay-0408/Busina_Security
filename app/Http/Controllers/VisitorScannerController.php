@@ -29,9 +29,11 @@ class VisitorScannerController extends Controller
                 ]);
 
                 return response()->json([
-                    'message' => 'Plate Number : ' . $unauthorizedRecord->plate_no . ' is timed out.',
+                    'message' => 'Plate Number : ' . $unauthorizedRecord->plate_no . ' is leaving the university premises.',
                     'redirect' => route('visitor_scanner')
                 ]);
+
+                // return redirect()->route('visitor_scanner')->with('success', 'Plate Number : ' . $unauthorizedRecord->plate_no . ' is leaving the university premises.');
             } else {
                 session(['qr' => $qrCodeData]);
                 return response()->json(['redirect' => route('unauthorized')]);

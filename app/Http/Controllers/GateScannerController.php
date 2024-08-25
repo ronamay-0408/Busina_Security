@@ -15,7 +15,7 @@ class GateScannerController extends Controller
     {
         $qrCodeData = $request->input('qr_code');
         Log::info('Received QR code data: ' . $qrCodeData);
-        
+
         try {
             // Find the vehicle owner
             $vehicleOwner = VehicleOwner::where('id', $qrCodeData)->first();
@@ -45,20 +45,38 @@ class GateScannerController extends Controller
                 ];
             });
 
-            // Get current time
+            // Get current date and time
             $currentDate = now()->toDateString();
             $currentTime = now()->toTimeString();
 
-            // Create or update the user log
-            UserLog::updateOrCreate(
-                [
-                    'vehicle_owner_id' => $vehicleOwner->id,
-                    'log_date' => $currentDate,
-                ],
-                [
-                    'time_in' => $currentTime
-                ]
-            );
+            // Check if there's an existing log entry without time_out for today
+            $userLog = UserLog::where('vehicle_owner_id', $vehicleOwner->id)
+                ->where('log_date', $currentDate)
+                ->whereNull('time_out')
+                ->first();
+
+            if ($userLog) {
+                // Fetch the relevant transaction for the vehicle
+                $transaction = $transactions->first(); // Assuming the first transaction is relevant
+
+                // Use a placeholder if no transaction is found
+                $registrationNo = $transaction ? $transaction->registration_no : 'Unknown';
+
+                // Update time_out and return the alert message
+                $userLog->update(['time_out' => $currentTime]);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => "Vehicle with Registration Number {$registrationNo} is Leaving the University Premises"
+                ]);
+            }
+
+            // Create a new log entry for time_in
+            UserLog::create([
+                'vehicle_owner_id' => $vehicleOwner->id,
+                'log_date' => $currentDate,
+                'time_in' => $currentTime
+            ]);
 
             return response()->json([
                 'success' => true,

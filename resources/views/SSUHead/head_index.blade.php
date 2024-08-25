@@ -325,12 +325,15 @@
                         <i class="bi bi-archive-fill"></i>
                     </div>
                     <div class="info-box">
-                        <p>Today's Vehicle Logs</p>
-                        <h2>100</h2>
+                        <p>Today's Vehicle Owner Logs</p>
+                        <h2>{{ $totalVehicleOwnerLogsToday }}</h2>
                     </div>
                     <hr class="dark horizontal my-0">
                     <div class="count-box">
-                        <p><span>+5 </span> Than Yesterday</p>
+                        <p>
+                            <span class="{{ $vehicleOwnerLogsDifference >= 0 ? 'increase' : 'decrease' }}">{{ $vehicleOwnerLogsDifference >= 0 ? '+' : '-' }}{{ abs($vehicleOwnerLogsDifference) }}</span>
+                            Than Yesterday
+                        </p>
                     </div>
                 </div>
             </div>
