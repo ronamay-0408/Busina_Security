@@ -8,14 +8,16 @@ table {
 }
 th, td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 5px;
     text-align: left;
+    font-size: 14px;
 }
 th {
     background-color: #f4f4f4;
 }
 .head_view_ssu_table{
     padding: 20px 0px;
+    overflow-y: hidden;
 }
 .add-new img{
     padding: 8.5px 10px;
@@ -182,14 +184,14 @@ th {
     height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.4);
-    padding-top: 60px;
+    /* padding-top: 60px; */
 }
 .modal-content {
     background-color: #fefefe;
     margin: 5% auto;
     padding: 0px;
     border: 1px solid #8886;
-    width: 50%;
+    width: 40%;
     border-radius: 10px;
 }
 .close {

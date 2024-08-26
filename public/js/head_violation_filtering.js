@@ -56,14 +56,14 @@ $(function() {
         filterTable();
     });
 
-    // Filter function
+    // Filtering function
     function filterTable() {
         var yearFilter = $("#year-filter").val();
         var monthFilter = $("#month-filter").val();
         var dayFilter = $("#day-filter").val();
 
         $("#violationTable tbody tr").each(function() {
-            var rowDateText = $(this).find("td:nth-child(6)").text();
+            var rowDateText = $(this).find("td:nth-child(1)").text(); // Date is in the first column
             var rowDate = new Date(rowDateText);
 
             var showRow = true;
@@ -77,7 +77,7 @@ $(function() {
             }
 
             if (monthFilter) {
-                var rowMonth = rowDate.getMonth();
+                var rowMonth = rowDate.getMonth(); // 0-based index
                 var filterMonth = new Date(monthFilter + ' 1').getMonth();
                 if (rowMonth !== filterMonth) {
                     showRow = false;
@@ -99,26 +99,22 @@ $(function() {
     // Export to CSV function
     function exportTableToCSV(filename) {
         var csv = [];
-        // Select only visible rows
-        var rows = $("#violationTable tbody tr:visible");
+        var rows = $("#violationTable tbody tr:visible"); // Only visible rows
 
         rows.each(function() {
             var rowData = [];
             var cols = $(this).find("td");
 
             cols.each(function(colIndex) {
-                // Skip the last column (Proof Image) for export
-                if (colIndex < cols.length - 1) {
-                    let cellText = $(this).text();
-                    // If cell contains multiple lines, replace new lines with space
-                    cellText = cellText.replace(/\n/g, ' ').trim();
+                let cellText = $(this).text();
+                // If cell contains multiple lines, replace new lines with space
+                cellText = cellText.replace(/\n/g, ' ').trim();
 
-                    // Handle the last column as "Date & Time"
-                    if (colIndex === cols.length - 2) {
-                        rowData.push(`"${cellText}"`);
-                    } else {
-                        rowData.push(cellText);
-                    }
+                // Handle the last column as "Proof Image" (could be omitted)
+                if (colIndex === cols.length - 1) {
+                    rowData.push(`"${cellText}"`);
+                } else {
+                    rowData.push(cellText);
                 }
             });
 

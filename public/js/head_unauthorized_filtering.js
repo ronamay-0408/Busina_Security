@@ -63,7 +63,7 @@ $(function() {
         var dayFilter = $("#day-filter").val();
 
         $("#unauthorizedTable tbody tr").each(function() {
-            var rowDateText = $(this).find("td:nth-child(4)").text();
+            var rowDateText = $(this).find("td:nth-child(1)").text(); // Change to index 1 if Date is in the first column
             var rowDate = new Date(rowDateText);
 
             var showRow = true;

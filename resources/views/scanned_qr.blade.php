@@ -111,7 +111,7 @@
         </div>
 
         <div class="scanner">
-            <h3>SCAN QR CODE</h3>
+            <h3>VERIFICATION SCANNER</h3>
             <div class="body-container">
                 <div id="video-container">
                     <video id="video" autoplay></video>

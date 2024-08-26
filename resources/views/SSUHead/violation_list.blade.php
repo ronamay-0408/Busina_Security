@@ -17,6 +17,110 @@
     <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+
+    <style>
+        /* Custom CSS for pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .page-item {
+            margin: 0 2px;
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .page-item.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .page-item.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .page-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Custom CSS for per-page dropdown */
+        .per-page-form {
+            display: flex;
+            align-items: center;
+            margin: 0 0 10px 0;
+        }
+
+        .per-page-form label {
+            margin-right: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .per-page-form select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .per-page-form select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+
+        .modal-details {
+            padding: 10px;
+        }
+        .modal-details p {
+            margin: 0 0 5px 0;
+        }
+        .modal-details h3 {
+            /* margin: 0; */
+            text-align: center;
+        }
+        .vio-details p {
+            margin: 0;
+            padding: 0 0 5px 0;
+        }
+
+        @media (max-width: 600px) {
+            .page-item {
+                font-size: 12px;
+            }
+            
+            .content {
+                flex-wrap: wrap;
+            }
+            .dropdown-month {
+                flex-wrap: wrap;
+            }
+            .filter-container {
+                flex-wrap: wrap;
+            }
+            .filter-item {
+                gap: 10px;
+            }
+            .filter-item input {
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -131,17 +235,32 @@
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Search..">
         </div>
+
         <div class="head_view_violation_table">
-            <table id="violationTable"> <!-- Added id here -->
+            <!-- Dropdown to select number of rows per page -->
+            <form method="GET" action="{{ url()->current() }}" class="per-page-form">
+                <label for="per_page">Show:</label>
+                <select name="per_page" id="per_page" onchange="this.form.submit()">
+                    <option value="25" {{ request('per_page', 25) == 25 ? 'selected' : '' }}>25</option>
+                    <option value="50" {{ request('per_page', 25) == 50 ? 'selected' : '' }}>50</option>
+                    <option value="100" {{ request('per_page', 25) == 100 ? 'selected' : '' }}>100</option>
+                    <option value="250" {{ request('per_page', 25) == 250 ? 'selected' : '' }}>250</option>
+                    <option value="500" {{ request('per_page', 25) == 500 ? 'selected' : '' }}>500</option>
+                    <option value="1000" {{ request('per_page', 25) == 1000 ? 'selected' : '' }}>1000</option>
+                </select>
+            </form>
+
+            <!-- Table -->
+            <table id="violationTable">
                 <thead>
                     <tr>
                         <th>Date & Time</th>
                         <th>Plate No</th>
-                        <th>Violation Type</th>
-                        <th>Location</th>
-                        <th>Reported By</th>
-                        <th>Remarks</th>
-                        <th>Proof Image</th>
+                        <!-- <th>Violation Type</th> -->
+                        <!-- <th>Location</th> -->
+                        <!-- <th>Reported By</th> -->
+                        <!-- <th>Remarks</th> -->
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -149,13 +268,22 @@
                         <tr>
                             <td>{{ $violation->created_at->format('F j, Y, g:i a') }}</td>
                             <td>{{ $violation->plate_no }}</td>
-                            <td>{{ $violation->violationType->violation_name }}</td> <!-- Violation Type -->
-                            <td>{{ $violation->location }}</td>
-                            <td>{{ $violation->reportedBy->fullName }}</td> <!-- Reported By -->
-                            <td>{{ $violation->remarks }}</td>
+                            <!-- <td>{{ $violation->violationType->violation_name }}</td> -->
+                            <!-- <td>{{ $violation->location }}</td> -->
+                            <!-- <td>{{ $violation->reportedBy->fullName }}</td> -->
+                            <!-- <td>{{ $violation->remarks }}</td> -->
                             <td>
                                 @if($violation->proof_image)
-                                    <button class="view-btn" data-image="{{ asset('storage/' . $violation->proof_image) }}">View</button>
+                                    <button 
+                                        class="view-btn" 
+                                        data-image="{{ asset('storage/' . $violation->proof_image) }}" 
+                                        data-date="{{ $violation->created_at->format('F j, Y, g:i a') }}" 
+                                        data-plate="{{ $violation->plate_no }}" 
+                                        data-violation="{{ $violation->violationType->violation_name }}" 
+                                        data-location="{{ $violation->location }}" 
+                                        data-reported="{{ $violation->reportedBy->fullName }}" 
+                                        data-remarks="{{ $violation->remarks }}"
+                                    >View</button>
                                 @else
                                     No Image
                                 @endif
@@ -164,14 +292,49 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <!-- Pagination Links -->
+            <div class="pagination">
+                {{-- Previous Page Link --}}
+                @if ($violations->onFirstPage())
+                    <span class="page-item disabled">« Previous</span>
+                @else
+                    <a class="page-item" href="{{ $violations->previousPageUrl() }}&per_page={{ request('per_page', 25) }}">« Previous</a>
+                @endif
+
+                {{-- Pagination Links --}}
+                @foreach ($violations->getUrlRange(1, $violations->lastPage()) as $page => $url)
+                    @if ($page == $violations->currentPage())
+                        <span class="page-item active">{{ $page }}</span>
+                    @else
+                        <a class="page-item" href="{{ $url }}&per_page={{ request('per_page', 25) }}">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Next Page Link --}}
+                @if ($violations->hasMorePages())
+                    <a class="page-item" href="{{ $violations->nextPageUrl() }}&per_page={{ request('per_page', 25) }}">Next »</a>
+                @else
+                    <span class="page-item disabled">Next »</span>
+                @endif
+            </div>
         </div>
 
         <!-- Modal -->
         <div id="myModal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <div class="proof-content">
-                    <h3>Violation Proof Image</h3>
+                <div class="modal-details">
+                    <h3>VIOLATION DETAILS</h3>
+                    <div class="vio-details">
+                        <p><strong>Date & Time:</strong> <span id="modal-date"></span></p>
+                        <p><strong>Plate No:</strong> <span id="modal-plate"></span></p>
+                        <p><strong>Violation Type:</strong> <span id="modal-violation"></span></p>
+                        <p><strong>Location:</strong> <span id="modal-location"></span></p>
+                        <p><strong>Reported By:</strong> <span id="modal-reported"></span></p>
+                        <p><strong>Remarks:</strong> <span id="modal-remarks"></span></p>
+                    </div>
+                    <p><strong>Proof Image :</strong></p>
                     <img id="modal-image" src="" alt="Proof Image" style="width: 100%;"/>
                 </div>
             </div>
