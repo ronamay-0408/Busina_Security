@@ -140,6 +140,10 @@
             const context = canvas.getContext('2d');
             const sideVehicleInfo = document.getElementById('sideVehicleInfo');
 
+            // Load the success and error audio files
+            const successAudio = new Audio('/scanner_sound/success_audio.mp3');
+            const errorAudio = new Audio('/scanner_sound/error_audio.mp3');
+
             const videoConstraints = {
                 facingMode: 'environment',
                 frameRate: { ideal: 30, max: 30 }
@@ -223,45 +227,60 @@
                     console.log('Server response:', data);
                     sideVehicleInfo.innerHTML = '';
                     if (data.success) {
-                        if (data.message) {
-                            sideVehicleInfo.className = 'side_vehicle_info found vehicle-out';
-                            sideVehicleInfo.innerHTML = data.message;
-                        } else if (data.vehicleOwner) {
-                            sideVehicleInfo.className = 'side_vehicle_info found';
-                            sideVehicleInfo.innerHTML = `
-                                <div class="title">
-                                    <h3>NAME: <span>${data.vehicleOwner.fname} ${data.vehicleOwner.mname} ${data.vehicleOwner.lname}</span></h3>
-                                </div>
-                                <div class="title">
-                                    <h3>REGISTERED VEHICLE</h3>
-                                </div>
-                                <div class="registered_vehicle">
-                                    ${data.vehicles.map(vehicle => `
-                                        <div class="vehicle_con">
-                                            <div class="vehicle_info">
-                                                <h3>
-                                                    REGISTRATION NUMBER: 
-                                                    <a href="/vehicle-info/${encodeURIComponent(vehicle.registration_no)}" class="vehicle-link">
-                                                        ${vehicle.registration_no || 'N/A'}
-                                                    </a>
-                                                </h3>
-                                                <p>PLATE NUMBER: <span>${vehicle.plate_no || 'N/A'}</span></p>
-                                                <p>STICKER EXPIRY: <span>${vehicle.sticker_expiry ? new Date(vehicle.sticker_expiry).toLocaleDateString() : 'N/A'}</span></p>
+                        // Play success sound first
+                        successAudio.play();
+                        // Delay the output of the message by 300ms to allow the sound to play first
+                        setTimeout(() => {
+                            if (data.message) {
+                                sideVehicleInfo.className = 'side_vehicle_info found vehicle-out';
+                                sideVehicleInfo.innerHTML = data.message;
+                            } else if (data.vehicleOwner) {
+                                sideVehicleInfo.className = 'side_vehicle_info found';
+                                sideVehicleInfo.innerHTML = `
+                                    <div class="title">
+                                        <h3>NAME: <span>${data.vehicleOwner.fname} ${data.vehicleOwner.mname} ${data.vehicleOwner.lname}</span></h3>
+                                    </div>
+                                    <div class="title">
+                                        <h3>REGISTERED VEHICLE</h3>
+                                    </div>
+                                    <div class="registered_vehicle">
+                                        ${data.vehicles.map(vehicle => `
+                                            <div class="vehicle_con">
+                                                <div class="vehicle_info">
+                                                    <h3>
+                                                        REGISTRATION NUMBER: 
+                                                        <a href="/vehicle-info/${encodeURIComponent(vehicle.registration_no)}" class="vehicle-link">
+                                                            ${vehicle.registration_no || 'N/A'}
+                                                        </a>
+                                                    </h3>
+                                                    <p>PLATE NUMBER: <span>${vehicle.plate_no || 'N/A'}</span></p>
+                                                    <p>STICKER EXPIRY: <span>${vehicle.sticker_expiry ? new Date(vehicle.sticker_expiry).toLocaleDateString() : 'N/A'}</span></p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            `;
-                        }
+                                        `).join('')}
+                                    </div>
+                                `;
+                            }
+                        }, 300); // 300 milliseconds delay
                     } else {
-                        sideVehicleInfo.className = 'side_vehicle_info not-found';
-                        sideVehicleInfo.innerHTML = `<h3>Error: ${data.message || "Vehicle owner not found."}</h3>`;
+                        // Play error sound first
+                        errorAudio.play();
+                        // Delay the output of the message by 300ms to allow the sound to play first
+                        setTimeout(() => {
+                            sideVehicleInfo.className = 'side_vehicle_info not-found';
+                            sideVehicleInfo.innerHTML = `<h3>Error: ${data.message || "Vehicle owner not found."}</h3>`;
+                        }, 300); // 300 milliseconds delay
                     }
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    sideVehicleInfo.className = 'side_vehicle_info not-found';
-                    sideVehicleInfo.innerHTML = `<h3>Error occurred while scanning QR code.</h3>`;
+                    // Play error sound first
+                    errorAudio.play();
+                    // Delay the output of the message by 300ms to allow the sound to play first
+                    setTimeout(() => {
+                        sideVehicleInfo.className = 'side_vehicle_info not-found';
+                        sideVehicleInfo.innerHTML = `<h3>Error occurred while scanning QR code.</h3>`;
+                    }, 300); // 300 milliseconds delay
                 });
             }, 500);
 
@@ -273,7 +292,6 @@
                 };
             }
         </script>
-
     </main><!-- End #main -->
 
     <!-- Template Main JS File // NAVBAR // -->

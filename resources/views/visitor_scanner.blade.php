@@ -152,7 +152,7 @@
                 if (message) {
                     const messageContainer = document.getElementById('message-container');
                     const messageText = document.getElementById('message-text');
-                    
+
                     messageText.innerText = message;
                     messageContainer.style.display = 'block';
 
@@ -168,6 +168,11 @@
             const video = document.getElementById('video');
             const canvas = document.getElementById('canvas');
             const context = canvas.getContext('2d');
+            const sideVehicleInfo = document.getElementById('sideVehicleInfo');
+
+            // Load the success and error audio files
+            const successAudio = new Audio('/scanner_sound/success_audio.mp3');
+            const errorAudio = new Audio('/scanner_sound/error_audio.mp3');
 
             const videoConstraints = {
                 facingMode: 'environment',
@@ -184,6 +189,9 @@
                     })
                     .catch(function(err) {
                         console.error("Error accessing the camera: ", err);
+                        if (errorAudio) {
+                            errorAudio.play();
+                        }
                         alert("Error accessing the camera.");
                     });
             }
@@ -191,6 +199,7 @@
             startCamera();
 
             let lastScannedQR = null;
+            let qrResetTimeout = null;
 
             function tick() {
                 if (video.readyState === video.HAVE_ENOUGH_DATA) {
@@ -203,20 +212,29 @@
                         inversionAttempts: "dontInvert",
                     });
 
-                    if (code && code.data) {
+                    if (code && isValidQRCode(code.data)) {
                         if (code.data !== lastScannedQR) {
+                            lastScannedQR = code.data;
                             console.log("QR Code found:", code.data);
                             sendQRCodeDataToServer(code.data);
 
-                            lastScannedQR = code.data;
-
-                            setTimeout(() => {
+                            // Set a timeout to reset the lastScannedQR after 5 seconds
+                            if (qrResetTimeout) {
+                                clearTimeout(qrResetTimeout);
+                            }
+                            qrResetTimeout = setTimeout(() => {
                                 lastScannedQR = null;
-                            }, 1000);
+                            }, 5000); // 5000 milliseconds = 5 seconds
                         }
+                    } else if (!code) {
+                        output.textContent = "Scanning for QR code...";
                     }
                 }
                 requestAnimationFrame(tick);
+            }
+
+            function isValidQRCode(data) {
+                return data && data.trim().length > 0;
             }
 
             function sendQRCodeDataToServer(qrCodeData) {
@@ -228,8 +246,6 @@
                 }
 
                 const csrfToken = csrfTokenMeta.getAttribute('content');
-                console.log('Sending QR Code Data:', qrCodeData);
-
                 fetch('{{ url("/visitor-scan-qr") }}', {
                     method: 'POST',
                     headers: {
@@ -242,25 +258,61 @@
                 .then(data => {
                     console.log('Server Response:', data);
 
-                    // Store message and redirect URL in local storage
                     if (data.message) {
+                        // Store message and redirect URL in local storage
                         localStorage.setItem('message', data.message);
-                    }
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
+                        
+                        // Determine which sound to play
+                        if (data.message.includes('is leaving the university premises')) {
+                            if (successAudio) {
+                                successAudio.play();
+                            }
+                        } else {
+                            if (errorAudio) {
+                                errorAudio.play();
+                            }
+                        }
+
+                        // Delay the redirection to allow the sound to play first
+                        setTimeout(() => {
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
+                            }
+                        }, (successAudio.duration || errorAudio.duration) * 1000); // Convert duration to milliseconds
+
+                    } else if (data.redirect) {
+                        // Handle redirects without a message
+                        if (data.redirect.includes('unauthorized')) {
+                            if (successAudio) {
+                                successAudio.play();
+                            }
+                        } else {
+                            if (errorAudio) {
+                                errorAudio.play();
+                            }
+                        }
+
+                        // Delay the redirection to allow the sound to play first
+                        setTimeout(() => {
+                            window.location.href = data.redirect;
+                        }, (successAudio.duration || errorAudio.duration) * 1000); // Convert duration to milliseconds
                     }
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    alert("Error occurred while scanning QR code: " + error.message);
+                    if (errorAudio) {
+                        errorAudio.play();
+                    }
+
+                    // Delay the display of error message to allow the sound to play first
+                    setTimeout(() => {
+                        output.textContent = "Error occurred while scanning QR code.";
+                    }, (errorAudio.duration || successAudio.duration) * 1000); // Convert duration to milliseconds
                 });
             }
 
-            function hideMessage(id) {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.style.display = 'none';
-                }
+            function isValidQRCode(data) {
+                return data && data.trim().length > 0;
             }
         </script>
     </main><!-- End #main -->
