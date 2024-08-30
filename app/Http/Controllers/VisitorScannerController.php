@@ -14,7 +14,7 @@ class VisitorScannerController extends Controller
         $qrCodeData = $request->input('qr_code');
         Log::info('QR Code Data Received:', ['qr_code' => $qrCodeData]);
 
-        $visitorPattern = '/^visitor \d+$/i';
+        $visitorPattern = '/^card \d+$/i';
 
         if (preg_match($visitorPattern, $qrCodeData)) {
             Log::info('QR Code matched pattern:', ['qr_code' => $qrCodeData]);

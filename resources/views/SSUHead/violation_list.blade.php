@@ -38,9 +38,9 @@
         }
 
         .page-item.active {
-            background-color: #007bff;
+            background-color: #09b3e4;
             color: white;
-            border-color: #007bff;
+            border-color: rgba(53, 192, 247, 0.3);
         }
 
         .page-item.disabled {
@@ -201,122 +201,69 @@
 
     <main id="main" class="main">
         <div class="date-time"></div>
-        <div class="main-title">
-            <h3 class="per-title">VIOLATIONS</h3>
-        </div>
 
-        <div class="content">
-            <div class="dropdown-month">
-                <label>FILTERING FIELDS</label>
-
-                <div class="filter-container">
-                    <div class="filter-item">
-                        <label>YEAR</label>
-                        <input class="filter-year" type="text" id="year-filter" placeholder="Select Year" readonly>
-                        <button class="btn btn-secondary btn-clear" id="clear-year">Clear</button>
-                    </div>
-                    <div class="filter-item">
-                        <label>MONTH</label>
-                        <input class="filter-month" type="text" id="month-filter" placeholder="Select Month" readonly>
-                        <button class="btn btn-secondary btn-clear" id="clear-month">Clear</button>
-                    </div>
-                    <div class="filter-item">
-                        <label>DAY</label>
-                        <input class="filter-day" type="text" id="day-filter" placeholder="Select Day" readonly>
-                        <button class="btn btn-secondary btn-clear" id="clear-day">Clear</button>
-                    </div>
+        <div class="submain">
+            <div class="main-title">
+                <h3 class="per-title">REPORTED VIOLATIONS</h3>
+                <div class="submain-btn">
+                    <button type="submit" name="export" value="csv" class="buttons">Export as CSV</button>
+                    <button type="submit" class="buttons">Export All Details to CSV</button>
                 </div>
             </div>
-            <div class="export-tbn">
-                <button class="export-child btn btn-primary">EXPORT</button>
+
+            <div class="search-filter">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" name="search" placeholder="Search by plate number">
+                </div>
+
+                <div class="filter-field">
+                    <!-- Year Filter -->
+                    <select id="yearFilter" name="year" class="filter-select" onchange="this.form.submit()">
+                        <option value="">Select Year</option>
+                        @foreach(range(date('Y'), 2000) as $year)
+                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                        @endforeach
+                    </select>
+
+                    <!-- Month Filter -->
+                    <select id="monthFilter" name="month" class="filter-select" onchange="this.form.submit()">
+                        <option value="">Select Month</option>
+                        @foreach(range(1, 12) as $month)
+                            <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}" {{ request('month') == str_pad($month, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                {{ date('F', mktime(0, 0, 0, $month, 1)) }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <!-- Day Filter -->
+                    <select id="dayFilter" name="day" class="filter-select" onchange="this.form.submit()">
+                        <option value="">Select Day</option>
+                        @foreach(range(1, 31) as $day)
+                            <option value="{{ str_pad($day, 2, '0', STR_PAD_LEFT) }}" {{ request('day') == str_pad($day, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>{{ $day }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
+            
+            <div class="head_view_violation_table">
+                <!-- Dropdown to select number of rows per page -->
+                <form method="GET" action="{{ url()->current() }}" class="per-page-form">
+                    <label for="per_page">Show:</label>
+                    <select name="per_page" id="per_page" onchange="this.form.submit()">
+                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
+                        <option value="250" {{ request('per_page', 10) == 250 ? 'selected' : '' }}>250</option>
+                        <option value="500" {{ request('per_page', 10) == 500 ? 'selected' : '' }}>500</option>
+                        <option value="1000" {{ request('per_page', 10) == 1000 ? 'selected' : '' }}>1000</option>
+                    </select>
+                </form>
 
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search..">
-        </div>
-
-        <div class="head_view_violation_table">
-            <!-- Dropdown to select number of rows per page -->
-            <form method="GET" action="{{ url()->current() }}" class="per-page-form">
-                <label for="per_page">Show:</label>
-                <select name="per_page" id="per_page" onchange="this.form.submit()">
-                    <option value="25" {{ request('per_page', 25) == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ request('per_page', 25) == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ request('per_page', 25) == 100 ? 'selected' : '' }}>100</option>
-                    <option value="250" {{ request('per_page', 25) == 250 ? 'selected' : '' }}>250</option>
-                    <option value="500" {{ request('per_page', 25) == 500 ? 'selected' : '' }}>500</option>
-                    <option value="1000" {{ request('per_page', 25) == 1000 ? 'selected' : '' }}>1000</option>
-                </select>
-            </form>
-
-            <!-- Table -->
-            <table id="violationTable">
-                <thead>
-                    <tr>
-                        <th>Date & Time</th>
-                        <th>Plate No</th>
-                        <!-- <th>Violation Type</th> -->
-                        <!-- <th>Location</th> -->
-                        <!-- <th>Reported By</th> -->
-                        <!-- <th>Remarks</th> -->
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($violations as $violation)
-                        <tr>
-                            <td>{{ $violation->created_at->format('F j, Y, g:i a') }}</td>
-                            <td>{{ $violation->plate_no }}</td>
-                            <!-- <td>{{ $violation->violationType->violation_name }}</td> -->
-                            <!-- <td>{{ $violation->location }}</td> -->
-                            <!-- <td>{{ $violation->reportedBy->fullName }}</td> -->
-                            <!-- <td>{{ $violation->remarks }}</td> -->
-                            <td>
-                                @if($violation->proof_image)
-                                    <button 
-                                        class="view-btn" 
-                                        data-image="{{ asset('storage/' . $violation->proof_image) }}" 
-                                        data-date="{{ $violation->created_at->format('F j, Y, g:i a') }}" 
-                                        data-plate="{{ $violation->plate_no }}" 
-                                        data-violation="{{ $violation->violationType->violation_name }}" 
-                                        data-location="{{ $violation->location }}" 
-                                        data-reported="{{ $violation->reportedBy->fullName }}" 
-                                        data-remarks="{{ $violation->remarks }}"
-                                    >View</button>
-                                @else
-                                    No Image
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <!-- Pagination Links -->
-            <div class="pagination">
-                {{-- Previous Page Link --}}
-                @if ($violations->onFirstPage())
-                    <span class="page-item disabled">« Previous</span>
-                @else
-                    <a class="page-item" href="{{ $violations->previousPageUrl() }}&per_page={{ request('per_page', 25) }}">« Previous</a>
-                @endif
-
-                {{-- Pagination Links --}}
-                @foreach ($violations->getUrlRange(1, $violations->lastPage()) as $page => $url)
-                    @if ($page == $violations->currentPage())
-                        <span class="page-item active">{{ $page }}</span>
-                    @else
-                        <a class="page-item" href="{{ $url }}&per_page={{ request('per_page', 25) }}">{{ $page }}</a>
-                    @endif
-                @endforeach
-
-                {{-- Next Page Link --}}
-                @if ($violations->hasMorePages())
-                    <a class="page-item" href="{{ $violations->nextPageUrl() }}&per_page={{ request('per_page', 25) }}">Next »</a>
-                @else
-                    <span class="page-item disabled">Next »</span>
-                @endif
+                <!-- Table -->
+                <div id="tableContainer">
+                    @include('SSUHead.partials.violation_table', ['violations' => $violations])
+                </div>
             </div>
         </div>
 
@@ -334,15 +281,167 @@
                         <p><strong>Reported By:</strong> <span id="modal-reported"></span></p>
                         <p><strong>Remarks:</strong> <span id="modal-remarks"></span></p>
                     </div>
-                    <p><strong>Proof Image :</strong></p>
+                    <p><strong>Proof Image:</strong></p>
                     <img id="modal-image" src="" alt="Proof Image" style="width: 100%;"/>
                 </div>
             </div>
         </div>
     </main><!-- End #main -->
 
+    <!-- JAVASCRIPT FOR AUTOMATIC SEARCH AND FILTERING -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function fetchData(url) {
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(response) {
+                        $('#tableContainer').html(response.tableHtml);
+                        $('#paginationLinks').html(response.paginationHtml);
+                    }
+                });
+            }
+
+            function buildUrl() {
+                const search = $('#searchInput').val();
+                const year = $('#yearFilter').val();
+                const month = $('#monthFilter').val();
+                const day = $('#dayFilter').val();
+                const perPage = $('#per_page').val();
+                const url = new URL(window.location.href);
+
+                url.searchParams.set('search', search);
+                url.searchParams.set('year', year);
+                url.searchParams.set('month', month);
+                url.searchParams.set('day', day);
+                url.searchParams.set('per_page', perPage);
+
+                return url.toString();
+            }
+
+            // Initial fetch
+            fetchData(buildUrl());
+
+            // Event listeners for search and filters
+            $('#searchInput, #yearFilter, #monthFilter, #dayFilter').on('input change', function() {
+                fetchData(buildUrl());
+            });
+
+            $('#per_page').on('change', function() {
+                fetchData(buildUrl());
+            });
+
+            // Handle pagination clicks
+            $(document).on('click', '#paginationLinks a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                fetchData(url);
+            });
+
+            // Modal functionality with event delegation
+            $(document).on('click', '.view-btn', function() {
+                // Update modal content with data attributes
+                $('#modal-image').attr('src', $(this).data('image'));
+                $('#modal-date').text($(this).data('date'));
+                $('#modal-plate').text($(this).data('plate'));
+                $('#modal-violation').text($(this).data('violation'));
+                $('#modal-location').text($(this).data('location'));
+                $('#modal-reported').text($(this).data('reported'));
+                $('#modal-remarks').text($(this).data('remarks'));
+
+                // Show the modal
+                $('#myModal').show();
+            });
+
+            // Close the modal
+            $(document).on('click', '.close', function() {
+                $('#myModal').hide();
+            });
+
+            // Hide the modal if the user clicks outside of it
+            $(window).on('click', function(event) {
+                if ($(event.target).is('#myModal')) {
+                    $('#myModal').hide();
+                }
+            });
+        });
+    </script>
+
+    <!-- JAVASCRIPT FOR EXPORT WITHOUT PAGINATION -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const exportButton = document.querySelector('.submain-btn button[name="export"]');
+            const exportAllButton = document.querySelector('.submain-btn button:not([name="export"])');
+            const violationTable = document.getElementById('violationTable');
+
+            function generateCSV(data) {
+                // Create a CSV string from the data array
+                const csvRows = [];
+                const headers = Array.from(data[0].querySelectorAll('th')).map(th => th.textContent);
+                csvRows.push(headers.join(','));
+
+                for (const row of data) {
+                    const cells = Array.from(row.querySelectorAll('td')).map(td => `"${td.textContent.replace(/"/g, '""')}"`);
+                    csvRows.push(cells.join(','));
+                }
+
+                return csvRows.join('\n');
+            }
+
+            function getCurrentDateString() {
+                // Get the current date in YYYY-MM-DD format
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                const day = now.getDate().toString().padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            function downloadCSV(csv, filename) {
+                const csvFile = new Blob([csv], { type: 'text/csv' });
+                const downloadLink = document.createElement('a');
+                
+                downloadLink.download = filename;
+                downloadLink.href = window.URL.createObjectURL(csvFile);
+                downloadLink.style.display = 'none';
+                document.body.appendChild(downloadLink);
+                
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }
+
+            function exportVisibleRows() {
+                const visibleRows = Array.from(violationTable.querySelectorAll('tbody tr')).filter(row => row.style.display !== 'none');
+                if (visibleRows.length === 0) {
+                    alert('No visible rows to export.');
+                    return;
+                }
+
+                const csv = generateCSV([...violationTable.querySelectorAll('thead tr'), ...visibleRows]);
+                const filename = `Violation_Reports_Filtered_${getCurrentDateString()}.csv`;
+                downloadCSV(csv, filename);
+            }
+
+            function exportAllRows() {
+                const allRows = Array.from(violationTable.querySelectorAll('tbody tr'));
+                if (allRows.length === 0) {
+                    alert('No rows to export.');
+                    return;
+                }
+
+                const csv = generateCSV([...violationTable.querySelectorAll('thead tr'), ...allRows]);
+                const filename = `Violation_Reports_All_${getCurrentDateString()}.csv`;
+                downloadCSV(csv, filename);
+            }
+
+            exportButton.addEventListener('click', exportVisibleRows);
+            exportAllButton.addEventListener('click', exportAllRows);
+        });
+    </script>
+    
     <!-- MODAL AND SEARCH JS -->
-    <script src="{{ asset('js/head_violation_modal.js') }}"></script>
+    <!-- <script src="{{ asset('js/head_violation_modal.js') }}"></script> -->
 
     <!-- Filtering JS File -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

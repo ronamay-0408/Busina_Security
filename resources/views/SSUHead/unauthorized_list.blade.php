@@ -100,6 +100,10 @@
                 width: 100%;
             }
         }
+
+        #unauthorizedTable tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 
@@ -183,107 +187,217 @@
         <div class="date-time">
         </div>
 
-        <div class="main-title">
-            <h3 class="per-title">UNAUTHORIZED VEHICLE</h3>
-        </div>
-
-        <div class="content">
-            <div class="dropdown-month">
-                <label>FILTERING FIELDS</label>
-
-                <div class="filter-container">
-                    <div class="filter-item">
-                        <label>YEAR</label>
-                        <input class="filter-year" type="text" id="year-filter" placeholder="Select Year" readonly>
-                        <button class="btn btn-secondary btn-clear" id="clear-year">Clear</button>
-                    </div>
-                    <div class="filter-item">
-                        <label>MONTH</label>
-                        <input class="filter-month" type="text" id="month-filter" placeholder="Select Month" readonly>
-                        <button class="btn btn-secondary btn-clear" id="clear-month">Clear</button>
-                    </div>
-                    <div class="filter-item">
-                        <label>DAY</label>
-                        <input class="filter-day" type="text" id="day-filter" placeholder="Select Day" readonly>
-                        <button class="btn btn-secondary btn-clear" id="clear-day">Clear</button>
-                    </div>
+        <div class="submain">
+            <div class="main-title">
+                <h3 class="per-title">UNAUTHORIZED VEHICLE REPORT</h3>
+                <div class="submain-btn">
+                    <button type="submit" name="export" value="csv" class="buttons">
+                        Export as CSV
+                    </button>
+                    <button type="submit" name="export" value="all" class="buttons"> <!-- Updated value -->
+                        Export All Details to CSV
+                    </button>
                 </div>
             </div>
-            <div class="export-tbn">
-                <button class="export-child btn btn-primary">EXPORT</button>
+
+            <div class="search-filter">
+                <div class="search-bar">
+                    <input type="text" id="searchInputUnauthorized" placeholder="Search by plate number">
+                </div>
+                <!-- Filter Fields -->
+                <div class="filter-field">
+                    <!-- Year Filter -->
+                    <select id="yearFilter" class="filter-select" onchange="submitFilters()">
+                        <option value="">Select Year</option>
+                        @foreach(range(date('Y'), 2000) as $year)
+                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <!-- Month Filter -->
+                    <select id="monthFilter" class="filter-select" onchange="submitFilters()">
+                        <option value="">Select Month</option>
+                        @foreach(range(1, 12) as $month)
+                            <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}" {{ request('month') == str_pad($month, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                {{ date('F', mktime(0, 0, 0, $month, 1)) }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <!-- Day Filter -->
+                    <select id="dayFilter" class="filter-select" onchange="submitFilters()">
+                        <option value="">Select Day</option>
+                        @foreach(range(1, 31) as $day)
+                            <option value="{{ str_pad($day, 2, '0', STR_PAD_LEFT) }}" {{ request('day') == str_pad($day, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                                {{ $day }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div class="head_view_unauthorized_table">
+                <!-- Dropdown to select number of rows per page -->
+                <form method="GET" id="per-page-form" action="{{ url()->current() }}" class="per-page-form">
+                    <label for="per_page">Show:</label>
+                    <select name="per_page" id="per_page" onchange="submitFilters()">
+                        <option value="10" {{ request('per_page', 10) == 10 ? 'selected' : '' }}>10</option>
+                        <option value="25" {{ request('per_page', 10) == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('per_page', 10) == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ request('per_page', 10) == 100 ? 'selected' : '' }}>100</option>
+                        <option value="250" {{ request('per_page', 10) == 250 ? 'selected' : '' }}>250</option>
+                        <option value="500" {{ request('per_page', 10) == 500 ? 'selected' : '' }}>500</option>
+                        <option value="1000" {{ request('per_page', 10) == 1000 ? 'selected' : '' }}>1000</option>
+                    </select>
+                </form>
+
+                <div id="unauthorized-data">
+                    @include('SSUHead.partials.unauthorized_table', ['unauthorizedRecords' => $unauthorizedRecords])
+                </div>
             </div>
         </div>
+    </main>
 
-        <div class="search-bar">
-            <input type="text" id="searchInputUnauthorized" placeholder="Search.." name="search">
-        </div>
+    <!-- JAVASCRIPT FOR AJAX -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInputUnauthorized');
+            const yearFilter = document.getElementById('yearFilter');
+            const monthFilter = document.getElementById('monthFilter');
+            const dayFilter = document.getElementById('dayFilter');
+            const perPageForm = document.getElementById('per_page');
+            
+            function submitFilters(page = 1) {
+                const searchText = searchInput.value.trim();
+                const selectedYear = yearFilter.value;
+                const selectedMonth = monthFilter.value;
+                const selectedDay = dayFilter.value;
+                const perPage = perPageForm.value;
 
-        <div class="head_view_unauthorized_table">
-            <!-- Dropdown to select number of rows per page -->
-            <form method="GET" action="{{ url()->current() }}" class="per-page-form">
-                <label for="per_page">Show:</label>
-                <select name="per_page" id="per_page" onchange="this.form.submit()">
-                    <option value="25" {{ request('per_page', 25) == 25 ? 'selected' : '' }}>25</option>
-                    <option value="50" {{ request('per_page', 25) == 50 ? 'selected' : '' }}>50</option>
-                    <option value="100" {{ request('per_page', 25) == 100 ? 'selected' : '' }}>100</option>
-                    <option value="250" {{ request('per_page', 25) == 250 ? 'selected' : '' }}>250</option>
-                    <option value="500" {{ request('per_page', 25) == 500 ? 'selected' : '' }}>500</option>
-                    <option value="1000" {{ request('per_page', 25) == 1000 ? 'selected' : '' }}>1000</option>
-                </select>
-            </form>
+                const queryParams = new URLSearchParams({
+                    search: searchText,
+                    year: selectedYear,
+                    month: selectedMonth,
+                    day: selectedDay,
+                    per_page: perPage,
+                    page: page
+                }).toString();
 
-            <table id="unauthorizedTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Plate No</th>
-                        <th>Time In</th>
-                        <th>Time Out</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($unauthorizedRecords as $record)
-                        <tr>
-                            <td>{{ $record->log_date }}</td>
-                            <td>{{ $record->plate_no }}</td>
-                            <td>{{ \Carbon\Carbon::parse($record->time_in)->format('g:i A') }}</td>
-                            <td>
-                                @if($record->time_out)
-                                    {{ \Carbon\Carbon::parse($record->time_out)->format('g:i A') }}
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                fetch(`{{ route('unauthorized_list') }}?${queryParams}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('unauthorized-data').innerHTML = html;
+                    updatePaginationLinks(); // Ensure pagination links are updated with the correct URL
+                })
+                .catch(error => console.error('Error:', error));
+            }
 
-            <!-- Pagination Links -->
-            <div class="pagination">
-                {{-- Previous Page Link --}}
-                @if ($unauthorizedRecords->onFirstPage())
-                    <span class="page-item disabled">« Previous</span>
-                @else
-                    <a class="page-item" href="{{ $unauthorizedRecords->previousPageUrl() }}&per_page={{ request('per_page', 25) }}">« Previous</a>
-                @endif
+            function updatePaginationLinks() {
+                document.querySelectorAll('.pagination a.page-item').forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const page = new URL(this.href).searchParams.get('page');
+                        if (page) {
+                            submitFilters(page);
+                        }
+                    });
+                });
+            }
 
-                {{-- Pagination Links --}}
-                @foreach ($unauthorizedRecords->getUrlRange(1, $unauthorizedRecords->lastPage()) as $page => $url)
-                    @if ($page == $unauthorizedRecords->currentPage())
-                        <span class="page-item active">{{ $page }}</span>
-                    @else
-                        <a class="page-item" href="{{ $url }}&per_page={{ request('per_page', 25) }}">{{ $page }}</a>
-                    @endif
-                @endforeach
+            searchInput.addEventListener('input', debounce(submitFilters, 300));
+            yearFilter.addEventListener('change', submitFilters);
+            monthFilter.addEventListener('change', submitFilters);
+            dayFilter.addEventListener('change', submitFilters);
+            perPageForm.addEventListener('change', submitFilters);
 
-                {{-- Next Page Link --}}
-                @if ($unauthorizedRecords->hasMorePages())
-                    <a class="page-item" href="{{ $unauthorizedRecords->nextPageUrl() }}&per_page={{ request('per_page', 25) }}">Next »</a>
-                @else
-                    <span class="page-item disabled">Next »</span>
-                @endif
-            </div>
-        </div>
-    </main><!-- End #main -->
+            updatePaginationLinks();
+        });
+
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this, args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(context, args), wait);
+            };
+        }
+    </script>
+
+    <!-- JAVASCRIPT FOR EXPORT -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const exportCsvButton = document.querySelector('button[name="export"][value="csv"]');
+            const exportAllButton = document.querySelector('button[name="export"][value="all"]');
+            const unauthorizedTable = document.getElementById('unauthorizedTable');
+            
+            function exportToCsv(filename, rows) {
+                const csvContent = rows.map(row => row.join(",")).join("\n");
+                const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const csvUrl = URL.createObjectURL(csvBlob);
+                const link = document.createElement('a');
+                link.setAttribute('href', csvUrl);
+                link.setAttribute('download', filename);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            function getFilteredTableData() {
+                const rows = Array.from(unauthorizedTable.querySelectorAll('tbody tr'));
+                let data = [];
+                
+                data.push(['Date', 'Plate No', 'Time In', 'Time Out']); // Header row
+                rows.forEach(row => {
+                    if (row.style.display !== 'none') {
+                        data.push(Array.from(row.children).map(cell => cell.textContent.trim()));
+                    }
+                });
+                
+                return data;
+            }
+
+            function getAllTableData() {
+                const rows = Array.from(unauthorizedTable.querySelectorAll('tbody tr'));
+                let data = [];
+                
+                data.push(['Date', 'Plate No', 'Time In', 'Time Out']); // Header row
+                rows.forEach(row => {
+                    data.push(Array.from(row.children).map(cell => cell.textContent.trim()));
+                });
+                
+                return data;
+            }
+
+            function handleExportClick(includeAll) {
+                const filename = `Unauthorized_Vehicle_Report_${new Date().toISOString().split('T')[0]}.csv`;
+                const tableData = includeAll ? getAllTableData() : getFilteredTableData();
+                if (tableData.length > 1) { // Check if there is data other than header
+                    exportToCsv(filename, tableData);
+                } else {
+                    alert('No data to export');
+                }
+            }
+
+            if (exportCsvButton) {
+                exportCsvButton.addEventListener('click', () => handleExportClick(false));
+            } else {
+                console.error('Export CSV button not found');
+            }
+            
+            if (exportAllButton) {
+                exportAllButton.addEventListener('click', () => handleExportClick(true));
+            } else {
+                console.error('Export All button not found');
+            }
+        });
+    </script>
+
 
     <!-- Search Js -->
     <script src="{{ asset('js/head_unauthorized_search.js') }}"></script>

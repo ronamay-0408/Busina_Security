@@ -6,14 +6,20 @@ table {
     width: 100%;
     border-collapse: collapse;
 }
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
 th, td {
-    border: 1px solid #ddd;
-    padding: 5px;
+    /* border: 1px solid #ddd; */
+    padding: 10px;
     text-align: left;
-    font-size: 14px;
+    font-size: 15px;
 }
 th {
-    background-color: #f4f4f4;
+    padding: 8px;
+    text-align: left;
+    color: #566a7f;
+    background-color: rgba(53, 192, 247, 0.3);
 }
 .head_view_ssu_table{
     padding: 20px 0px;

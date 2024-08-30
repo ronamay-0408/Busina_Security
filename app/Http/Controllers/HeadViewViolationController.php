@@ -13,15 +13,42 @@ class HeadViewViolationController extends Controller
     {
         $user = Auth::user();
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-            // Get the number of rows per page from the request, default to 25
-            $perPage = $request->input('per_page', 25);
+            $perPage = $request->input('per_page', 10);
 
-            // Order violations by created_at in descending order and paginate
-            $violations = Violation::with('violationType', 'vehicle', 'reportedBy')
-                                    ->orderBy('created_at', 'desc')
-                                    ->paginate($perPage);
-                                    
-            return view('SSUHead.violation_list', compact('violations'));
+            $query = Violation::with('violationType', 'vehicle', 'reportedBy')
+                            ->orderBy('created_at', 'desc');
+
+            // Apply filters and search terms to the query
+            if ($request->filled('search')) {
+                $query->where('plate_no', 'like', '%' . $request->input('search') . '%');
+            }
+
+            if ($request->filled('year')) {
+                $query->whereYear('created_at', $request->input('year'));
+            }
+
+            if ($request->filled('month')) {
+                $query->whereMonth('created_at', $request->input('month'));
+            }
+
+            if ($request->filled('day')) {
+                $query->whereDay('created_at', $request->input('day'));
+            }
+
+             // Paginate and append query parameters
+            $violations = $query->paginate($perPage)->appends($request->except('page'));
+
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'tableHtml' => view('SSUHead.partials.violation_table', ['violations' => $violations])->render(),
+                    'paginationHtml' => $violations->links()->render()
+                ]);
+            }
+
+            // Regular view rendering for non-AJAX requests
+            return view('SSUHead.violation_list', compact('violations', 'request'));
+
         } else {
             return redirect()->route('index');
         }
