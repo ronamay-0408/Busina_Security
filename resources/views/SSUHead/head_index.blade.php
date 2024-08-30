@@ -22,7 +22,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-
     <style>
         .reports {
             display: flex;
@@ -188,7 +187,6 @@
 
     <!-- ======= Sidebar ======= -->
     <aside id="sidebar" class="sidebar">
-
         <div class="profile">
             <div class="image">
                 <img src="{{ asset('images/BUsina logo (1) 1.png') }}" alt="">
@@ -201,53 +199,7 @@
             </div>
         </div>
 
-        <ul class="sidebar-nav" id="sidebar-nav">
-            <li class="nav-item">
-                <a class="nav-link hove" href="{{ route('head_index') }}">
-                    <img src="images/Dashboard Layout.png" alt="">
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('violation_list') }}">
-                    <img src="images/Foul.png" alt="">
-                    <span>Violations</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('unauthorized_list') }}">
-                    <img src="images/Driving Guidelines.png" alt="">
-                    <span>Unauthorized Vehicles</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('ssu_personnel') }}">
-                    <img src="images/Foul.png" alt="">
-                    <span>SSU Personnels</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('head_guidelines') }}">
-                    <img src="images/Driving Guidelines.png" alt="">
-                    <span>Guidelines</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('head_account') }}">
-                    <img src="images/Account.png" alt="">
-                    <span>My Account</span>
-                </a>
-            </li>
-            <li class="nav-item last head-last">
-                <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="images/Open Pane.png" alt="">
-                    <span>Log Out</span>
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </li>
-        </ul>
+        @include('SSUHead.partials.sidebar')
     </aside><!-- End Sidebar-->
 
     <main id="main" class="main">

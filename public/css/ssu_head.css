@@ -26,8 +26,8 @@ th {
     overflow-y: hidden;
 }
 .add-new img{
-    padding: 8.5px 10px;
-    background-color: rgba(80, 119, 165, 0.2);
+    padding: 10px;
+    background-color: rgba(53, 192, 247, 0.3);
     border-radius: 5px;
     cursor: pointer;
 }
@@ -72,6 +72,13 @@ th {
     color: #878484;
     cursor: pointer;
     font-size: 30px;
+}
+
+@media (max-width: 600px) {
+    .form-popup {
+        width: 90%;
+        padding: 15px;
+    }
 }
 
 .blur-bg-overlay {
@@ -237,4 +244,121 @@ th {
 }
 .view-btn:hover{
     background-color: rgba(80, 119, 165, 0.2);
+}
+
+
+/*--------------------------------------------------------------
+# PAGINATION CSS
+--------------------------------------------------------------*/
+/* Custom CSS for pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.page-item {
+    margin: 1px;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.page-item.active {
+    background-color: #09b3e4;
+    color: white;
+    border-color: rgba(53, 192, 247, 0.3);
+}
+
+.page-item.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.page-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Custom CSS for per-page dropdown */
+.per-page-form {
+    display: flex;
+    align-items: center;
+    margin: 0 0 10px 0;
+}
+
+.per-page-form label {
+    margin-right: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.per-page-form select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.per-page-form select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+@media (max-width: 600px) {
+    .page-item {
+        font-size: 12px;
+    }
+    
+    .content {
+        flex-wrap: wrap;
+    }
+    .dropdown-month {
+        flex-wrap: wrap;
+    }
+    .filter-container {
+        flex-wrap: wrap;
+    }
+    .filter-item {
+        gap: 10px;
+    }
+    .filter-item input {
+        width: 100%;
+    }
+    .pagination {
+        margin: 10px 0;
+        flex-wrap: wrap;
+    }
+    .results-info p{
+        font-size: 14px;
+    }
+
+    .modal-content {
+        width: 90%;
+    }
+}
+
+#unauthorizedTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+
+.modal-details {
+    padding: 10px;
+}
+.modal-details p {
+    margin: 0 0 5px 0;
+}
+.modal-details h3 {
+    /* margin: 0; */
+    text-align: center;
+}
+.vio-details p {
+    margin: 0;
+    padding: 0 0 5px 0;
 }

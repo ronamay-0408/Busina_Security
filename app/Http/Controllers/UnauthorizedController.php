@@ -16,16 +16,19 @@ class UnauthorizedController extends Controller
         // Validate the form input
         $request->validate([
             'plate_no' => 'required|string|max:255',
+            'fullname' => 'required|string|max:255',
         ]);
 
         // Retrieve QR code from session
         $qrCodeData = session('qr', 'Unknown QR Code');
 
-        // Count how many records already exist for this plate number
-        $count = Unauthorized::where('plate_no', $request->input('plate_no'))->count();
+        // Count how many records already exist for this plate number and fullname combination
+        $count = Unauthorized::where('plate_no', $request->input('plate_no'))
+                              ->where('fullname', $request->input('fullname'))
+                              ->count();
 
         if ($count >= 3) {
-            // If there are already 3 records for this plate number, show an error
+            // If there are already 3 records for this plate number and fullname, show an error
             return redirect()->back()->with('error', 'This Vehicle has already visited Bicol University 3 times. If they keep visiting the University, they need to register their vehicle on BUsina.');
         }
 
@@ -33,6 +36,7 @@ class UnauthorizedController extends Controller
         Unauthorized::create([
             'qrcode' => $qrCodeData,
             'plate_no' => $request->input('plate_no'),
+            'fullname' => $request->input('fullname'),
             'log_date' => Carbon::now()->toDateString(), // Current date
             'time_in' => Carbon::now()->toTimeString(), // Current time
         ]);

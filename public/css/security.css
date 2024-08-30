@@ -46,7 +46,7 @@ a {
 }
 
 .bar{
-    width: 17%;
+    width: 15%;
     position: absolute;
 }
 .bar i{
@@ -157,11 +157,11 @@ a {
     font-size: 15px;
 }
 
-.sidebar li a.hove {
+.sidebar li a.active {
     color: #09b3e4;
 }
 
-.sidebar li img.hove {
+.sidebar li img.active {
     color: #09b3e4;
 }
 
@@ -193,7 +193,7 @@ a {
 
 .sidebar-nav .nav-link i {
     font-size: 16px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     /* color: #4154f1; */
 }
 
@@ -210,7 +210,7 @@ a {
     border-radius: 10px;
 }
 
-.hove{
+.active{
     background-color: rgba(53, 192, 247, 0.3);
     border-radius: 10px;
 }
@@ -226,14 +226,18 @@ a {
     font-size: 70px;
 }
 
+.info {
+    margin-top: -1rem;
+}
+
 .info h2{
-    margin-top: -0.5rem;
-    font-size: 22px;
+    margin: 0;
+    font-size: 20px;
 }
 .info h3{
-    margin-top: -1rem;
+    margin: 0;
     font-weight: 300;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .head_info {
@@ -694,12 +698,12 @@ select#month-type {
 }
 .export-child{
     border-radius: 5px;
-    background-color: rgba(80, 119, 165, 0.2);
+    background-color: #5077A5;
     text-align: right;
-    padding: 10px 25px;
+    padding: 12px 25px;
     font-size: 15px;
     font-weight: 600;
-    color: rgba(62, 62, 62, 1);
+    color: white;
     border: none;
     cursor: pointer;
 }
@@ -756,7 +760,7 @@ select#month-type {
     display: flex;
     flex-wrap: wrap;
     margin-top: 1.5rem;
-    gap: 20px 25px;
+    gap: 10px 23px;
 }
 .filed-child{
     background-color: white;
@@ -804,7 +808,7 @@ select#month-type {
 .click_files2 {
     align-items: center;
     justify-content: center;
-    border: 2px dashed rgba(0, 0, 0, 1);
+    /* border: 2px dashed rgba(0, 0, 0, 1); */
     border-radius: 4px;
     text-align: center;
     color: #999;
@@ -815,6 +819,7 @@ select#month-type {
 
 .click_files2 img {
     width: 350px;
+    margin-top: 5px;
 }
 
 .back-btn{

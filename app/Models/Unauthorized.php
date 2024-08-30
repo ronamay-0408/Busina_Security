@@ -19,6 +19,7 @@ class Unauthorized extends Model
     protected $fillable = [
         'qrcode',
         'plate_no',
+        'fullname',    // Add fullname to the fillable fields
         'log_date',
         'time_in',
         'time_out',

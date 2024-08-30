@@ -45,98 +45,59 @@
             </div>
         </div>
 
-        <ul class="sidebar-nav" id="sidebar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('index') }}">
-                    <img src="images/Dashboard Layout.png" alt="">
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('view_reports') }}">
-                    <img src="images/Foul.png" alt="">
-                    <span>My Reports</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('scanned_qr') }}">
-                    <img src="images/Qr Code.png" alt="">
-                    <span>Scanned QR Code</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('guidelines') }}">
-                    <img src="images/Driving Guidelines.png" alt="">
-                    <span>Guidelines</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link hove" href="{{ route('myaccount') }}">
-                    <img src="images/Account.png" alt="">
-                    <span>My Account</span>
-                </a>
-            </li>
-            <li class="nav-item last">
-                <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="images/Open Pane.png" alt="">
-                    <span>Log Out</span>
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </li>
-        </ul>
-
+        @include('MainPartials.ssu_sidebar')
     </aside><!-- End Sidebar-->
 
     <main id="main" class="main">
         <div class="date-time">
         </div>
 
-        <div class="main-title">
-            <h3 class="per-title">MY ACCOUNT</h3>
-        </div>
+        <div class="submain">
+            <div class="main-title">
+                <h3 class="per-title">MY ACCOUNT</h3>
+            </div>
 
-        <div class="per_report">
-            <form action="">
-                <div class="photo">
-                    <img src="images/Male User.png" alt="">
+            <div class="per_report">
+                <form action="">
+                    <div class="photo">
+                        <img src="images/Male User.png" alt="">
+                    </div>
+                    <div class="inputs">
+                        <div class="input-form">
+                            <label for="emp_no">Employee Number</label>
+                            <input type="text" name="emp_no" value="{{ Session::has('user') ? Session::get('user')['emp_no'] : '' }}" readonly>
+                        </div>
+
+                        <div class="input-form">
+                            <label for="fname">First Name</label>
+                            <input type="text" name="fname" value="{{ Session::has('user') ? Session::get('user')['fname'] : '' }}" readonly>
+                        </div>
+
+                        <div class="input-form">
+                            <label for="mname">Middle Name</label>
+                            <input type="text" name="mname" value="{{ Session::has('user') ? Session::get('user')['mname'] : '' }}" readonly>
+                        </div>
+
+                        <div class="input-form">
+                            <label for="lname">Last Name</label>
+                            <input type="text" name="lname" value="{{ Session::has('user') ? Session::get('user')['lname'] : '' }}" readonly>
+                        </div>
+
+                        <div class="input-form">
+                            <label for="contact_num">Contact No.</label>
+                            <input type="text" name="contact_num" value="{{ Session::has('user') ? Session::get('user')['contact_no'] : '' }}" readonly>
+                        </div>
+
+                        <div class="input-form">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" value="{{ Session::has('user') ? Session::get('user')['email'] : '' }}" readonly>
+                        </div>                    
+                    </div>
+                </form>
+
+                <div class="back-btn4">
+                    <a class="nav-link" href="{{ url('/index') }}">BACK</a>
                 </div>
-                <div class="inputs">
-                    <div class="input-form">
-                        <label for="emp_no">Employee Number</label>
-                        <input type="text" name="emp_no" value="{{ Session::has('user') ? Session::get('user')['emp_no'] : '' }}" readonly>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="fname">First Name</label>
-                        <input type="text" name="fname" value="{{ Session::has('user') ? Session::get('user')['fname'] : '' }}" readonly>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="mname">Middle Name</label>
-                        <input type="text" name="mname" value="{{ Session::has('user') ? Session::get('user')['mname'] : '' }}" readonly>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="lname">Last Name</label>
-                        <input type="text" name="lname" value="{{ Session::has('user') ? Session::get('user')['lname'] : '' }}" readonly>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="contact_num">Contact No.</label>
-                        <input type="text" name="contact_num" value="{{ Session::has('user') ? Session::get('user')['contact_no'] : '' }}" readonly>
-                    </div>
-
-                    <div class="input-form">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" value="{{ Session::has('user') ? Session::get('user')['email'] : '' }}" readonly>
-                    </div>                    
-                </div>
-            </form>
-
-            <div class="back-btn4">
-                <a class="nav-link" href="{{ url('/index') }}">BACK</a>
             </div>
         </div>
     </main><!-- End #main -->

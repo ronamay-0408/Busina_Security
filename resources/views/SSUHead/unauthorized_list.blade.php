@@ -17,94 +17,6 @@
     <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
-
-    <style>
-        /* Custom CSS for pagination */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            padding: 0;
-            margin: 20px 0;
-        }
-
-        .page-item {
-            margin: 0 2px;
-            padding: 8px 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #007bff;
-            cursor: pointer;
-        }
-
-        .page-item.active {
-            background-color: #007bff;
-            color: white;
-            border-color: #007bff;
-        }
-
-        .page-item.disabled {
-            color: #ccc;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .page-item:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* Custom CSS for per-page dropdown */
-        .per-page-form {
-            display: flex;
-            align-items: center;
-            margin: 0 0 10px 0;
-        }
-
-        .per-page-form label {
-            margin-right: 10px;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .per-page-form select {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .per-page-form select:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-
-        @media (max-width: 600px) {
-            .page-item {
-                font-size: 12px;
-            }
-            
-            .content {
-                flex-wrap: wrap;
-            }
-            .dropdown-month {
-                flex-wrap: wrap;
-            }
-            .filter-container {
-                flex-wrap: wrap;
-            }
-            .filter-item {
-                gap: 10px;
-            }
-            .filter-item input {
-                width: 100%;
-            }
-        }
-
-        #unauthorizedTable tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-    </style>
 </head>
 
 <body>
@@ -134,53 +46,7 @@
             </div>
         </div>
 
-        <ul class="sidebar-nav" id="sidebar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('head_index') }}">
-                    <img src="images/Dashboard Layout.png" alt="">
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('violation_list') }}">
-                    <img src="images/Foul.png" alt="">
-                    <span>Violations</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link hove" href="{{ route('unauthorized_list') }}">
-                    <img src="images/Qr Code.png" alt="">
-                    <span>Unauthorized Vehicles</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('ssu_personnel') }}">
-                    <img src="images/Foul.png" alt="">
-                    <span>SSU Personnels</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('head_guidelines') }}">
-                    <img src="images/Driving Guidelines.png" alt="">
-                    <span>Guidelines</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('head_account') }}">
-                    <img src="images/Account.png" alt="">
-                    <span>My Account</span>
-                </a>
-            </li>
-            <li class="nav-item last head-last">
-                <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="images/Open Pane.png" alt="">
-                    <span>Log Out</span>
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </li>
-        </ul>
+        @include('SSUHead.partials.sidebar')
     </aside><!-- End Sidebar-->
 
     <main id="main" class="main">

@@ -45,48 +45,7 @@
             </div>
         </div>
 
-        <ul class="sidebar-nav" id="sidebar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('index') }}">
-                    <img src="images/Dashboard Layout.png" alt="">
-                    <span>Dashboard</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('view_reports') }}">
-                    <img src="images/Foul.png" alt="">
-                    <span>My Reports</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('scanned_qr') }}">
-                    <img src="images/Qr Code.png" alt="">
-                    <span>Scanned QR Code</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('guidelines') }}">
-                    <img src="images/Driving Guidelines.png" alt="">
-                    <span>Guidelines</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('myaccount') }}">
-                    <img src="images/Account.png" alt="">
-                    <span>My Account</span>
-                </a>
-            </li>
-            <li class="nav-item last">
-                <a class="nav-link" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="images/Open Pane.png" alt="">
-                    <span>Log Out</span>
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </li>
-        </ul>
-
+        @include('MainPartials.ssu_sidebar')
     </aside><!-- End Sidebar-->
     
     <main id="main" class="main">
@@ -137,12 +96,12 @@
                         <input type="text" placeholder="LLL-DDDD or DDD-LLL/L-DDD-LL" id="plate_no" name="plate_no" required>
                     </div>
 
-                    <!-- <div class="input-form">
+                    <div class="input-form">
                         <label for="fullname">Full Name</label>
                         <input type="text" placeholder="Full Name" id="fullname" name="fullname" required>
                     </div>
 
-                    <div class="input-form">
+                    <!-- <div class="input-form">
                         <label for="purpose">Purpose</label>
                         <input type="text" placeholder="Submission of Document" id="purpose" name="purpose" required>
                     </div> -->
