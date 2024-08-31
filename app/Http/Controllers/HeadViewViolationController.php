@@ -6,6 +6,8 @@ use App\Models\Violation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Carbon\Carbon;
 
 class HeadViewViolationController extends Controller
 {
@@ -52,5 +54,99 @@ class HeadViewViolationController extends Controller
         } else {
             return redirect()->route('index');
         }
+    }
+
+    public function exportViolationCsv(Request $request)
+    {
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            $query = Violation::orderBy('created_at', 'desc');
+
+            // Apply filters
+            if ($request->filled('search')) {
+                $query->where('plate_no', 'like', '%' . $request->input('search') . '%');
+            }
+            if ($request->filled('year')) {
+                $query->whereYear('created_at', $request->input('year'));
+            }
+            if ($request->filled('month')) {
+                $query->whereMonth('created_at', $request->input('month'));
+            }
+            if ($request->filled('day')) {
+                $query->whereDay('created_at', $request->input('day'));
+            }
+
+            // Handle pagination
+            $perPage = $request->input('per_page', 10);
+            $page = $request->input('page', 1);
+            $violations = $query->forPage($page, $perPage)->get();
+
+            return $this->exportToCsv($violations, 'Violation_Report_FilteredRecord');
+        }
+
+        return redirect()->route('index');
+    }
+
+    public function exportAllViolationCsv(Request $request)
+    {
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            $query = Violation::orderBy('created_at', 'desc');
+
+            // Apply filters
+            if ($request->filled('search')) {
+                $query->where('plate_no', 'like', '%' . $request->input('search') . '%');
+            }
+            if ($request->filled('year')) {
+                $query->whereYear('created_at', $request->input('year'));
+            }
+            if ($request->filled('month')) {
+                $query->whereMonth('created_at', $request->input('month'));
+            }
+            if ($request->filled('day')) {
+                $query->whereDay('created_at', $request->input('day'));
+            }
+
+            // Get all records
+            $violations = $query->get();
+
+            return $this->exportToCsv($violations, 'Violation_Report_AllRecord');
+        }
+
+        return redirect()->route('index');
+    }
+
+    private function exportToCsv($violations, $fileName)
+    {
+        $date = Carbon::now()->format('Ymd_His');
+        $fileName = "{$fileName}_{$date}.csv";
+
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+
+        $columns = ['Date', 'Plate No', 'Time In', 'Time Out'];
+
+        $callback = function () use ($violations, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($violations as $record) {
+                $row['Date'] = $record->created_at->format('Y-m-d');
+                $row['Plate No'] = $record->plate_no;
+                $row['Time In'] = $record->created_at->format('g:i A');
+                $row['Time Out'] = $record->updated_at->format('g:i A'); // Adjust as needed
+
+                fputcsv($file, $row);
+            }
+
+            fclose($file);
+        };
+
+        return new StreamedResponse($callback, 200, $headers);
     }
 }

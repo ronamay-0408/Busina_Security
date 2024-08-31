@@ -57,10 +57,10 @@
             <div class="main-title">
                 <h3 class="per-title">UNAUTHORIZED VEHICLE REPORT</h3>
                 <div class="submain-btn">
-                    <button type="submit" name="export" value="csv" class="buttons">
+                    <button type="button" id="exportCsvButton" class="buttons">
                         Export as CSV
                     </button>
-                    <button type="submit" name="export" value="all" class="buttons"> <!-- Updated value -->
+                    <button type="button" id="exportAllButton" class="buttons">
                         Export All Details to CSV
                     </button>
                 </div>
@@ -134,7 +134,7 @@
             const monthFilter = document.getElementById('monthFilter');
             const dayFilter = document.getElementById('dayFilter');
             const perPageForm = document.getElementById('per_page');
-            
+
             function submitFilters(page = 1) {
                 const searchText = searchInput.value.trim();
                 const selectedYear = yearFilter.value;
@@ -151,6 +151,9 @@
                     page: page
                 }).toString();
 
+                // Update URL without reloading
+                history.pushState(null, '', `?${queryParams}`);
+
                 fetch(`{{ route('unauthorized_list') }}?${queryParams}`, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
@@ -159,7 +162,7 @@
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('unauthorized-data').innerHTML = html;
-                    updatePaginationLinks(); // Ensure pagination links are updated with the correct URL
+                    updatePaginationLinks();
                 })
                 .catch(error => console.error('Error:', error));
             }
@@ -176,11 +179,19 @@
                 });
             }
 
-            searchInput.addEventListener('input', debounce(submitFilters, 300));
-            yearFilter.addEventListener('change', submitFilters);
-            monthFilter.addEventListener('change', submitFilters);
-            dayFilter.addEventListener('change', submitFilters);
-            perPageForm.addEventListener('change', submitFilters);
+            searchInput.addEventListener('input', debounce(() => submitFilters(), 300));
+            yearFilter.addEventListener('change', () => submitFilters());
+            monthFilter.addEventListener('change', () => submitFilters());
+            dayFilter.addEventListener('change', () => submitFilters());
+            perPageForm.addEventListener('change', () => submitFilters());
+
+            // Initialize with current URL parameters
+            const params = new URLSearchParams(window.location.search);
+            searchInput.value = params.get('search') || '';
+            yearFilter.value = params.get('year') || '';
+            monthFilter.value = params.get('month') || '';
+            dayFilter.value = params.get('day') || '';
+            perPageForm.value = params.get('per_page') || '10';
 
             updatePaginationLinks();
         });
@@ -197,74 +208,52 @@
 
     <!-- JAVASCRIPT FOR EXPORT -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const exportCsvButton = document.querySelector('button[name="export"][value="csv"]');
-            const exportAllButton = document.querySelector('button[name="export"][value="all"]');
-            const unauthorizedTable = document.getElementById('unauthorizedTable');
-            
-            function exportToCsv(filename, rows) {
-                const csvContent = rows.map(row => row.join(",")).join("\n");
-                const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const csvUrl = URL.createObjectURL(csvBlob);
-                const link = document.createElement('a');
-                link.setAttribute('href', csvUrl);
-                link.setAttribute('download', filename);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+    // Function to get the current URL parameters
+    function getCurrentFilters(page = 1) {
+        let params = new URLSearchParams();
+        // Add search parameter if present
+        let searchInput = document.getElementById('searchInputUnauthorized').value;
+        if (searchInput) {
+            params.append('search', searchInput);
+        }
+        // Add year, month, and day filters
+        let year = document.getElementById('yearFilter').value;
+        let month = document.getElementById('monthFilter').value;
+        let day = document.getElementById('dayFilter').value;
+        if (year) params.append('year', year);
+        if (month) params.append('month', month);
+        if (day) params.append('day', day);
+        // Add per-page parameter
+        let perPage = document.getElementById('per_page').value;
+        params.append('per_page', perPage);
+        // Add page parameter
+        params.append('page', page);
 
-            function getFilteredTableData() {
-                const rows = Array.from(unauthorizedTable.querySelectorAll('tbody tr'));
-                let data = [];
-                
-                data.push(['Date', 'Plate No', 'Time In', 'Time Out']); // Header row
-                rows.forEach(row => {
-                    if (row.style.display !== 'none') {
-                        data.push(Array.from(row.children).map(cell => cell.textContent.trim()));
-                    }
-                });
-                
-                return data;
-            }
+        return params.toString();
+    }
 
-            function getAllTableData() {
-                const rows = Array.from(unauthorizedTable.querySelectorAll('tbody tr'));
-                let data = [];
-                
-                data.push(['Date', 'Plate No', 'Time In', 'Time Out']); // Header row
-                rows.forEach(row => {
-                    data.push(Array.from(row.children).map(cell => cell.textContent.trim()));
-                });
-                
-                return data;
-            }
+    // Export as CSV button click event
+    document.getElementById('exportCsvButton').addEventListener('click', function() {
+        // Get the current page number
+        const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+        let url = new URL("{{ route('exportUnauthorizedCsv') }}");
+        // Append current filters and pagination parameters
+        url.search = getCurrentFilters(currentPage);
+        window.location.href = url;
+    });
 
-            function handleExportClick(includeAll) {
-                const filename = `Unauthorized_Vehicle_Report_${new Date().toISOString().split('T')[0]}.csv`;
-                const tableData = includeAll ? getAllTableData() : getFilteredTableData();
-                if (tableData.length > 1) { // Check if there is data other than header
-                    exportToCsv(filename, tableData);
-                } else {
-                    alert('No data to export');
-                }
-            }
+    // Export All Details button click event
+    document.getElementById('exportAllButton').addEventListener('click', function() {
+        let url = "{{ route('exportAllUnauthorizedCsv') }}";
+        // Append current filters
+        url += '?' + getCurrentFilters();
+        window.location.href = url;
+    });
+});
 
-            if (exportCsvButton) {
-                exportCsvButton.addEventListener('click', () => handleExportClick(false));
-            } else {
-                console.error('Export CSV button not found');
-            }
-            
-            if (exportAllButton) {
-                exportAllButton.addEventListener('click', () => handleExportClick(true));
-            } else {
-                console.error('Export All button not found');
-            }
-        });
     </script>
-
-
+    
     <!-- Search Js -->
     <script src="{{ asset('js/head_unauthorized_search.js') }}"></script>
 

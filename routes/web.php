@@ -149,7 +149,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //     }
     // })->name('violation_list');
 
+    // Route to view the violation list
     Route::get('/violation_list', [HeadViewViolationController::class, 'index'])->name('violation_list');
+
+    // Route to export current page CSV
+    Route::get('/export-violation-csv', [HeadViewViolationController::class, 'exportViolationCsv'])->name('exportViolationCsv');
+
+    // Route to export all records CSV
+    Route::get('/export-all-violation-csv', [HeadViewViolationController::class, 'exportAllViolationCsv'])->name('exportAllViolationCsv');
+
 
     // Route::get('/unauthorized_list', function () {
     //     // Check user_type and redirect accordingly
@@ -163,6 +171,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Route to view the unauthorized list
     Route::get('/unauthorized_list', [HeadViewUnauthorizedController::class, 'index'])->name('unauthorized_list');
+    // Route to export current page CSV
+    Route::get('/export/unauthorized/csv', [HeadViewUnauthorizedController::class, 'exportCsv'])->name('exportUnauthorizedCsv');
+    // Route to export all records CSV
+    Route::get('/export/unauthorized/all', [HeadViewUnauthorizedController::class, 'exportAllUnauthorizedCsv'])->name('exportAllUnauthorizedCsv');
 
     Route::get('/head_account', function () {
         // Check user_type and redirect accordingly

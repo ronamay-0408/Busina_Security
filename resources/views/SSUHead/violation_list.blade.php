@@ -56,8 +56,8 @@
             <div class="main-title">
                 <h3 class="per-title">REPORTED VIOLATIONS</h3>
                 <div class="submain-btn">
-                    <button type="submit" name="export" value="csv" class="buttons">Export as CSV</button>
-                    <button type="submit" class="buttons">Export All Details to CSV</button>
+                    <button type="submit" id="exportCsvButton" class="buttons">Export as CSV</button>
+                    <button type="button" id="exportAllButton" class="buttons">Export All Details to CSV</button>
                 </div>
             </div>
 
@@ -220,75 +220,85 @@
 
     <!-- JAVASCRIPT FOR EXPORT WITHOUT PAGINATION -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const exportButton = document.querySelector('.submain-btn button[name="export"]');
-            const exportAllButton = document.querySelector('.submain-btn button:not([name="export"])');
-            const violationTable = document.getElementById('violationTable');
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const yearFilter = document.getElementById('yearFilter');
+    const monthFilter = document.getElementById('monthFilter');
+    const dayFilter = document.getElementById('dayFilter');
+    const perPageForm = document.getElementById('per_page');
+    const exportCsvButton = document.getElementById('exportCsvButton');
+    const exportAllButton = document.getElementById('exportAllButton');
 
-            function generateCSV(data) {
-                // Create a CSV string from the data array
-                const csvRows = [];
-                const headers = Array.from(data[0].querySelectorAll('th')).map(th => th.textContent);
-                csvRows.push(headers.join(','));
+    // Get query parameters
+    function getQueryParams(page = 1) {
+        const searchText = searchInput.value.trim();
+        const selectedYear = yearFilter.value;
+        const selectedMonth = monthFilter.value;
+        const selectedDay = dayFilter.value;
+        const perPage = perPageForm ? perPageForm.value : 10;
 
-                for (const row of data) {
-                    const cells = Array.from(row.querySelectorAll('td')).map(td => `"${td.textContent.replace(/"/g, '""')}"`);
-                    csvRows.push(cells.join(','));
+        return new URLSearchParams({
+            search: searchText,
+            year: selectedYear,
+            month: selectedMonth,
+            day: selectedDay,
+            per_page: perPage,
+            page: page
+        }).toString();
+    }
+
+    // Handle the export CSV button click
+    function handleExportCsv() {
+        const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+        const queryParams = getQueryParams(currentPage);
+        const exportUrl = `{{ route('exportViolationCsv') }}?${queryParams}`;
+        window.location.href = exportUrl;
+    }
+
+    // Handle the export All button click
+    function handleExportAll() {
+        const queryParams = getQueryParams();
+        const exportUrl = `{{ route('exportAllViolationCsv') }}?${queryParams}`;
+        window.location.href = exportUrl;
+    }
+
+    // Attach event listeners
+    exportCsvButton.addEventListener('click', handleExportCsv);
+    exportAllButton.addEventListener('click', handleExportAll);
+
+    // Existing code for handling pagination and filters
+    function submitFilters(page = 1) {
+        const queryParams = getQueryParams(page);
+
+        fetch(`{{ route('violation_list') }}?${queryParams}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('tableContainer').innerHTML = html;
+            updatePaginationLinks();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function updatePaginationLinks() {
+        document.querySelectorAll('.pagination a.page-item').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const page = new URL(this.href).searchParams.get('page');
+                if (page) {
+                    submitFilters(page);
                 }
-
-                return csvRows.join('\n');
-            }
-
-            function getCurrentDateString() {
-                // Get the current date in YYYY-MM-DD format
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = (now.getMonth() + 1).toString().padStart(2, '0');
-                const day = now.getDate().toString().padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            }
-
-            function downloadCSV(csv, filename) {
-                const csvFile = new Blob([csv], { type: 'text/csv' });
-                const downloadLink = document.createElement('a');
-                
-                downloadLink.download = filename;
-                downloadLink.href = window.URL.createObjectURL(csvFile);
-                downloadLink.style.display = 'none';
-                document.body.appendChild(downloadLink);
-                
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
-            }
-
-            function exportVisibleRows() {
-                const visibleRows = Array.from(violationTable.querySelectorAll('tbody tr')).filter(row => row.style.display !== 'none');
-                if (visibleRows.length === 0) {
-                    alert('No visible rows to export.');
-                    return;
-                }
-
-                const csv = generateCSV([...violationTable.querySelectorAll('thead tr'), ...visibleRows]);
-                const filename = `Violation_Reports_Filtered_${getCurrentDateString()}.csv`;
-                downloadCSV(csv, filename);
-            }
-
-            function exportAllRows() {
-                const allRows = Array.from(violationTable.querySelectorAll('tbody tr'));
-                if (allRows.length === 0) {
-                    alert('No rows to export.');
-                    return;
-                }
-
-                const csv = generateCSV([...violationTable.querySelectorAll('thead tr'), ...allRows]);
-                const filename = `Violation_Reports_All_${getCurrentDateString()}.csv`;
-                downloadCSV(csv, filename);
-            }
-
-            exportButton.addEventListener('click', exportVisibleRows);
-            exportAllButton.addEventListener('click', exportAllRows);
+            });
         });
-    </script>
+    }
+
+    updatePaginationLinks();
+});
+</script>
+
     
     <!-- MODAL AND SEARCH JS -->
     <!-- <script src="{{ asset('js/head_violation_modal.js') }}"></script> -->
