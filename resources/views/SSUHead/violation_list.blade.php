@@ -220,84 +220,84 @@
 
     <!-- JAVASCRIPT FOR EXPORT WITHOUT PAGINATION -->
     <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const searchInput = document.getElementById('searchInput');
-    const yearFilter = document.getElementById('yearFilter');
-    const monthFilter = document.getElementById('monthFilter');
-    const dayFilter = document.getElementById('dayFilter');
-    const perPageForm = document.getElementById('per_page');
-    const exportCsvButton = document.getElementById('exportCsvButton');
-    const exportAllButton = document.getElementById('exportAllButton');
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const yearFilter = document.getElementById('yearFilter');
+            const monthFilter = document.getElementById('monthFilter');
+            const dayFilter = document.getElementById('dayFilter');
+            const perPageForm = document.getElementById('per_page');
+            const exportCsvButton = document.getElementById('exportCsvButton');
+            const exportAllButton = document.getElementById('exportAllButton');
 
-    // Get query parameters
-    function getQueryParams(page = 1) {
-        const searchText = searchInput.value.trim();
-        const selectedYear = yearFilter.value;
-        const selectedMonth = monthFilter.value;
-        const selectedDay = dayFilter.value;
-        const perPage = perPageForm ? perPageForm.value : 10;
+            // Get query parameters
+            function getQueryParams(page = 1) {
+                const searchText = searchInput.value.trim();
+                const selectedYear = yearFilter.value;
+                const selectedMonth = monthFilter.value;
+                const selectedDay = dayFilter.value;
+                const perPage = perPageForm ? perPageForm.value : 10;
 
-        return new URLSearchParams({
-            search: searchText,
-            year: selectedYear,
-            month: selectedMonth,
-            day: selectedDay,
-            per_page: perPage,
-            page: page
-        }).toString();
-    }
-
-    // Handle the export CSV button click
-    function handleExportCsv() {
-        const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
-        const queryParams = getQueryParams(currentPage);
-        const exportUrl = `{{ route('exportViolationCsv') }}?${queryParams}`;
-        window.location.href = exportUrl;
-    }
-
-    // Handle the export All button click
-    function handleExportAll() {
-        const queryParams = getQueryParams();
-        const exportUrl = `{{ route('exportAllViolationCsv') }}?${queryParams}`;
-        window.location.href = exportUrl;
-    }
-
-    // Attach event listeners
-    exportCsvButton.addEventListener('click', handleExportCsv);
-    exportAllButton.addEventListener('click', handleExportAll);
-
-    // Existing code for handling pagination and filters
-    function submitFilters(page = 1) {
-        const queryParams = getQueryParams(page);
-
-        fetch(`{{ route('violation_list') }}?${queryParams}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                return new URLSearchParams({
+                    search: searchText,
+                    year: selectedYear,
+                    month: selectedMonth,
+                    day: selectedDay,
+                    per_page: perPage,
+                    page: page
+                }).toString();
             }
-        })
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('tableContainer').innerHTML = html;
+
+            // Handle the export CSV button click
+            function handleExportCsv() {
+                const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
+                const queryParams = getQueryParams(currentPage);
+                const exportUrl = `{{ route('exportViolationCsv') }}?${queryParams}`;
+                window.location.href = exportUrl;
+            }
+
+            // Handle the export All button click
+            function handleExportAll() {
+                const queryParams = getQueryParams();
+                const exportUrl = `{{ route('exportAllViolationCsv') }}?${queryParams}`;
+                window.location.href = exportUrl;
+            }
+
+            // Attach event listeners
+            exportCsvButton.addEventListener('click', handleExportCsv);
+            exportAllButton.addEventListener('click', handleExportAll);
+
+            // Existing code for handling pagination and filters
+            function submitFilters(page = 1) {
+                const queryParams = getQueryParams(page);
+
+                fetch(`{{ route('violation_list') }}?${queryParams}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('tableContainer').innerHTML = html;
+                    updatePaginationLinks();
+                })
+                .catch(error => console.error('Error:', error));
+            }
+
+            function updatePaginationLinks() {
+                document.querySelectorAll('.pagination a.page-item').forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const page = new URL(this.href).searchParams.get('page');
+                        if (page) {
+                            submitFilters(page);
+                        }
+                    });
+                });
+            }
+
             updatePaginationLinks();
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    function updatePaginationLinks() {
-        document.querySelectorAll('.pagination a.page-item').forEach(link => {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                const page = new URL(this.href).searchParams.get('page');
-                if (page) {
-                    submitFilters(page);
-                }
-            });
         });
-    }
-
-    updatePaginationLinks();
-});
-</script>
+    </script>
 
     
     <!-- MODAL AND SEARCH JS -->
