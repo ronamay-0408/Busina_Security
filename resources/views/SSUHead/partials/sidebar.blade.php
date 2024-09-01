@@ -26,6 +26,12 @@
         </a>
     </li>
     <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('head_userlogs') ? 'active' : '' }}" href="{{ route('head_userlogs') }}">
+            <i class="bi bi-truck-front-fill"></i>
+            <span>Vehicle Owner Logs</span>
+        </a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('head_guidelines') ? 'active' : '' }}" href="{{ route('head_guidelines') }}">
             <i class="bi bi-journal-richtext"></i>
             <span>Guidelines</span>

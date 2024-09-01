@@ -121,11 +121,14 @@ class HeadViewUnauthorizedController extends Controller
             fputcsv($file, $columns);
 
             foreach ($unauthorizedRecords as $record) {
-                $row['Date'] = $record->log_date;
-                $row['Plate No'] = $record->plate_no;
-                $row['Time In'] = Carbon::parse($record->time_in)->format('g:i A');
-                $row['Time Out'] = $record->time_out ? Carbon::parse($record->time_out)->format('g:i A') : '';
-
+                $row = [
+                    // Format the log_date to YYYY-MM-DD (you can adjust this format as needed)
+                    'Date' => Carbon::parse($record->log_date)->format('m/d/Y'),
+                    'Plate No' => $record->plate_no,
+                    'Time In' => Carbon::parse($record->time_in)->format('g:i A'),
+                    'Time Out' => $record->time_out ? Carbon::parse($record->time_out)->format('g:i A') : '',
+                ];
+            
                 fputcsv($file, $row);
             }
 

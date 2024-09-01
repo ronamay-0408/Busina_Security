@@ -129,17 +129,23 @@ class HeadViewViolationController extends Controller
             "Expires" => "0"
         ];
 
-        $columns = ['Date', 'Plate No', 'Time In', 'Time Out'];
+        // Define the CSV columns
+        $columns = ['Date & Time', 'Plate No', 'Violation Type', 'Location', 'Reported By', 'Remarks', 'Proof Image'];
 
         $callback = function () use ($violations, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             foreach ($violations as $record) {
-                $row['Date'] = $record->created_at->format('Y-m-d');
-                $row['Plate No'] = $record->plate_no;
-                $row['Time In'] = $record->created_at->format('g:i A');
-                $row['Time Out'] = $record->updated_at->format('g:i A'); // Adjust as needed
+                $row = [
+                    $record->created_at->format('F j, Y, g:i a'),
+                    $record->plate_no,
+                    $record->violationType ? $record->violationType->violation_name : 'N/A',
+                    $record->location ?? 'N/A',
+                    $record->reportedBy ? $record->reportedBy->getFullNameAttribute() : 'N/A',
+                    $record->remarks ?? 'N/A',
+                    $record->proof_image ?? 'N/A' // Adjust as needed
+                ];
 
                 fputcsv($file, $row);
             }

@@ -20,6 +20,7 @@ use App\Http\Controllers\HeadViewViolationController;
 use App\Http\Controllers\HeadViewUnauthorizedController;
 use App\Http\Controllers\HeadViewSSUController;
 use App\Http\Controllers\HeadReportsController;
+use App\Http\Controllers\UserLogController;
 
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\GateScannerController;
@@ -175,6 +176,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/export/unauthorized/csv', [HeadViewUnauthorizedController::class, 'exportCsv'])->name('exportUnauthorizedCsv');
     // Route to export all records CSV
     Route::get('/export/unauthorized/all', [HeadViewUnauthorizedController::class, 'exportAllUnauthorizedCsv'])->name('exportAllUnauthorizedCsv');
+
+    // Route::get('/head_userlogs', function () {
+    //     // Check user_type and redirect accordingly
+    //     $user = Auth::user();
+    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+    //         return view('SSUHead.head_userlogs');
+    //     } else {
+    //         // abort(403, 'Unauthorized action.');
+    //         // If the user is not authorized, redirect to the index view
+    //         return redirect()->route('index');
+    //     }
+    // })->name('head_userlogs');
+
+    Route::get('/head_userlogs', [UserLogController::class, 'index'])->name('head_userlogs');
+    Route::get('/userlogs/export', [UserLogController::class, 'exportCsv'])->name('userlogs.export');
+    Route::get('/userlogs/export-all', [UserLogController::class, 'exportAllCsv'])->name('userlogs.export.all');
 
     Route::get('/head_account', function () {
         // Check user_type and redirect accordingly

@@ -124,15 +124,20 @@
                 <div class="modal-details">
                     <h3>VIOLATION DETAILS</h3>
                     <div class="vio-details">
-                        <p><strong>Date & Time:</strong> <span id="modal-date"></span></p>
-                        <p><strong>Plate No:</strong> <span id="modal-plate"></span></p>
-                        <p><strong>Violation Type:</strong> <span id="modal-violation"></span></p>
-                        <p><strong>Location:</strong> <span id="modal-location"></span></p>
-                        <p><strong>Reported By:</strong> <span id="modal-reported"></span></p>
-                        <p><strong>Remarks:</strong> <span id="modal-remarks"></span></p>
+                        <div class="vio-plate">
+                            <h2><span id="modal-plate"></span></h2>
+                            <p>Plate Number</p>
+                        </div>
+                        <div class="vio-second">
+                            <p><strong>Date & Time:</strong><br><span id="modal-date"></span></p>
+                            <p><strong>Violation Type:</strong><br><span id="modal-violation"></span></p>
+                            <p><strong>Location:</strong><br><span id="modal-location"></span></p>
+                            <p><strong>Reported By:</strong><br><span id="modal-reported"></span></p>
+                            <p><strong>Remarks:</strong><br><span id="modal-remarks"></span></p>
+                            <p><strong>Proof Image:</strong></p>
+                        </div>
+                        <img id="modal-image" src="" alt="Proof Image"/>
                     </div>
-                    <p><strong>Proof Image:</strong></p>
-                    <img id="modal-image" src="" alt="Proof Image" style="width: 100%;"/>
                 </div>
             </div>
         </div>
@@ -299,7 +304,6 @@
         });
     </script>
 
-    
     <!-- MODAL AND SEARCH JS -->
     <!-- <script src="{{ asset('js/head_violation_modal.js') }}"></script> -->
 
