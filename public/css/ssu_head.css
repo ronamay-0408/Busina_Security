@@ -380,12 +380,7 @@ th {
     text-align: center;
     font-size: 13px;
 }
-.vio-second {
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #f8f9fa; /* Light gray background */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-}
+
 .vio-second span {
     padding: 5px;
     border: 0.5px solid #80808066;
@@ -393,8 +388,52 @@ th {
     /* margin-top: 5px; */
     font-size: 15px;
 }
+
+.vio-sub{
+    display: flex;
+    gap: 0px 10px;
+}
+
+.vio-sub strong{
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.vio-sub input{
+    padding: 5px;
+    border: 0.5px solid #80808066;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+    background: white;
+    color: black;
+    font-size: 14px;
+}
+.vio-sub-inside input{
+    padding: 5px;
+    border: 0.5px solid #80808066;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+    background: white;
+    color: black;
+    font-size: 14px;
+    width: 100%;
+}
+
+.vio-sub-inside strong{
+    font-size: 14px;
+    font-weight: 500;
+}
+
 @media (max-width: 600px) {
     #modal-image{
+        width: 100%;
+    }
+    .vio-sub{
+        display: inline;
+    }
+    .vio-sub input{
         width: 100%;
     }    
 }

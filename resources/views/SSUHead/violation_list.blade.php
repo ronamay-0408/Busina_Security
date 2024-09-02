@@ -135,28 +135,36 @@
                             <p><strong>Reported By:</strong><br><span id="modal-reported"></span></p>
                             <p><strong>Remarks:</strong><br><span id="modal-remarks"></span></p> -->
 
-                            <p>
-                                <strong>Date & Time:</strong><br>
-                                <input type="text" class="form-control" id="modal-date-input" readonly>
-                            </p>
-                            <p>
-                                <strong>Violation Type:</strong><br>
-                                <input type="text" class="form-control" id="modal-violation-input" readonly>
-                            </p>
-                            <p>
-                                <strong>Location:</strong><br>
-                                <input type="text" class="form-control" id="modal-location-input" readonly>
-                            </p>
-                            <p>
-                                <strong>Reported By:</strong><br>
-                                <input type="text" class="form-control" id="modal-reported-input" readonly>
-                            </p>
-                            <p>
-                                <strong>Remarks:</strong><br>
-                                <input type="text" class="form-control" id="modal-remarks-input" readonly>
-                            </p>
+                            <div class="vio-sub">
+                                <p>
+                                    <strong>Date & Time</strong><br>
+                                    <input type="text" class="form-control" id="modal-date-input" readonly>
+                                </p>
+                                <p>
+                                    <strong>Location</strong><br>
+                                    <input type="text" class="form-control" id="modal-location-input" readonly>
+                                </p>
+                            </div>
 
-                            <p><strong>Proof Image:</strong></p>
+                            <div class="vio-sub-inside">
+                                <p>
+                                    <strong>Violation Type</strong><br>
+                                    <input type="text" class="form-control" id="modal-violation-input" readonly>
+                                </p>
+                            </div>
+
+                            <div class="vio-sub">
+                                <p>
+                                    <strong>Reported By</strong><br>
+                                    <input type="text" class="form-control" id="modal-reported-input" readonly>
+                                </p>
+                                <p>
+                                    <strong>Remarks</strong><br>
+                                    <input type="text" class="form-control" id="modal-remarks-input" readonly>
+                                </p>
+                            </div>
+
+                            <p><strong>Proof Image</strong></p>
                             <img id="modal-image" src="" alt="Proof Image"/>
                         </div>
 
