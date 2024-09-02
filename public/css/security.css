@@ -531,7 +531,8 @@ main{
 
 .input-form input,
 .input-form select {
-    flex: 5;
+    /* flex: 5; */
+    flex: 4;
     padding: 5px 5px 5px 10px;
     border: 0.1px solid #80808061;
     border-radius: 5px;
@@ -543,20 +544,27 @@ main{
 }
 
 @media (max-width: 600px) {
-    .input-form{
+    /* .input-form{
         flex-direction: column;
         padding: 0px 10px;
         margin-top: 0px;
-    }
+    } */
 
     .input-form label {
-        text-align: left;
-        padding: 5px 0px;
+        flex: 1.4;
         font-size: 14px;
     }
 
-    .input-form input, .input-form select {
+    .input-form{
+        align-items: center;
+    }
+
+    /* .input-form input, .input-form select {
         font-size: 14px;
+    } */
+
+    select#vio_type {
+        width: 10%;
     }
     
 }
@@ -582,7 +590,7 @@ main{
     justify-content: center;
     border: 2px dashed rgba(0, 0, 0, 1);
     border-radius: 4px;
-    padding: 30px 20px 20px 20px;;
+    padding: 10px 15px;
     text-align: center;
     color: #999;
     cursor: pointer;
@@ -591,14 +599,14 @@ main{
 }
 
 .click_files img {
-    width: 100px;
-    margin-right: 10px;
+    width: 250px;
+    /* margin-right: 10px; */
 }
 
 .save_not_btn {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    /* margin-top: 20px; */
 }
 
 .save_not_btn button,
