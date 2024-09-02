@@ -129,14 +129,37 @@
                             <p>Plate Number</p>
                         </div>
                         <div class="vio-second">
-                            <p><strong>Date & Time:</strong><br><span id="modal-date"></span></p>
+                            <!-- <p><strong>Date & Time:</strong><br><span id="modal-date"></span></p>
                             <p><strong>Violation Type:</strong><br><span id="modal-violation"></span></p>
                             <p><strong>Location:</strong><br><span id="modal-location"></span></p>
                             <p><strong>Reported By:</strong><br><span id="modal-reported"></span></p>
-                            <p><strong>Remarks:</strong><br><span id="modal-remarks"></span></p>
+                            <p><strong>Remarks:</strong><br><span id="modal-remarks"></span></p> -->
+
+                            <p>
+                                <strong>Date & Time:</strong><br>
+                                <input type="text" class="form-control" id="modal-date-input" readonly>
+                            </p>
+                            <p>
+                                <strong>Violation Type:</strong><br>
+                                <input type="text" class="form-control" id="modal-violation-input" readonly>
+                            </p>
+                            <p>
+                                <strong>Location:</strong><br>
+                                <input type="text" class="form-control" id="modal-location-input" readonly>
+                            </p>
+                            <p>
+                                <strong>Reported By:</strong><br>
+                                <input type="text" class="form-control" id="modal-reported-input" readonly>
+                            </p>
+                            <p>
+                                <strong>Remarks:</strong><br>
+                                <input type="text" class="form-control" id="modal-remarks-input" readonly>
+                            </p>
+
                             <p><strong>Proof Image:</strong></p>
+                            <img id="modal-image" src="" alt="Proof Image"/>
                         </div>
-                        <img id="modal-image" src="" alt="Proof Image"/>
+
                     </div>
                 </div>
             </div>
@@ -194,18 +217,40 @@
                 fetchData(url);
             });
 
-            // Modal functionality with event delegation
-            $(document).on('click', '.view-btn', function() {
-                // Update modal content with data attributes
-                $('#modal-image').attr('src', $(this).data('image'));
-                $('#modal-date').text($(this).data('date'));
-                $('#modal-plate').text($(this).data('plate'));
-                $('#modal-violation').text($(this).data('violation'));
-                $('#modal-location').text($(this).data('location'));
-                $('#modal-reported').text($(this).data('reported'));
-                $('#modal-remarks').text($(this).data('remarks'));
+            // // Modal functionality with event delegation
+            // $(document).on('click', '.view-btn', function() {
+            //     // Update modal content with data attributes
+            //     $('#modal-image').attr('src', $(this).data('image'));
+            //     $('#modal-date').text($(this).data('date'));
+            //     $('#modal-plate').text($(this).data('plate'));
+            //     $('#modal-violation').text($(this).data('violation'));
+            //     $('#modal-location').text($(this).data('location'));
+            //     $('#modal-reported').text($(this).data('reported'));
+            //     $('#modal-remarks').text($(this).data('remarks'));
 
-                // Show the modal
+            //     // Show the modal
+            //     $('#myModal').show();
+            // });
+
+            $(document).on('click', '.view-btn', function() {
+                // Retrieve data from the clicked element
+                const dateValue = $(this).data('date');
+                const violationValue = $(this).data('violation');
+                const locationValue = $(this).data('location');
+                const reportedValue = $(this).data('reported');
+                const remarksValue = $(this).data('remarks');
+                
+                // Populate input fields (for display only)
+                $('#modal-image').attr('src', $(this).data('image'));
+                $('#modal-plate').text($(this).data('plate'));
+
+                $('#modal-date-input').val(dateValue);
+                $('#modal-violation-input').val(violationValue);
+                $('#modal-location-input').val(locationValue);
+                $('#modal-reported-input').val(reportedValue);
+                $('#modal-remarks-input').val(remarksValue);
+
+                // Show the modal (if applicable)
                 $('#myModal').show();
             });
 

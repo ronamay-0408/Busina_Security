@@ -380,6 +380,12 @@ th {
     text-align: center;
     font-size: 13px;
 }
+.vio-second {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa; /* Light gray background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
 .vio-second span {
     padding: 5px;
     border: 0.5px solid #80808066;
@@ -387,3 +393,9 @@ th {
     /* margin-top: 5px; */
     font-size: 15px;
 }
+@media (max-width: 600px) {
+    #modal-image{
+        width: 100%;
+    }    
+}
+
