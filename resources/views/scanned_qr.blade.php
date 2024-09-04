@@ -48,7 +48,7 @@
     </header><!-- End Header -->
 
     <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
+    <aside id="sidebar" class="qr_sidebar">
 
         <div class="profile">
             <div class="image">

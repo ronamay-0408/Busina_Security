@@ -76,7 +76,7 @@ a {
     bottom: 0;
     width: 260px;
     z-index: 996;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     /* padding: 20px; */
     overflow-y: auto;
     scrollbar-width: thin;
@@ -85,17 +85,10 @@ a {
     box-shadow: 0 0.125rem 0.375rem 0 rgba(161, 172, 184, 0.12);
 }
 
-
 .sidebar li a{
     text-decoration: none;
     font-weight: 500;
     font-size: 15px;
-}
-
-@media (max-width: 1199px) {
-    .sidebar {
-    left: -300px;
-    }
 }
 
 .sidebar::-webkit-scrollbar {
@@ -112,25 +105,25 @@ a {
 
     #main,
     #footer {
-    margin-left: 265px;
+        margin-left: 265px;
+    }
+
+    .toggle-sidebar #main,
+    .toggle-sidebar #footer {
+        margin-left: 0;
+    }
+
+    .toggle-sidebar .sidebar {
+        left: -300px;
     }
 }
 
 @media (max-width: 1199px) {
     .toggle-sidebar .sidebar {
-    left: 0;
+        left: 0;
     }
-}
-
-@media (min-width: 1200px) {
-
-    .toggle-sidebar #main,
-    .toggle-sidebar #footer {
-    margin-left: 0;
-    }
-
-    .toggle-sidebar .sidebar {
-    left: -300px;
+        .sidebar {
+        left: -300px;
     }
 }
 
@@ -213,6 +206,77 @@ a {
 .active{
     background-color: rgba(53, 192, 247, 0.3);
     border-radius: 10px;
+}
+
+/*--------------------------------------------------------------
+# With QR Code Scanner Sidebar
+--------------------------------------------------------------*/
+.qr_sidebar {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    bottom: 0;
+    width: 260px;
+    z-index: 996;
+    transition: transform 0.3s ease-in-out; /* Ensure smooth transition */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #aab7cf transparent;
+    background-color: #ffffff;
+    box-shadow: 0 0.125rem 0.375rem 0 rgba(161, 172, 184, 0.12);
+    transform: translateX(0); /* Initially hide the sidebar */
+}
+
+body.toggle-sidebar .qr_sidebar {
+    transform: translateX(0); /* Show the sidebar */
+}
+
+
+@media (max-width: 600px) {
+    .qr_sidebar {
+        transform: translateX(-100%); /* Initially hide the sidebar */
+    }
+}
+
+.qr_sidebar li a{
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.qr_sidebar::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+    background-color: #fff;
+}
+
+.qr_sidebar::-webkit-scrollbar-thumb {
+    background-color: #aab7cf;
+}
+
+@media (min-width: 1200px) {
+
+    .toggle-sidebar .qr_sidebar {
+    left: -300px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .toggle-sidebar .qr_sidebar {
+        left: 0;
+    }
+
+    .qr_sidebar {
+        left: -300px;
+    }
+}
+
+.qr_sidebar li a.active {
+    color: #09b3e4;
+}
+
+.qr_sidebar li img.active {
+    color: #09b3e4;
 }
 
 /*--------------------------------------------------------------

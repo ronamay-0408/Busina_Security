@@ -1,33 +1,24 @@
 (function() {
     "use strict";
 
-    /**
-     * Easy selector helper function
-     */
     const select = (el, all = false) => {
-        el = el.trim()
-        if (all) {
-        return [...document.querySelectorAll(el)]
-        } else {
-        return document.querySelector(el)
-        }
-    }
-    /**
-     * Easy event listener function
-     */
+        el = el.trim();
+        return all ? [...document.querySelectorAll(el)] : document.querySelector(el);
+    };
+
     const on = (type, el, listener, all = false) => {
+        const elements = select(el, all);
         if (all) {
-        select(el, all).forEach(e => e.addEventListener(type, listener))
+            elements.forEach(e => e.addEventListener(type, listener));
         } else {
-        select(el, all).addEventListener(type, listener)
+            elements.addEventListener(type, listener);
         }
-    }
-    /**
-     * Sidebar toggle
-     */
-    if (select('.toggle-sidebar-btn')) {
-        on('click', '.toggle-sidebar-btn', function(e) {
-        select('body').classList.toggle('toggle-sidebar')
-        })
-    }
+    };
+
+    // Sidebar toggle
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.toggle-sidebar-btn')) {
+            select('body').classList.toggle('toggle-sidebar');
+        }
+    });
 })();
