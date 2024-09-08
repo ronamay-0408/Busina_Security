@@ -44,4 +44,10 @@ class VehicleOwner extends Model
     {
         return $this->hasMany(UserLog::class, 'vehicle_owner_id');
     }
+
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class, 'vehicle_owner_id');
+    }
+
 }

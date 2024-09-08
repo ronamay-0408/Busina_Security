@@ -21,6 +21,7 @@ use App\Http\Controllers\HeadViewUnauthorizedController;
 use App\Http\Controllers\HeadViewSSUController;
 use App\Http\Controllers\HeadReportsController;
 use App\Http\Controllers\UserLogController;
+use App\Http\Controllers\SubUserLogsController;
 
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\GateScannerController;
@@ -160,15 +161,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/export-all-violation-csv', [HeadViewViolationController::class, 'exportAllViolationCsv'])->name('exportAllViolationCsv');
 
 
-    // Route::get('/unauthorized_list', function () {
+    // Route::get('/SubUserLogs', function () {
     //     // Check user_type and redirect accordingly
     //     $user = Auth::user();
     //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-    //         return view('SSUHead.unauthorized_list');
+    //         return view('SSUHead.SubUserLogs');
     //     } else {
     //         abort(403, 'Unauthorized action.');
     //     }
-    // })->name('unauthorized_list');
+    // })->name('SubUserLogs');
+
+    Route::get('/SubUserLogs/{vehicleOwnerId}', [SubUserLogsController::class, 'show'])->name('SubUserLogs');
 
     // Route to view the unauthorized list
     Route::get('/unauthorized_list', [HeadViewUnauthorizedController::class, 'index'])->name('unauthorized_list');

@@ -11,8 +11,8 @@
     </thead>
     <tbody>
         @foreach($userLogs as $log)
-            <tr>
-                <td>{{ $log->log_date }}</td>
+            <tr data-url="{{ route('SubUserLogs', ['vehicleOwnerId' => $log->vehicleOwner->id]) }}" style="cursor: pointer;">
+                <td>{{ \Carbon\Carbon::parse($log->log_date)->format('Y-m-d') }}</td>  <!-- Parse log_date -->
                 <td>{{ $log->vehicleOwner->driver_license_no }}</td>
                 <td>{{ \Carbon\Carbon::parse($log->time_in)->format('g:i A') }}</td>
                 <td>{{ \Carbon\Carbon::parse($log->time_out)->format('g:i A') }}</td>
@@ -20,6 +20,15 @@
         @endforeach
     </tbody>
 </table>
+
+<script>
+    document.querySelectorAll('#userlogsTable tr').forEach(function(row) {
+        row.addEventListener('click', function() {
+            var url = this.getAttribute('data-url');
+            window.location.href = url;
+        });
+    });
+</script>
 
 <!-- Showing X to Y of Z results -->
 <div class="results-info">

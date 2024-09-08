@@ -15,19 +15,22 @@ class Vehicle extends Model
         'vehicle_owner_id',
         'model_color',
         'plate_no',
-        'or_cr_no',
+        // 'or_cr_no',
         'expiry_date',
-        'copy_or_cr',
+        // 'copy_or_cr',
         'copy_driver_license',
         'copy_cor',
         'copy_school_id',
         'vehicle_type_id',
-        'registration_no',
-        'claiming_status',
-        'vehicle_status',
-        'apply_date',
-        'issued_date',
-        'sticker_expiry'
+        // 'registration_no',
+        'or_no',
+        'cr_no',
+        'copy_or_cr',
+        // 'claiming_status',
+        // 'vehicle_status',
+        // 'apply_date',
+        // 'issued_date',
+        // 'sticker_expiry'
     ];
 
     // Define relationship with Violation
@@ -47,4 +50,11 @@ class Vehicle extends Model
     {
         return $this->belongsTo(VehicleType::class, 'vehicle_type_id');
     }
+
+    // Vehicle.php
+    public function transactions()
+    {
+        return $this->hasOne(Transaction::class, 'vehicle_id');
+    }
+
 }
