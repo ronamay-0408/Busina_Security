@@ -53,15 +53,28 @@
         <div class="date-time"></div>
 
         <div class="submain">
-            <div class="main-title">
-                <h3 class="per-title">VEHICLE OWNER INFORMATION</h3>
-            </div>
-            <div class="vehicle-owner-details">
-                <p><strong>First Name:</strong> {{ $vehicleOwner->fname }}</p>
-                <p><strong>Last Name:</strong> {{ $vehicleOwner->lname }}</p>
-                <p><strong>Middle Name:</strong> {{ $vehicleOwner->mname }}</p>
-                <p><strong>Contact Number:</strong> {{ $vehicleOwner->contact_no }}</p>
-                <p><strong>Driver's License Number:</strong> {{ $vehicleOwner->driver_license_no }}</p>
+            <h3 class="userlog-title">Vehicle Owner Information</h3>
+            <div class="owner-info">
+                <ul>
+                    <li>
+                        <span>Full Name :</span> 
+                        <span class="deets">{{ $vehicleOwner->fname }} {{ $vehicleOwner->mname }} {{ $vehicleOwner->lname }}</span>
+                    </li>
+                    <li>
+                        <span>Contact Number :</span> 
+                        <span class="deets">{{ $vehicleOwner->contact_no }}</span>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <span>Driver's License :</span>
+                        <span class="deets">{{ $vehicleOwner->driver_license_no }}</span>
+                    </li>
+                    <li>
+                        <span>Owner Type :</span> 
+                        <span class="deets">{{ $vehicleOwner->applicantType->type }}</span>
+                    </li>
+                </ul>
             </div>
         </div>
 
@@ -70,16 +83,51 @@
             <div class="vehicles-owned">
                 @foreach($vehicleOwner->vehicles as $vehicle)
                     <div class="vehicle">
-                        <p><strong>Model Color:</strong> {{ $vehicle->model_color }}</p>
-                        <p><strong>Plate Number:</strong> {{ $vehicle->plate_no }}</p>
-
-                        @if($vehicle->transactions)
-                            <p><strong>Registration Number:</strong> {{ $vehicle->transactions->registration_no }}</p>
-                            <p><strong>Vehicle Status:</strong> {{ $vehicle->transactions->vehicle_status }}</p>
-                            <p><strong>Sticker Expiry:</strong> {{ \Carbon\Carbon::parse($vehicle->transactions->sticker_expiry)->format('Y-m-d') }}</p>
-                        @else
-                            <p>No transaction data available for this vehicle.</p>
-                        @endif
+                        <h3 class="userlog-title">Vehicle Information</h3>
+                        <div class="owner-info">
+                            <ul>
+                                <li>
+                                    <span>Plate Number :</span> 
+                                    <span class="deets">{{ $vehicle->plate_no }}</span>
+                                </li>
+                                <li>
+                                    <span>Registration Number :</span> 
+                                    <span class="deets">
+                                        @if($vehicle->transactions)
+                                            {{ $vehicle->transactions->registration_no }}
+                                        @else
+                                            No registration data available.
+                                        @endif
+                                    </span>
+                                </li>
+                                <li>
+                                    <span>Sticker Expiry :</span> 
+                                    <span class="deets">
+                                        @if($vehicle->transactions && $vehicle->transactions->sticker_expiry)
+                                            {{ \Carbon\Carbon::parse($vehicle->transactions->sticker_expiry)->format('Y-m-d') }}
+                                        @else
+                                            No sticker expiry data.
+                                        @endif
+                                    </span>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li>
+                                    <span>Model Color :</span> 
+                                    <span class="deets">{{ $vehicle->model_color }}</span>
+                                </li>
+                                <li>
+                                    <span>Vehicle Status :</span>
+                                    <span class="deets">
+                                        @if($vehicle->transactions)
+                                            {{ $vehicle->transactions->vehicle_status }}
+                                        @else
+                                            No vehicle status data.
+                                        @endif
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 @endforeach
             </div>

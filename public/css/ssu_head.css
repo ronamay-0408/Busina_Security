@@ -445,6 +445,45 @@ th {
     font-weight: 500;
 }
 
+.userlog-title{
+    font-size: 18px;
+    font-weight: 550;
+    color: #566a7f;
+    margin: 0;
+}
+
+.owner-info {
+    display: flex;
+    gap: 20px;
+}
+
+.owner-info ul {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-right: 20px;
+}
+
+.owner-info ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    font-size: 14px;
+    width: 100%;
+    color: #566a7f;
+}
+
+.deets {
+    border: 1px solid #ddd;
+    padding: 5px;
+    width: 70%;
+    text-align: right;
+    height: 100%;
+    align-content: center;
+    background-color: #ffffff;
+}
+
 @media (max-width: 600px) {
     #modal-image{
         width: 100%;
@@ -455,6 +494,22 @@ th {
     }
     .vio-sub input{
         width: 100%;
-    }    
+    } 
+    .owner-info {
+        flex-wrap: wrap;
+        gap: 0;
+        padding: 10px 0px;
+    }
+    .owner-info ul {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .owner-info ul li {
+        padding-bottom: 10px;
+        font-size: 12px;
+    }
+    .deets {
+        width: 60%;
+    }
 }
-

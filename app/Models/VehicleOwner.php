@@ -25,10 +25,10 @@ class VehicleOwner extends Model
 
     // Define relationships
 
-    // public function applicantType()
-    // {
-    //     return $this->belongsTo(ApplicantType::class, 'applicant_type_id');
-    // }
+    public function applicantType()
+    {
+        return $this->belongsTo(Applicant_type::class, 'applicant_type_id');
+    }
 
     public function employee()
     {
