@@ -10,13 +10,25 @@ use App\Models\Users; // Import Users model
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ReportVehicleController extends Controller
 {
     public function showForm()
     {
-        $violationTypes = ViolationType::all(); // Retrieve all violation types
-        return view('report_vehicle', compact('violationTypes'));
+        // Get the authenticated user
+        $user = Auth::user();
+
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 2) {
+
+            $violationTypes = ViolationType::all(); // Retrieve all violation types
+            return view('report_vehicle', compact('violationTypes'));
+
+        } else {
+            // Redirect to index if not authorized
+            // abort(403, 'Unauthorized action.');
+            return redirect()->route('head_index');
+        }
     }
 
     public function store(Request $request)

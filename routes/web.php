@@ -33,21 +33,41 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route to view the index page using a controller
     Route::get('/index', [IndexReportController::class, 'index'])->name('index');
 
-    // Route::get('/view_reports', function () {
-    //     return view('view_reports');
-    // })->name('view_reports');
-
     // Keep this route definition
     Route::get('/view_reports', [ViewReportsController::class, 'index'])->name('view_reports');
 
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+    // Route::get('/guidelines', function () {
+    //     return view('guidelines');
+    // })->name('guidelines');
+
     Route::get('/guidelines', function () {
-        return view('guidelines');
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 2) {
+            return view('guidelines');
+        } else {
+            // abort(403, 'Unauthorized action.');
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('head_guidelines');
+        }
     })->name('guidelines');
 
+    // Route::get('/myaccount', function () {
+    //     return view('myaccount');
+    // })->name('myaccount');
+
     Route::get('/myaccount', function () {
-        return view('myaccount');
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 2) {
+            return view('myaccount');
+        } else {
+            // abort(403, 'Unauthorized action.');
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('head_account');
+        }
     })->name('myaccount');
 
     Route::get('/report_vehicle', function () {
@@ -61,20 +81,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     //     return view('visitor_scanner');
     // })->name('visitor_scanner');
 
-    // Route::post('/scan-qr', [VisitorScannerController::class, 'scan'])->name('scan.qr');
-
-    // Route::get('/unauthorized', function () {
-    //     $qrCode = session('qr', 'Unknown QR Code');
-    //     return view('unauthorized', compact('qrCode'));
-    // })->name('unauthorized');    
-    // // Route::post('/store_unauthorized', [UnauthorizedController::class, 'store'])->name('store_unauthorized');
-
-    // Route::get('/visitorcode_notfound', function () {
-    //     return view('visitorcode_notfound');
-    // })->name('visitorcode_notfound');
-
     Route::get('/visitor_scanner', function () {
-        return view('visitor_scanner');
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 2) {
+            return view('visitor_scanner');
+        } else {
+            // abort(403, 'Unauthorized action.');
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('head_index');
+        }
     })->name('visitor_scanner');
     
     Route::post('/visitor-scan-qr', [VisitorScannerController::class, 'scan'])->name('visitor-scan.qr');
@@ -90,7 +106,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('visitorcode_notfound');
     })->name('visitorcode_notfound');
 
-
     Route::get('/reg_not_found', function () {
         return view('reg_not_found');
     })->name('reg_not_found');
@@ -99,25 +114,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('vehicle_registered_info');
     })->name('vehicle_registered_info');
 
+    // Route::get('/gate_scanner', function () {
+    //     return view('gate_scanner');
+    // })->name('gate_scanner');
+
     Route::get('/gate_scanner', function () {
-        return view('gate_scanner');
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 2) {
+            return view('gate_scanner');
+        } else {
+            // abort(403, 'Unauthorized action.');
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('head_index');
+        }
     })->name('gate_scanner');
     
     Route::post('/scan-qr', [GateScannerController::class, 'scanQR'])->name('gate_scanner.scan');
 
+    // Route to display scanned QR code page
     // Route::get('/scanned_qr', function () {
     //     return view('scanned_qr');
     // })->name('scanned_qr');
 
-    // Route::get('/scanned_result', function () {
-    //     return view('scanned_result');
-    // })->name('scanned_result');
-
-    // routes/web.php
-
-    // Route to display scanned QR code page
     Route::get('/scanned_qr', function () {
-        return view('scanned_qr');
+        // Check user_type and redirect accordingly
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 2) {
+            return view('scanned_qr');
+        } else {
+            // abort(403, 'Unauthorized action.');
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('head_index');
+        }
     })->name('scanned_qr');
 
     // Route to display scanned QR code result
@@ -141,16 +170,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/head_index', [HeadReportsController::class, 'index'])->name('head_index');
 
-    // Route::get('/violation_list', function () {
-    //     // Check user_type and redirect accordingly
-    //     $user = Auth::user();
-    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-    //         return view('SSUHead.violation_list');
-    //     } else {
-    //         abort(403, 'Unauthorized action.');
-    //     }
-    // })->name('violation_list');
-
     // Route to view the violation list
     Route::get('/violation_list', [HeadViewViolationController::class, 'index'])->name('violation_list');
 
@@ -160,17 +179,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route to export all records CSV
     Route::get('/export-all-violation-csv', [HeadViewViolationController::class, 'exportAllViolationCsv'])->name('exportAllViolationCsv');
 
-
-    // Route::get('/SubUserLogs', function () {
-    //     // Check user_type and redirect accordingly
-    //     $user = Auth::user();
-    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-    //         return view('SSUHead.SubUserLogs');
-    //     } else {
-    //         abort(403, 'Unauthorized action.');
-    //     }
-    // })->name('SubUserLogs');
-
     Route::get('/SubUserLogs/{vehicleOwnerId}', [SubUserLogsController::class, 'show'])->name('SubUserLogs');
 
     // Route to view the unauthorized list
@@ -179,18 +187,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/export/unauthorized/csv', [HeadViewUnauthorizedController::class, 'exportCsv'])->name('exportUnauthorizedCsv');
     // Route to export all records CSV
     Route::get('/export/unauthorized/all', [HeadViewUnauthorizedController::class, 'exportAllUnauthorizedCsv'])->name('exportAllUnauthorizedCsv');
-
-    // Route::get('/head_userlogs', function () {
-    //     // Check user_type and redirect accordingly
-    //     $user = Auth::user();
-    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-    //         return view('SSUHead.head_userlogs');
-    //     } else {
-    //         // abort(403, 'Unauthorized action.');
-    //         // If the user is not authorized, redirect to the index view
-    //         return redirect()->route('index');
-    //     }
-    // })->name('head_userlogs');
 
     Route::get('/head_userlogs', [UserLogController::class, 'index'])->name('head_userlogs');
     Route::get('/userlogs/export', [UserLogController::class, 'exportCsv'])->name('userlogs.export');
@@ -219,16 +215,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->route('index');
         }
     })->name('head_guidelines');
-
-    // Route::get('/ssu_personnel', function () {
-    //     // Check user_type and redirect accordingly
-    //     $user = Auth::user();
-    //     if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-    //         return view('SSUHead.ssu_personnel');
-    //     } else {
-    //         abort(403, 'Unauthorized action.');
-    //     }
-    // })->name('ssu_personnel');
     
     Route::get('/ssu_personnel', [HeadViewSSUController::class, 'index'])->name('ssu_personnel');
     // Route to handle form submission to add a new user

@@ -8,38 +8,50 @@ use App\Models\Vehicle;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session; // Import the Session facade
 use App\Models\Transaction; // Import the Transaction model
+use Illuminate\Support\Facades\Auth;
 
 class QRController extends Controller
 {
     public function scanQR(Request $request)
     {
-        $qrCodeData = $request->input('qr_code');
-        Log::info('Received QR code data: ' . $qrCodeData);
-        
-        try {
-            $vehicleOwner = VehicleOwner::where('id', $qrCodeData)->first();
-            Log::info('Vehicle owner found: ' . ($vehicleOwner ? 'Yes' : 'No'));
+        // Get the authenticated user
+        $user = Auth::user();
 
-            if (!$vehicleOwner) {
-                Log::warning('Vehicle owner not found for QR code: ' . $qrCodeData);
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 2) {
+
+            $qrCodeData = $request->input('qr_code');
+            Log::info('Received QR code data: ' . $qrCodeData);
+            
+            try {
+                // $vehicleOwner = VehicleOwner::where('id', $qrCodeData)->first(); //Code using vehicle_owner id
+                $vehicleOwner = VehicleOwner::where('driver_license_no', $qrCodeData)->first(); //Code using drivers license
+                Log::info('Vehicle owner found: ' . ($vehicleOwner ? 'Yes' : 'No'));
+
+                if (!$vehicleOwner) {
+                    Log::warning('Vehicle owner not found for QR code: ' . $qrCodeData);
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Vehicle owner not found.',
+                        'redirect' => route('reg_not_found') // Include redirection URL
+                    ]);
+                }
+
+                session(['vehicle_owner_id' => $vehicleOwner->id]);
+                Log::info('Vehicle owner ID stored in session: ' . $vehicleOwner->id);
+
+                return response()->json(['success' => true]);
+
+            } catch (\Exception $e) {
+                Log::error('Error processing QR code: ' . $e->getMessage());
                 return response()->json([
                     'success' => false,
-                    'message' => 'Vehicle owner not found.',
-                    'redirect' => route('reg_not_found') // Include redirection URL
+                    'message' => 'An error occurred while processing the QR code.'
                 ]);
             }
 
-            session(['vehicle_owner_id' => $vehicleOwner->id]);
-            Log::info('Vehicle owner ID stored in session: ' . $vehicleOwner->id);
-
-            return response()->json(['success' => true]);
-
-        } catch (\Exception $e) {
-            Log::error('Error processing QR code: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while processing the QR code.'
-            ]);
+        } else {
+            // Redirect to head_index if not authorized
+            return redirect()->route('head_index');
         }
     }
 
