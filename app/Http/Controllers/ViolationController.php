@@ -19,17 +19,19 @@ class ViolationController extends Controller
             // Get the search term from the request
             $searchTerm = $request->input('search');
 
-            // Query the violations, filtering by plate_no if a search term is provided
+            // Set a default pagination size (e.g., 10)
+            $perPage = $request->input('per_page', 10);
+
+            // Query the violations with pagination, filtering by plate_no if a search term is provided
             $violations = Violation::when($searchTerm, function ($query, $searchTerm) {
                 return $query->where('plate_no', 'like', '%' . $searchTerm . '%');
-            })->get();
+            })->paginate($perPage);
 
             // Pass the violations to the view
             return view('view_reports', compact('violations'));
 
         } else {
             // Redirect to index if not authorized
-            // abort(403, 'Unauthorized action.');
             return redirect()->route('head_index');
         }
     }
