@@ -134,6 +134,8 @@
         </div>
     </main>
 
+    @include('SSUHead.partials.footer')
+    
     <!-- MODAL AND SEARCH JS -->
     <!-- <script src="{{ asset('js/head_violation_modal.js') }}"></script> -->
 

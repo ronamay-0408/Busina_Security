@@ -52,7 +52,35 @@
         <div class="date-time">
         </div>
 
-        <div class="submain">
+        <div class="account-mainsub">
+            <div class="account-left">
+                <div class="left-sub">
+                    <img src="images/Male User.png" alt="">
+                    <h3>{{ Session::has('user') ? Session::get('user')['fname'] : '' }} {{ Session::has('user') ? Session::get('user')['lname'] : '' }}</h3>
+                    <p>Head of Security Service Unit</p>
+                    <h3>{{ Session::has('user') ? Session::get('user')['emp_no'] : '' }}</h4>
+                </div>
+            </div>
+            <div class="account-right">
+                <div class="account-sub">
+                    <h4>Full Name</h4>
+                    <p>{{ Session::has('user') ? Session::get('user')['fname'] : '' }} {{ Session::has('user') ? Session::get('user')['mname'] : '' }} {{ Session::has('user') ? Session::get('user')['lname'] : '' }}</p>
+                    <hr class="dark horizontal my-0">
+                </div>
+                <div class="account-sub">
+                    <h4>Email</h4>
+                    <p>{{ Session::has('user') ? Session::get('user')['email'] : '' }}</p>
+                    <hr class="dark horizontal my-0">
+                </div>
+                <div class="account-sub">
+                    <h4>Contact No.</h4>
+                    <p>{{ Session::has('user') ? Session::get('user')['contact_no'] : '' }}</p>
+                    <hr class="dark horizontal my-0">
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="submain">
             <div class="main-title">
                 <h3 class="per-title">MY ACCOUNT</h3>
             </div>
@@ -99,8 +127,10 @@
                     <a class="nav-link" href="{{ url('/head_index') }}">BACK</a>
                 </div>
             </div>
-        </div>
+        </div> -->
     </main><!-- End #main -->
+
+    @include('SSUHead.partials.footer')
 
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>

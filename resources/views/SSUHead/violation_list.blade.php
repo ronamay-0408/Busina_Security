@@ -174,6 +174,8 @@
         </div>
     </main><!-- End #main -->
 
+    @include('SSUHead.partials.footer')
+
     <!-- JAVASCRIPT FOR AUTOMATIC SEARCH AND FILTERING -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

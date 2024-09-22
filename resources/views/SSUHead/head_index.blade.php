@@ -206,7 +206,10 @@
         <div class="date-time">
         </div>
 
-        <div class="front">
+        <div class="banner">
+            <img src="images/BUTorch.png">
+        </div>
+        <!-- <div class="front">
             <div class="asset1">
                 <img src="images/Asset1.png">
             </div>
@@ -215,7 +218,7 @@
                 <h1>HEAD OF SECURITY</h1>
                 <p>Rizal St., Legazpi City, Albay</p>
             </div>
-        </div>
+        </div> -->
 
         <!-- resources/views/SSUHead/head_index.blade.php -->
         <div class="reports">
@@ -514,6 +517,8 @@
         </script>
     </main><!-- End #main -->
 
+    @include('SSUHead.partials.footer')
+    
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
 

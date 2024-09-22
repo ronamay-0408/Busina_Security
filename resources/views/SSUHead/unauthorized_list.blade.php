@@ -126,6 +126,8 @@
         </div>
     </main>
 
+    @include('SSUHead.partials.footer')
+
     <!-- JAVASCRIPT FOR AJAX -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {

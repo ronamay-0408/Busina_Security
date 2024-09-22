@@ -201,6 +201,8 @@
         </div>
     </main><!-- End #main -->
 
+    @include('SSUHead.partials.footer')
+
     <script src="{{ asset('js/head_ssu_search.js') }}"></script>
 
     <script src="{{ asset('js/ssu_export.js') }}"></script>

@@ -59,6 +59,8 @@
         </div>
     </main><!-- End #main -->
 
+    @include('SSUHead.partials.footer')
+
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
 

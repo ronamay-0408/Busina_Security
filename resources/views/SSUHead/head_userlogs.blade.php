@@ -126,6 +126,8 @@
         </div>
     </main>
 
+    @include('SSUHead.partials.footer')
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('searchInputUnauthorized');
