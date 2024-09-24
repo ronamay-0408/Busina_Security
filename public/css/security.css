@@ -1820,6 +1820,7 @@ hr.horizontal.dark {
     background: 0 0;
     padding: 0.5rem 1rem;
     font-size: 16px;
+    cursor: pointer;
 }
 .nav-link2.new-active {
     background-color: #fff;
@@ -1861,4 +1862,39 @@ hr.horizontal.dark {
     margin-top: 20px;
     cursor: pointer;
     font-size: 14px;
+}
+
+.pass-input {
+    position: relative;
+}
+
+.pass-input i {
+    position: absolute;
+    right: 10px; /* Adjust based on your layout */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #607D8B;
+}
+#passwordStrength {
+    font-size: 14px;
+    padding-top: 2px;
+}
+#confirmPasswordError{
+    color: red;
+    font-size: 14px;
+    padding-top: 2px;
+}
+
+.alert-success{
+    color: #35a133;
+    text-align: center;
+    padding-top: 10px;
+    font-size: 13px;
+}
+.alert-danger{
+    color: red;
+    text-align: center;
+    padding-top: 10px;
+    font-size: 13px;
 }

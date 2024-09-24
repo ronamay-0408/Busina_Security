@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <!-- ======= Header ======= -->
@@ -98,32 +99,50 @@
                 <!-- Change Password Section -->
                 <div class="ChangePass" id="changePassSection" style="display:none;">
                     <!-- Change Password Form -->
-                    <form method="post">
+                    <form method="post" action="{{ route('change.password') }}">
+                        @csrf
                         <div class="row mb-3">
                             <label>Current Password</label>
-                            <div class="pass-input">
-                                <input name="password" type="password" class="form-control" id="currentPassword">
+                            <div class="pass-input position-relative">
+                                <input name="current_password" type="password" class="form-control" required id="currentPassword">
+                                <i class="fas fa-eye" onclick="togglePasswordVisibility('currentPassword', this)"></i>
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <label>New Password</label>
-                            <div class="pass-input">
-                                <input name="newpassword" type="password" class="form-control" id="newPassword">
+                            <div class="pass-input position-relative">
+                                <input name="new_password" type="password" class="form-control" required id="new_pass">
+                                <i class="fas fa-eye" onclick="togglePasswordVisibility('new_pass', this)"></i>
                             </div>
+                            <div id="passwordStrength"></div>
                         </div>
 
                         <div class="row mb-3">
                             <label>Re-enter New Password</label>
-                            <div class="pass-input">
-                                <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                            <div class="pass-input position-relative">
+                                <input name="new_password_confirmation" type="password" class="form-control" required id="con_pass">
+                                <i class="fas fa-eye" onclick="togglePasswordVisibility('con_pass', this)"></i>
                             </div>
+                            <div id="confirmPasswordError" style="display:none;">Passwords do not match</div>
                         </div>
 
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">Change Password</button>
                         </div>
                     </form>
+
+                    @if(session('success'))
+                        <div id="successMessage" class="alert alert-success" style="display:block;">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div id="errorMessage" class="alert alert-danger" style="display:block;">
+                            {{ implode(', ', $errors->all()) }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -178,35 +197,9 @@
         </div> -->
     </main><!-- End #main -->
 
-    <script>
-        // Get the buttons and the sections
-        const overviewBtn = document.getElementById('overviewBtn');
-        const changePassBtn = document.getElementById('changePassBtn');
-        const overviewSection = document.getElementById('overviewSection');
-        const changePassSection = document.getElementById('changePassSection');
+    <script src="{{ asset('js/ChangePasswordConditions.js') }}"></script>
 
-        // Add event listeners to buttons
-        overviewBtn.addEventListener('click', function() {
-            // Show the overview section, hide the change password section
-            overviewSection.style.display = 'block';
-            changePassSection.style.display = 'none';
-
-            // Add active class to the clicked button and remove from the other
-            overviewBtn.classList.add('new-active');
-            changePassBtn.classList.remove('new-active');
-        });
-
-        changePassBtn.addEventListener('click', function() {
-            // Show the change password section, hide the overview section
-            overviewSection.style.display = 'none';
-            changePassSection.style.display = 'block';
-
-            // Add active class to the clicked button and remove from the other
-            changePassBtn.classList.add('new-active');
-            overviewBtn.classList.remove('new-active');
-        });
-    </script>
-
+    <script src="{{ asset('js/NavigatingSection.js') }}"></script>
 
     @include('SSUHead.partials.footer')
 

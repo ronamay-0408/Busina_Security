@@ -25,7 +25,7 @@ use App\Http\Controllers\SubUserLogsController;
 
 use App\Http\Controllers\QRController;
 use App\Http\Controllers\GateScannerController;
-
+use App\Http\Controllers\HeadChangePassController;
 use App\Http\Controllers\VisitorScannerController;
 
 // Group routes that require authentication and email verification
@@ -255,6 +255,8 @@ Route::get('/updated_pass_result', function () {
     
     return view('updated_pass_result');
 })->name('updated_pass_result'); // Password updated confirmation
+
+Route::post('/change-password', [HeadChangePassController::class, 'changePassword'])->name('change.password');
 
 Route::get('/email', function () {
     return view('email');
