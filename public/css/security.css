@@ -1762,7 +1762,7 @@ p#message-text {
 }
 
 .account-sub{
-    padding: 0px 0px 20px 0px;
+    padding: 0px 0px 10px 0px;
 }
 .account-sub h4{
     margin: 0;
@@ -1805,4 +1805,60 @@ hr.horizontal.dark {
     text-align: center;
     font-size: 13px;
     color: #012970;
+}
+
+
+
+.account-btn{
+    display: flex;
+    
+}
+.nav-link2 {
+    margin-bottom: -2px;
+    border: none;
+    color: #2c384e;
+    background: 0 0;
+    padding: 0.5rem 1rem;
+    font-size: 16px;
+}
+.nav-link2.new-active {
+    background-color: #fff;
+    color: #4154f1;
+    border-bottom: 2px solid #4154f1;
+}
+.nav-tabs-bordered {
+    border-bottom: 2px solid #ebeef4;
+}
+.Overview{
+    padding: 20px 0px 0px 0px;
+}
+.Overview h3{
+    margin: 0;
+    padding: 0px 0px 10px 0px;
+    font-weight: 500;
+}
+.row.mb-3 {
+    padding: 15px 0px 0px 0px;
+}
+.pass-input input {
+    width: 100%;
+    padding: 5px 5px 5px 10px;
+    border: 0.5px solid #80808066;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+    background: white;
+    color: black;
+    font-size: 14px;
+}
+
+.ChangePass button{
+    background-color: #5077A5;
+    color: white;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 4px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 14px;
 }

@@ -17,7 +17,6 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-
 <body>
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -62,20 +61,69 @@
                 </div>
             </div>
             <div class="account-right">
-                <div class="account-sub">
-                    <h4>Full Name</h4>
-                    <p>{{ Session::has('user') ? Session::get('user')['fname'] : '' }} {{ Session::has('user') ? Session::get('user')['mname'] : '' }} {{ Session::has('user') ? Session::get('user')['lname'] : '' }}</p>
-                    <hr class="dark horizontal my-0">
+                <div class="account-btn nav-tabs-bordered" role="tablist">
+                    <div class="sub-btn">
+                        <button class="nav-link2 new-active" id="overviewBtn">Overview</button>
+                    </div>
+                    <div class="sub-btn">
+                        <button class="nav-link2" id="changePassBtn">Change Password</button>
+                    </div>
                 </div>
-                <div class="account-sub">
-                    <h4>Email</h4>
-                    <p>{{ Session::has('user') ? Session::get('user')['email'] : '' }}</p>
-                    <hr class="dark horizontal my-0">
+
+                <!-- Overview Section -->
+                <div class="Overview" id="overviewSection">
+                    <h3>Profile Details</h3>
+                    <div class="account-sub">
+                        <h4>Full Name</h4>
+                        <p>{{ Session::has('user') ? Session::get('user')['fname'] : '' }} {{ Session::has('user') ? Session::get('user')['mname'] : '' }} {{ Session::has('user') ? Session::get('user')['lname'] : '' }}</p>
+                        <hr class="dark horizontal my-0">
+                    </div>
+                    <div class="account-sub">
+                        <h4>Email</h4>
+                        <p>{{ Session::has('user') ? Session::get('user')['email'] : '' }}</p>
+                        <hr class="dark horizontal my-0">
+                    </div>
+                    <div class="account-sub">
+                        <h4>Contact No.</h4>
+                        <p>{{ Session::has('user') ? Session::get('user')['contact_no'] : '' }}</p>
+                        <hr class="dark horizontal my-0">
+                    </div>
+                    <div class="account-sub">
+                        <h4>Password</h4>
+                        <p>**********</p> <!-- Display a masked password -->
+                        <hr class="dark horizontal my-0">
+                    </div>
                 </div>
-                <div class="account-sub">
-                    <h4>Contact No.</h4>
-                    <p>{{ Session::has('user') ? Session::get('user')['contact_no'] : '' }}</p>
-                    <hr class="dark horizontal my-0">
+
+                <!-- Change Password Section -->
+                <div class="ChangePass" id="changePassSection" style="display:none;">
+                    <!-- Change Password Form -->
+                    <form method="post">
+                        <div class="row mb-3">
+                            <label>Current Password</label>
+                            <div class="pass-input">
+                                <input name="password" type="password" class="form-control" id="currentPassword">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label>New Password</label>
+                            <div class="pass-input">
+                                <input name="newpassword" type="password" class="form-control" id="newPassword">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label>Re-enter New Password</label>
+                            <div class="pass-input">
+                                <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Change Password</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -129,6 +177,36 @@
             </div>
         </div> -->
     </main><!-- End #main -->
+
+    <script>
+        // Get the buttons and the sections
+        const overviewBtn = document.getElementById('overviewBtn');
+        const changePassBtn = document.getElementById('changePassBtn');
+        const overviewSection = document.getElementById('overviewSection');
+        const changePassSection = document.getElementById('changePassSection');
+
+        // Add event listeners to buttons
+        overviewBtn.addEventListener('click', function() {
+            // Show the overview section, hide the change password section
+            overviewSection.style.display = 'block';
+            changePassSection.style.display = 'none';
+
+            // Add active class to the clicked button and remove from the other
+            overviewBtn.classList.add('new-active');
+            changePassBtn.classList.remove('new-active');
+        });
+
+        changePassBtn.addEventListener('click', function() {
+            // Show the change password section, hide the overview section
+            overviewSection.style.display = 'none';
+            changePassSection.style.display = 'block';
+
+            // Add active class to the clicked button and remove from the other
+            changePassBtn.classList.add('new-active');
+            overviewBtn.classList.remove('new-active');
+        });
+    </script>
+
 
     @include('SSUHead.partials.footer')
 
