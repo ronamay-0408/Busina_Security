@@ -179,7 +179,7 @@ a {
 }
 
 .sidebar-nav .last{
-    margin-top: 9rem;
+    margin-top: 5rem;
 }
 
 .sidebar-nav .sub_last{
@@ -1808,7 +1808,6 @@ hr.horizontal.dark {
 }
 
 
-
 .account-btn{
     display: flex;
     
@@ -1897,4 +1896,203 @@ hr.horizontal.dark {
     text-align: center;
     padding-top: 10px;
     font-size: 13px;
+}
+
+
+
+
+/* GUIDELINES */
+.cont-g {
+    margin: 20px 0px;
+}
+
+.box-g {
+    flex: 1;
+    /* padding-left: 20px;
+    padding-right: 20px; */
+    /* background-color: #f5f5f9; */
+    background-color:#ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 0.375rem 0.25rem rgba(161, 172, 184, 0.15);
+    background: linear-gradient(to bottom right, #f08c00, #f85032);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0px;
+}
+.box-g ul {
+    list-style: none;
+    margin: 15px;
+}
+.guide-title-1 {
+    color: #040044;
+    font-size: 16px;
+    font-weight: 600;
+}
+.guide-title-2 {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+.guide-title-3 {
+    color:#333;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.cont-g-2 {
+    display: grid;
+    grid-template-rows: repeat(1, 0.25fr) 2.75fr; /* 1fr for the first 3 columns, 2fr for the 4th column */
+    margin: 20px 0px;
+    gap: 10px;
+    height: 69vh;
+}
+.box-g-2 {
+    flex: 1;
+    padding-right: 20px;
+    padding-left: 20px;
+    /* height: 60vh; */
+    /* background-color: #f5f5f9; */
+    background-color:#ffffff;
+    border-radius: 5px;
+    box-shadow: 0 0 0.375rem 0.25rem rgba(161, 172, 184, 0.15);
+    position: relative;
+    overflow-y: scroll;
+}
+.box-g-2 h3 {
+    color:#566a7f;
+    font-weight: 600;
+} 
+.box-g-2 h4 {
+    color:#566a7f;
+    font-weight: 600;
+}
+.box-g-2 p {
+    color: #566a7f;
+    padding-left: 20px;
+}
+::-webkit-scrollbar {
+    width: 6px; /* Make the scrollbar thinner */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Scrollbar track color */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888; /* Scrollbar handle color */
+    border-radius: 10px; /* Rounded scrollbar edges */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Darker handle when hovered */
+}
+.box-g-2 ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    width: 100px;
+}
+.box-g-2 ul li {
+    color: #697a8d;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px;
+}
+.box-g-2 ul li:hover{
+    border-radius: 5px;
+    background-color: rgba(53, 192, 247, 0.3);
+}
+.dropdown-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+}
+#sectionSearch {
+    padding: 8px;
+    border: 1px solid #dddedf;
+    border-radius: 4px;
+    width: 400px;
+    height: 40px;
+    box-sizing: border-box;
+    color: #566a7f;
+}
+#sectionSearch:focus {
+    border: 2px solid;
+    border-color: #566a7f; /* Change this to the desired color */
+    outline: none; /* Remove the default outline */
+}
+.srch-btn {
+    border: none;
+    background: transparent;
+    font-size: 1.25em; /* Adjust size as needed */
+    cursor: pointer;
+    color: #697a8d; /* Adjust color as needed */
+}
+.srch-btn:hover {
+    color:  #09b3e4; /* Color change on hover */
+}
+.srch-arw {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+#sectionDropdown {
+    padding: 8px;
+    border: 1px solid #dddedf;
+    border-radius: 4px;
+    width: 200px;
+    height: 40px;
+    color: #566a7f;
+}
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #ccc; /* Customize color */
+    margin: 20px 0; /* Customize space around the line */
+}
+.highlight {
+    background-color: rgba(53, 192, 247, 0.3);
+    font-weight: bold;
+}
+
+.current-match .highlight {
+    background-color: rgb(255, 217, 148);
+}
+
+.check::before {
+    content: "\f14a"; /* Font Awesome's checkbox icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-right: 10px;
+    color: green;
+}
+
+.not::before {
+    content: "\f05e"; /* Font Awesome's 'ban' icon */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    margin-right: 10px;
+    color: red; /* You can change the color */
+}
+@media (max-width: 600px) {
+    .dropdown-section {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    #sectionSearch {
+        width: 320px;
+    }
+    .box-g-2 {
+        padding: 0px 10px 0px 10px;
+    }
 }
