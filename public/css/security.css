@@ -1820,6 +1820,7 @@ hr.horizontal.dark {
     padding: 0.5rem 1rem;
     font-size: 16px;
     cursor: pointer;
+    font-family: 'Poppins';
 }
 .nav-link2.new-active {
     background-color: #fff;
@@ -1861,6 +1862,7 @@ hr.horizontal.dark {
     margin-top: 20px;
     cursor: pointer;
     font-size: 14px;
+    font-family: 'Poppins';
 }
 
 .pass-input {

@@ -20,15 +20,15 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('ssu_personnel') ? 'active' : '' }}" href="{{ route('ssu_personnel') }}">
-            <i class="bi bi-people-fill"></i>
-            <span>SSU Personnels</span>
-        </a>
-    </li>
-    <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('head_userlogs') ? 'active' : '' }}" href="{{ route('head_userlogs') }}">
             <i class="bi bi-truck-front-fill"></i>
             <span>Vehicle Owner Logs</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('ssu_personnel') ? 'active' : '' }}" href="{{ route('ssu_personnel') }}">
+            <i class="bi bi-people-fill"></i>
+            <span>SSU Personnels</span>
         </a>
     </li>
     <li class="nav-item">
