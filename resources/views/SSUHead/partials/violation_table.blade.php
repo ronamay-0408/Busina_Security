@@ -11,7 +11,7 @@
     <tbody>
         @foreach($violations as $violation)
             <tr>
-                <td>{{ $violation->created_at->format('F j, Y, g:i a') }}</td>
+                <td>{{ $violation->created_at->format('Y-m-d, g:i A') }}</td>
                 <td>{{ $violation->plate_no }}</td>
                 <td>
                     @if($violation->proof_image)

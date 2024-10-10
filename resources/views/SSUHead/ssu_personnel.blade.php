@@ -148,7 +148,7 @@
                 <span class="close-btn">&times;</span>
                 <div class="form-box">
                     <div class="form-content">
-                        <h2>Add New User</h2>
+                        <h2>Add Authorize SSU Personnel</h2>
 
                         <form action="{{ route('ssu_personnel') }}" method="post" onsubmit="return validateEmail()">
                             @csrf
