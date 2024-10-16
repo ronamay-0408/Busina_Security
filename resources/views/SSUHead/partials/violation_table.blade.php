@@ -17,7 +17,7 @@
                     @if($violation->proof_image)
                         <button 
                             class="view-btn" 
-                            data-image="{{ asset('storage/' . $violation->proof_image) }}" 
+                            data-image="{{ asset('storage/' . $violation->proof_image) }}"
                             data-date="{{ $violation->created_at->format('F j, Y, g:i a') }}" 
                             data-plate="{{ $violation->plate_no }}" 
                             data-violation="{{ $violation->violationType->violation_name }}" 

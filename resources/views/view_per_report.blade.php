@@ -90,6 +90,7 @@
                             @if($violation->proof_image)
                                 <div class="click_files2">
                                     <img src="{{ asset('storage/' . $violation->proof_image) }}" alt="Proof Image">
+                                    <!-- <img src="{{ asset('storage/app/public/' . $violation->proof_image) }}" alt="Proof Image"> On Hostinger-->
                                 </div>
                             @else
                                 <p>No image available</p>
