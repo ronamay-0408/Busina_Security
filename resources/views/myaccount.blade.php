@@ -74,7 +74,6 @@
 
                 <!-- Overview Section -->
                 <div class="Overview" id="overviewSection">
-                    <h3>Profile Details</h3>
                     <div class="account-sub">
                         <h4>Full Name</h4>
                         <p>{{ Session::has('user') ? Session::get('user')['fname'] : '' }} {{ Session::has('user') ? Session::get('user')['mname'] : '' }} {{ Session::has('user') ? Session::get('user')['lname'] : '' }}</p>
@@ -106,7 +105,7 @@
                             <label>Current Password</label>
                             <div class="pass-input position-relative">
                                 <input name="current_password" type="password" class="form-control" required id="currentPassword">
-                                <i class="fas fa-eye" onclick="togglePasswordVisibility('currentPassword', this)"></i>
+                                <i class="fas fa-eye-slash" onclick="togglePasswordVisibility('currentPassword', this)"></i>
                             </div>
                         </div>
 
@@ -114,7 +113,7 @@
                             <label>New Password</label>
                             <div class="pass-input position-relative">
                                 <input name="new_password" type="password" class="form-control" required id="new_pass">
-                                <i class="fas fa-eye" onclick="togglePasswordVisibility('new_pass', this)"></i>
+                                <i class="fas fa-eye-slash" onclick="togglePasswordVisibility('new_pass', this)"></i>
                             </div>
                             <div id="passwordStrength"></div>
                         </div>
@@ -123,7 +122,7 @@
                             <label>Re-enter New Password</label>
                             <div class="pass-input position-relative">
                                 <input name="new_password_confirmation" type="password" class="form-control" required id="con_pass">
-                                <i class="fas fa-eye" onclick="togglePasswordVisibility('con_pass', this)"></i>
+                                <i class="fas fa-eye-slash" onclick="togglePasswordVisibility('con_pass', this)"></i>
                             </div>
                             <div id="confirmPasswordError" style="display:none;">Passwords do not match</div>
                         </div>

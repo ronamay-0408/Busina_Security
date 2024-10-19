@@ -16,7 +16,7 @@
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('scanned_qr') ? 'active' : '' }}" href="{{ route('scanned_qr') }}">
             <i class="bi bi-qr-code-scan"></i>
-            <span>Scanned QR Code</span>
+            <span>Verification Scanner</span>
         </a>
     </li>
     <li class="nav-item">

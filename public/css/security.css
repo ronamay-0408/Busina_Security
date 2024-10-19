@@ -2060,7 +2060,7 @@ hr {
     border: 0;
     height: 1px;
     background-color: #ccc; /* Customize color */
-    margin: 20px 0; /* Customize space around the line */
+    /* margin: 20px 0; Customize space around the line */
 }
 .highlight {
     background-color: rgba(53, 192, 247, 0.3);

@@ -11,6 +11,18 @@ class VehicleOwner extends Model
 
     protected $table = 'vehicle_owner';
 
+    // protected $fillable = [
+    //     'fname',
+    //     'lname',
+    //     'mname',
+    //     'contact_no',
+    //     'applicant_type_id',
+    //     'qr_code',
+    //     'emp_id',
+    //     'std_id',
+    //     'driver_license_no'
+    // ];
+
     protected $fillable = [
         'fname',
         'lname',
@@ -18,10 +30,10 @@ class VehicleOwner extends Model
         'contact_no',
         'applicant_type_id',
         'qr_code',
-        'emp_id',
-        'std_id',
+        'id_no', // Since it's now in the table
         'driver_license_no'
     ];
+    
 
     // Define relationships
 
