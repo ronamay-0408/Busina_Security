@@ -874,11 +874,12 @@ select#month-type {
     padding: 10px 10px 10px 20px;
     width: 46.5%;
 }
-
 .myfiled h3{
     font-size: 14px;
-    color: rgba(0, 155, 221, 1);
     margin: 0;
+}
+.myfiled a{
+    color: rgba(0, 155, 221, 1);
 }
 .myfiled p{
     font-weight: 600;

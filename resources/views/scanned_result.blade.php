@@ -56,6 +56,7 @@
         @endif
 
         <div class="date-time">
+            <!-- Date-time display -->
         </div>
 
         <div class="title">
@@ -65,29 +66,32 @@
         <div class="title">
             <h3>REGISTERED VEHICLE</h3>
         </div>
-        <!-- resources/views/scanned_result.blade.php -->
+
         <div class="registered_vehicle">
-            @foreach($transactions as $transaction)
-                <div class="vehicle_con">
-                    <div class="vehicle_info">
-                        <h3>
-                            REGISTRATION NUMBER .: 
-                            <a href="{{ route('vehicle.info', ['registration_no' => $transaction->registration_no]) }}" class="btn btn-primary">
-                                {{ $transaction->registration_no }}
-                            </a>
-                        </h3>
-                        <p>PLATE NUMBER .: <span>{{ $transaction->vehicle->plate_no }}</span></p>
-                        <p>STICKER EXPIRY .: <span>{{ $transaction->sticker_expiry }}</span></p>
+            @if ($groupedTransactions->isEmpty())
+                <p>No registered vehicles found for this owner.</p>
+            @else
+                @foreach($groupedTransactions as $registrationNo => $group)
+                    <div class="vehicle_con">
+                        <div class="vehicle_info">
+                            <h3>
+                                REGISTRATION NUMBER .: 
+                                <a href="{{ route('vehicle.info', ['registration_no' => $registrationNo]) }}" class="btn btn-primary">
+                                    {{ $registrationNo }}
+                                </a>
+                            </h3>
+                            <p>PLATE NUMBER .: <span>{{ $group->first()->vehicle->plate_no ?? 'N/A' }}</span></p>
+                            <p>STICKER EXPIRY .: <span>{{ $group->first()->sticker_expiry }}</span></p>
+                        </div>
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            @endif
         </div>
-        
+
         <div class="back-btn3">
             <a class="nav-link" href="{{ url('/scanned_qr') }}">SCANNER</a>
         </div>
     </main><!-- End #main -->
-
 
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>

@@ -57,7 +57,6 @@ class QRController extends Controller
 
     public function showResult()
     {
-        // Use the Session facade to get the session data
         $vehicleOwnerId = Session::get('vehicle_owner_id');
 
         if (!$vehicleOwnerId) {
@@ -69,17 +68,21 @@ class QRController extends Controller
             return redirect()->route('scanned_qr')->with('error', 'Vehicle owner not found.');
         }
 
-        // Get transactions associated with the vehicle owner
-        $transactions = Transaction::whereHas('vehicle', function ($query) use ($vehicleOwnerId) {
-            $query->where('vehicle_owner_id', $vehicleOwnerId);
-        })->get();
+        // Fetch unique vehicles owned by the vehicle owner
+        $vehicles = Vehicle::where('vehicle_owner_id', $vehicleOwnerId)->distinct()->get();
+
+        // Fetch transactions related to those vehicles
+        $transactions = Transaction::whereIn('vehicle_id', $vehicles->pluck('id'))->get();
+
+        // Group transactions by registration number to prevent duplication
+        $groupedTransactions = $transactions->groupBy('registration_no');
 
         return view('scanned_result', [
             'vehicleOwner' => $vehicleOwner,
-            'transactions' => $transactions
+            'vehicles' => $vehicles,
+            'groupedTransactions' => $groupedTransactions // Pass the grouped transactions to the view
         ]);
     }
-
 
     public function showVehicleInfo($registration_no)
     {
