@@ -1653,21 +1653,21 @@ select#month-type {
 /*--------------------------------------------------------------
 # GATE SCANNER CSS
 --------------------------------------------------------------*/
-.gate-scanner{
+/* .gate-scanner{
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-}
-.gate-scanner2{
+} */
+/* .gate-scanner2{
     width: calc(100% / 2 - 10px);
-}
+} */
 .side_vehicle_info{
     background-color: white;
     padding: 20px;
     margin-top: 20px;
     border-radius: 10px;
     border: 0.1px solid #80808061;
-    width: calc(100% / 2 - 10px);
+    /* width: calc(100% / 2 - 10px); */
 }
 .not-found h3 {
     text-align: center;
@@ -1700,7 +1700,7 @@ select#month-type {
         width: 100%;
     }
     .side_vehicle_info{
-        width: 100%;
+        width: 90%;
     }
 }
 

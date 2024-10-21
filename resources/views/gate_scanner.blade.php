@@ -16,8 +16,75 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        .side_vehicle_info {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the div */
+            z-index: 9999; /* Ensure it appears on top */
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+            opacity: 0; /* Start hidden for fade-in effect */
+            transition: opacity 0.5s ease-in-out; /* Smooth transition */
+            /* position: relative; */
+            
+        }
+        @media (max-width: 650px) {
+            .side_vehicle_info{
+                width: 90%;
+            }
+        }
+
+        /* Show and animate the pop-up */
+        .side_vehicle_info.show {
+            display: block;
+            opacity: 1; /* Fade in */
+        }
+
+        /* Styling for the success state */
+        .side_vehicle_info.found {
+            background-color: #e6ffe6;
+            border: 2px solid #4caf50;
+        }
+
+        /* Styling for the error state */
+        .side_vehicle_info.not-found {
+            background-color: #ffe6e6;
+            border: 2px solid #f44336;
+        }
+
+        /* Close (X) button styling */
+        .side_vehicle_info .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Add some padding for the title message */
+        .side_vehicle_info .title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .side_vehicle_info .title h2 {
+            margin: 0;
+            font-size: 18px
+        }
+    </style>
+
 </head>
 
 <body>
@@ -157,6 +224,51 @@
                 return data && data.trim().length > 0;
             }
 
+            // Function to show the message
+            function showMessage(content, isError = false) {
+                const messageBox = document.getElementById('sideVehicleInfo');
+                messageBox.innerHTML = `
+                    <div class="title">
+                        <button class="close-btn" onclick="hideMessage()">×</button>
+                        <span>${content}</span>
+                    </div>
+                `;
+
+                messageBox.classList.remove('found', 'not-found'); // Clear previous classes
+                messageBox.classList.add('show', isError ? 'not-found' : 'found'); // Add show class
+
+                console.log("Showing message:", content); // Debug log
+
+                // Automatically hide the message after 5 seconds
+                setTimeout(() => {
+                    console.log("Hiding message after timeout"); // Debug log
+                    hideMessage();
+                }, 5000); // 5000ms = 5 seconds
+            }
+
+            // Function to hide the message
+            function hideMessage() {
+                const messageBox = document.getElementById('sideVehicleInfo');
+                messageBox.classList.remove('show'); // Hide the message
+                console.log("Message hidden"); // Debug log
+            }
+
+            // Example usage after receiving a response from the server
+            function handleResponse(data) {
+                console.log('Response received:', data); // Log the response for debugging
+
+                if (data.success) {
+                    // Vehicle entry successful
+                    showMessage(`Vehicle entry successful! Welcome ${data.vehicleOwner.fname} ${data.vehicleOwner.mname} ${data.vehicleOwner.lname}, your entry has been recorded.`, false);
+                } else {
+                    // Vehicle owner not found or leaving
+                    if (data.message && data.message.includes('Leaving the University Premises')) {
+                        showMessage(data.message, false);
+                    } else {
+                        showMessage(data.message || "Vehicle owner not found.", true);
+                    }
+                }
+            }
             const sendQRCodeDataToServer = debounce(function(qrCodeData) {
                 const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
                 if (!csrfTokenMeta) {
@@ -176,66 +288,59 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Server response:', data);
+                    console.log('Server response:', data);  // Check if you get the correct response
                     sideVehicleInfo.innerHTML = '';
+                    sideVehicleInfo.classList.remove('show'); // Hide by default before updating
+                    
                     if (data.success) {
-                        // Play success sound first
                         successAudio.play();
-                        // Delay the output of the message by 300ms to allow the sound to play first
                         setTimeout(() => {
-                            if (data.message) {
-                                sideVehicleInfo.className = 'side_vehicle_info found vehicle-out';
-                                sideVehicleInfo.innerHTML = data.message;
-                            } else if (data.vehicleOwner) {
-                                sideVehicleInfo.className = 'side_vehicle_info found';
+                            console.log('Success case triggered');  // Debugging log
+
+                            // handleResponse(data); FIX THIS, MAKE THE SUCCESS MESSAGE TO HIDE AUTOMATICALLY
+
+                            sideVehicleInfo.classList.add('show'); // Show the div if there's a message
+                            sideVehicleInfo.className = 'side_vehicle_info found show';
+                            if (data.message && data.message.includes('Leaving the University Premises')) {
+                                // Show message when vehicle is leaving
                                 sideVehicleInfo.innerHTML = `
                                     <div class="title">
-                                        <h3>NAME: <span>${data.vehicleOwner.fname} ${data.vehicleOwner.mname} ${data.vehicleOwner.lname}</span></h3>
+                                        <button class="close-btn" onclick="hideMessage()">×</button>
+                                        <span>${data.message}</span>
                                     </div>
+                                `;
+                            } else if (data.vehicleOwner) {
+                                // Show message when vehicle entry is successful
+                                sideVehicleInfo.innerHTML = `
                                     <div class="title">
-                                        <h3>REGISTERED VEHICLE</h3>
-                                    </div>
-                                    <div class="registered_vehicle">
-                                        ${data.vehicles.map(vehicle => `
-                                            <div class="vehicle_con">
-                                                <div class="vehicle_info">
-                                                    <h3>
-                                                        REGISTRATION NUMBER: 
-                                                        <a href="/vehicle-info/${encodeURIComponent(vehicle.registration_no)}" class="vehicle-link">
-                                                            ${vehicle.registration_no || 'N/A'}
-                                                        </a>
-                                                    </h3>
-                                                    <p>PLATE NUMBER: <span>${vehicle.plate_no || 'N/A'}</span></p>
-                                                    <p>STICKER EXPIRY: <span>${vehicle.sticker_expiry ? new Date(vehicle.sticker_expiry).toLocaleDateString() : 'N/A'}</span></p>
-                                                </div>
-                                            </div>
-                                        `).join('')}
+                                        <button class="close-btn" onclick="hideMessage()">×</button>
+                                        <span>Vehicle entry successful! Welcome <h2>${data.vehicleOwner.fname} ${data.vehicleOwner.mname} ${data.vehicleOwner.lname}</h2></span>
                                     </div>
                                 `;
                             }
-                        }, 300); // 300 milliseconds delay
+                        }, 300);
                     } else {
-                        // Play error sound first
                         errorAudio.play();
-                        // Delay the output of the message by 300ms to allow the sound to play first
                         setTimeout(() => {
-                            sideVehicleInfo.className = 'side_vehicle_info not-found';
-                            sideVehicleInfo.innerHTML = `<h3>Error: ${data.message || "Vehicle owner not found."}</h3>`;
-                        }, 300); // 300 milliseconds delay
+                            console.log('Error case triggered');  // Debugging log
+                            handleResponse(data); // Call handleResponse to show the message (THIS CODE SUPPORTS ON HIDING THE ERROR MESSAGE)
+                            sideVehicleInfo.classList.add('show'); // Show the div when there's an error
+                            sideVehicleInfo.className = 'side_vehicle_info not-found show';
+                            sideVehicleInfo.innerHTML = `<h4>Error: ${data.message || "Vehicle owner not found."}</h4>`;
+                        }, 300);
                     }
                 })
                 .catch(error => {
                     console.error("Error:", error);
-                    // Play error sound first
                     errorAudio.play();
-                    // Delay the output of the message by 300ms to allow the sound to play first
                     setTimeout(() => {
-                        sideVehicleInfo.className = 'side_vehicle_info not-found';
+                        console.log('Catch block triggered');  // Debugging log
+                        sideVehicleInfo.classList.add('show'); // Show the div when there's an error
+                        sideVehicleInfo.className = 'side_vehicle_info not-found show';
                         sideVehicleInfo.innerHTML = `<h3>Error occurred while scanning QR code.</h3>`;
-                    }, 300); // 300 milliseconds delay
+                    }, 300);
                 });
             }, 500);
-
             function debounce(func, wait) {
                 let timeout;
                 return function(...args) {
