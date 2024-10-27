@@ -536,12 +536,21 @@ main{
     display: flex;
     margin-top: 1.5rem;
     text-align: center;
+    gap: 10px;
+}
+.upload a{
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
 }
 .child{
     background-color: rgba(242, 117, 43, 0.2);
     box-shadow: 1px 1px 3px rgb(185 180 180);
     border-radius: 5px;
-    width: 50%;
+    padding: 15px 10px;
+    /* width: 50%; */
 }
 .child img{
     font-size: 35px;
@@ -554,20 +563,21 @@ main{
     margin: 0;
     margin-top: 5px;
 }
-.child2{
+/* .child2{
+    flex: 2;
     background-color: rgba(242, 117, 43, 0.2);
     box-shadow: 1px 1px 3px rgb(185 180 180);
     border-radius: 5px;
     width: 50%;
     margin-left: 10px;
-}
-.unauthorize{
+} */
+/* .unauthorize{
     margin-top: 1.5rem;
-}
-.violation{
+} */
+/* .violation{
     margin-top: 1.5rem;
-}
-.child2 a{
+} */
+/* .child2 a{
     margin-top: 1.3rem;
 }
 .child2 .bi-exclamation-circle-fill{
@@ -579,7 +589,7 @@ main{
     color: rgba(97, 103, 121, 1);
     font-size: 14px;
     margin-top: 5px;
-}
+} */
 
 
 /*--------------------------------------------------------------

@@ -133,7 +133,7 @@
                                 <div class="file-label">
                                     <label for="files">Click to Attach Photo</label>
                                 </div>
-                                <input type="file" id="files" name="photo" accept="image/*" style="display: none;">
+                                <input type="file" id="files" name="photo" accept="image/*" style="display: none;" required>
                             </div>
                         </div>
                     </div>

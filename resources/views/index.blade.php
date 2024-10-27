@@ -95,12 +95,14 @@
             <a class="nav-link" href="{{ url('report_vehicle') }}">CREATE A REPORT</a>
         </div>
 
-        <div class="upload">
+        <!-- <div class="upload">
             <div class="child">
-                <div class="violation">
-                <a class="nav-link" href="{{ url('report_vehicle') }}"><img src="images/Foul2.png"></a>
-                </div>
-                <p>Violation Report</p>
+                <a href="{{ url('report_vehicle') }}">
+                    <div class="violation">
+                        <a class="nav-link" href="{{ url('report_vehicle') }}"><img src="images/Foul2.png"></a>
+                    </div>
+                    <p>Violation Report</p>
+                </a>
             </div>
             <div class="child2">
                 <div class="unauthorize">
@@ -108,7 +110,28 @@
                 </div>
                 <p>Unauthorized Vehicle</p>
             </div>
+        </div> -->
+
+        <div class="upload">
+            <a href="{{ url('report_vehicle') }}">
+                <div class="child">
+                    <div class="violation">
+                        <img src="images/Foul2.png">
+                    </div>
+                    <p>Violation Report</p>
+                </div>
+            </a>
+            
+            <a href="{{ url('visitor_scanner') }}">
+                <div class="child">
+                    <div class="unauthorize">
+                        <img src="images/Box Important.png">
+                    </div>
+                    <p>Unauthorized Vehicle</p>
+                </div>
+            </a>
         </div>
+
     </main><!-- End #main -->
 
     <!-- Template Main JS File // NAVBAR // -->
