@@ -63,6 +63,9 @@ class ReportVehicleController extends Controller
             
             // Store the image with the new filename
             $proofImagePath = $proofImage->storeAs('proof_images', $newFilename, 'public');
+
+            // When Hosting the system to Hostinger //
+            // $proofImagePath = $proofImage->move(public_path('../../uploads/violation_images'), $newFilename);
         }
 
         // Default value for remarks
