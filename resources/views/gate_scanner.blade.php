@@ -243,7 +243,7 @@
                 setTimeout(() => {
                     console.log("Hiding message after timeout"); // Debug log
                     hideMessage();
-                }, 5000); // 5000ms = 5 seconds
+                }, 3000); // 3000ms = 3 seconds
             }
 
             // Function to hide the message
@@ -301,6 +301,8 @@
 
                             sideVehicleInfo.classList.add('show'); // Show the div if there's a message
                             sideVehicleInfo.className = 'side_vehicle_info found show';
+
+                            // Show the appropriate message based on the response
                             if (data.message && data.message.includes('Leaving the University Premises')) {
                                 // Show message when vehicle is leaving
                                 sideVehicleInfo.innerHTML = `
@@ -318,6 +320,12 @@
                                     </div>
                                 `;
                             }
+
+                            // Automatically hide the success message after 3 seconds
+                            setTimeout(() => {
+                                hideMessage();
+                            }, 3000); // 3000ms = 3 seconds
+
                         }, 300);
                     } else {
                         errorAudio.play();
