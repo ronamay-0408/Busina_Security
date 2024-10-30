@@ -14,6 +14,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
@@ -170,6 +171,17 @@
             cursor: pointer;
         }
 
+        /* Popular Violation CSS */
+        .pop-violations{
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -1px rgba(0, 0, 0, .06);
+        }
+        .pop-title h3{
+            font-weight: 500;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 
@@ -338,6 +350,96 @@
                 </div>
             </div>
         </div>
+
+        <div class="pop-violations">
+            <div class="pop-title" style="display: flex; justify-content: space-between; align-items: center;">
+                <h3">Violation Rate for the Month of {{ $currentMonthName }} {{ $currentYear }}</h3>
+                <button id="export-button" class="btn btn-primary" style="margin-left: 10px;">
+                    <i class="bi bi-cloud-arrow-down-fill"></i> Export
+                </button>
+            </div>
+            <div class="violations-list">
+                <ol class="ol-cards alternate" id="pdf-content">
+                    @foreach($violations as $violation)
+                        <li style="--ol-cards-color-accent:#00a560">
+                            <div class="step"><span>{{ $violation->count }}</span></div>
+                            <div class="title">Violation</div>
+                            <div class="content">{{ $violation->violationType->violation_name ?? 'Unknown Violation' }}</div>
+                        </li>
+                    @endforeach
+                </ol>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="exportModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span id="closeModal" class="close">&times;</span>
+                <h2>Select Export Format</h2>
+                <button id="export-pdf" class="btn btn-primary">Export as PDF</button>
+                <button id="export-csv" class="btn btn-primary">Export as CSV</button>
+            </div>
+        </div>
+
+        <script>
+            document.getElementById('export-button').addEventListener('click', function () {
+                document.getElementById('exportModal').style.display = 'block';
+            });
+
+            document.getElementById('closeModal').addEventListener('click', function () {
+                document.getElementById('exportModal').style.display = 'none';
+            });
+
+            document.getElementById('export-pdf').addEventListener('click', function () {
+                exportToPDF();
+                document.getElementById('exportModal').style.display = 'none';
+            });
+
+            document.getElementById('export-csv').addEventListener('click', function () {
+                exportToCSV();
+                document.getElementById('exportModal').style.display = 'none';
+            });
+
+            function exportToPDF() {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
+                const content = document.getElementById('pdf-content');
+                const items = content.querySelectorAll('li');
+
+                pdf.text(`Violation Rate for the Month of {{ $currentMonthName }} {{ $currentYear }}`, 10, 10);
+                let y = 20;
+
+                items.forEach(item => {
+                    const violationCount = item.querySelector('.step span').innerText;
+                    const violationName = item.querySelector('.content').innerText;
+                    pdf.text(`${violationCount}: ${violationName}`, 10, y);
+                    y += 10;
+                });
+
+                pdf.save(`violations_report_${ '{{ $currentMonthName }}' }_${ '{{ $currentYear }}' }.pdf`);
+            }
+
+            function exportToCSV() {
+                const content = document.getElementById('pdf-content');
+                const items = content.querySelectorAll('li');
+                let csvContent = "data:text/csv;charset=utf-8,";
+                csvContent += "Count,Violation Name\n";
+
+                items.forEach(item => {
+                    const violationCount = item.querySelector('.step span').innerText;
+                    const violationName = item.querySelector('.content').innerText;
+                    csvContent += `${violationCount},${violationName}\n`;
+                });
+
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `violations_report_${ '{{ $currentMonthName }}' }_${ '{{ $currentYear }}' }.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        </script>
 
         <!-- Pass PHP data to JavaScript -->
         <script>

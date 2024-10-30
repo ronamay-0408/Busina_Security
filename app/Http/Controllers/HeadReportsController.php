@@ -9,6 +9,7 @@ use App\Models\UserLog; // Import the UserLog model
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 
 class HeadReportsController extends Controller
 {
@@ -72,6 +73,19 @@ class HeadReportsController extends Controller
                 $monthlyUnauthorizedCounts[] = Unauthorized::whereBetween('log_date', [$startOfMonth, $endOfMonth])->count();
             }
 
+            // Fetch popular violations for the current month
+            $currentMonth = Carbon::now()->month;
+            $currentYear = Carbon::now()->year; // Get the current year
+            $violations = Violation::with('violationType')
+                ->selectRaw('violation_type_id, COUNT(*) as count')
+                ->whereMonth('created_at', $currentMonth)
+                ->groupBy('violation_type_id')
+                ->orderByDesc('count')
+                ->get();
+
+            // Get the month name for display
+            $currentMonthName = Carbon::now()->format('F'); // Full textual representation of a month (e.g., October)
+
             // Return the view with the data
             return view('SSUHead.head_index', compact(
                 'totalViolationsToday', 'totalViolationsYesterday', 'violationDifference',
@@ -80,11 +94,30 @@ class HeadReportsController extends Controller
                 'totalAuthorizedUsers', 'totalAuthorizedUsersYesterday',
                 'violationColor', 'unauthorizedVehicleColor',
                 'dates', 'violationCounts', 'unauthorizedCounts',
-                'months', 'monthlyViolationCounts', 'monthlyUnauthorizedCounts'
+                'months', 'monthlyViolationCounts', 'monthlyUnauthorizedCounts',
+                'violations', // Pass violations data to the view
+                'currentMonthName', // Pass current month name to the view
+                'currentYear' // Pass current year to the view
             ));
         } else {
             // If the user is not authorized, redirect to the index view
             return redirect()->route('index');
         }
     }
+
+//     public function showPopularViolations()
+// {
+//     $currentMonth = Carbon::now()->month;
+
+//     // Fetch violation data grouped by violation type for the current month
+//     $violations = Violation::with('violationType')
+//         ->selectRaw('violation_type_id, COUNT(*) as count')
+//         ->whereMonth('created_at', $currentMonth)
+//         ->groupBy('violation_type_id')
+//         ->orderByDesc('count')
+//         ->get();
+
+//     return view('SSUHead.head_index', compact('violations'));
+// }
+
 }
