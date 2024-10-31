@@ -20,7 +20,10 @@ class UserLogController extends Controller
             $month = request('month');
             $day = request('day');
 
-            $query = UserLog::with('vehicleOwner')->orderBy('log_date', 'desc');
+            // $query = UserLog::with('vehicleOwner')->orderBy('log_date', 'desc');
+            $query = UserLog::with('vehicleOwner')
+            ->orderBy('log_date', 'desc')         // Sort by date in descending order
+            ->orderBy('time_in', 'desc');         // Then by time_in in descending order
 
             if ($search) {
                 $query->whereHas('vehicleOwner', function ($q) use ($search) {
