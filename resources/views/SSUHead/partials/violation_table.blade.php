@@ -5,6 +5,7 @@
         <tr>
             <th>Date & Time</th>
             <th>Plate No</th>
+            <th>Remarks</th>
             <th>Details</th>
         </tr>
     </thead>
@@ -13,6 +14,11 @@
             <tr>
                 <td>{{ $violation->created_at->format('Y-m-d, g:i A') }}</td>
                 <td>{{ $violation->plate_no }}</td>
+                <td>
+                    <span class="{{ $violation->remarks == 'Settled' ? 'settled' : 'not-settled' }}">
+                        {{ $violation->remarks }}
+                    </span>
+                </td>
                 <td>
                     @if($violation->proof_image)
                         <button 

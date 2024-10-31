@@ -257,7 +257,19 @@ th {
     background-color: rgba(80, 119, 165, 0.2);
 }
 
+.settled {
+    color: #097901;
+    background-color: #B9FFB8;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+}
 
+.not-settled {
+    color: #797501;
+    background-color: #FAFFB8;
+    padding: 0.2em 0.5em;
+    border-radius: 4px;
+}
 /*--------------------------------------------------------------
 # PAGINATION CSS
 --------------------------------------------------------------*/

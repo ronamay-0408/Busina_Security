@@ -52,6 +52,17 @@ class ReportVehicleController extends Controller
             return redirect()->back()->with('error', 'Vehicle with this plate number does not exist.');
         }
 
+        // CHECK FOR DUPLICATES VIOLATION REPORT
+        $existingViolation = Violation::where('plate_no', $request->input('plate_no'))
+        ->where('violation_type_id', $request->input('vio_type'))
+        ->where('remarks', 'Not been settled')
+        ->whereDate('created_at', now()->toDateString())
+        ->first();
+
+        if ($existingViolation) {
+            return redirect()->back()->with('error', 'This violation has already been reported.');
+        }
+
         // Handle file upload
         $proofImagePath = null;
         if ($request->hasFile('photo')) {
@@ -107,7 +118,7 @@ class ReportVehicleController extends Controller
     private function sendViolationEmail($user, $violation, $penaltyFee)
     {
         $mail = new PHPMailer(true);
-
+    
         try {
             // Server settings
             $mail->isSMTP();
@@ -117,11 +128,21 @@ class ReportVehicleController extends Controller
             $mail->Password   = 'jpic klzq vxkd cwwc';        // Your Gmail password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
-
+    
             // Recipients
             $mail->setFrom('businabicoluniversity@gmail.com', 'BUsina');
             $mail->addAddress($user->email);  // Add recipient email
-
+    
+            // Attach proof image if available
+            if ($violation->proof_image) {
+                // Create a temporary file for the image
+                $tempImagePath = tempnam(sys_get_temp_dir(), 'proof_image') . '.jpg';
+                file_put_contents($tempImagePath, $violation->proof_image);
+    
+                // Attach the image to the email
+                $mail->addAttachment($tempImagePath, 'violation_proof_image.jpg');
+            }
+    
             // Content
             $mail->isHTML(true); // Set to true if sending HTML email
             $mail->Subject = 'Violation Report Notification';
@@ -140,7 +161,6 @@ class ReportVehicleController extends Controller
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'>A new violation report has been submitted for your vehicle with the following details:</p>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Location:</strong> {$violation->location}</p>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Date and Time:</strong> {$violation->created_at}</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Proof Image:</strong> <a href='" . asset('storage/' . $violation->proof_image) . "'>View Image</a></p>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Penalty Fee:</strong> ₱{$penaltyFee}</p>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Don't forget to settle your violation as soon as possible to lessen inconvenience on your Vehicle Renewal.</p>
                         <p style='margin: 10px 0; color: #666666; font-size: 14px;'>If you have any questions or need further assistance, please contact us at <a href='mailto:businabicoluniversity@gmail.com' style='color: #161a39; text-decoration: none;'>busina@gmail.com</a>.</p>
@@ -160,8 +180,13 @@ class ReportVehicleController extends Controller
             </body>
             </html>
             ";
-
+    
             $mail->send();
+    
+            // Remove the temporary file after sending the email
+            if (isset($tempImagePath)) {
+                unlink($tempImagePath);
+            }
         } catch (Exception $e) {
             // Handle errors
             Log::error("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
