@@ -7,6 +7,7 @@ use App\Models\VehicleOwner;
 use App\Models\Vehicle;
 use App\Models\Transaction; // Import the Transaction model
 use App\Models\UserLog; // Import the UserLog model
+use App\Models\Violation; // Import the Violation model
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,6 +34,26 @@ class GateScannerController extends Controller
                     return response()->json([
                         'success' => false,
                         'message' => 'Vehicle owner not found.'
+                    ]);
+                }
+
+                // Get all vehicles owned by the vehicle owner
+                $vehicles = $vehicleOwner->vehicles;
+
+                // CHECK FOR UNSETTLED VIOLATIONS THAT ARE OVERDUE FOR ALL VEHICLES
+                $unsettledViolations = Violation::whereIn('vehicle_id', $vehicles->pluck('id'))
+                    ->where('remarks', 'Not been settled')
+                    ->where('created_at', '<=', now()->subDays(1)) // Check if violation is over 1 day old
+                    ->get();
+
+                // Check if the number of unsettled violations equals the number of vehicles
+                if ($unsettledViolations->count() === $vehicles->count()) {
+                    // Get all plate numbers for the owner's vehicles
+                    $vehiclePlateNumbers = $vehicles->pluck('plate_no')->implode(', '); // Join plate numbers into a single string
+
+                    return response()->json([
+                        'success' => false,
+                        'message' => "This vehicle owner cannot bring the vehicles with plate numbers {$vehiclePlateNumbers} onto campus for 2 months due to unresolved violations."
                     ]);
                 }
 

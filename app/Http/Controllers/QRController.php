@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\VehicleOwner;
 use App\Models\Vehicle;
+use App\Models\Violation;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session; // Import the Session facade
 use App\Models\Transaction; // Import the Transaction model
@@ -70,6 +71,11 @@ class QRController extends Controller
 
         // Fetch unique vehicles owned by the vehicle owner
         $vehicles = Vehicle::where('vehicle_owner_id', $vehicleOwnerId)->distinct()->get();
+        
+        // If no vehicles found, handle appropriately
+        if ($vehicles->isEmpty()) {
+            return redirect()->route('scanned_qr')->with('error', 'No vehicles found for this owner.');
+        }
 
         // Fetch transactions related to those vehicles
         $transactions = Transaction::whereIn('vehicle_id', $vehicles->pluck('id'))->get();
@@ -77,10 +83,17 @@ class QRController extends Controller
         // Group transactions by registration number to prevent duplication
         $groupedTransactions = $transactions->groupBy('registration_no');
 
+        // Fetch unsettled violations for the user's vehicles
+        $unsettledViolations = Violation::whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->where('remarks', 'Not been settled')
+            ->with(['violationType', 'reportedBy'])
+            ->get();
+
         return view('scanned_result', [
             'vehicleOwner' => $vehicleOwner,
             'vehicles' => $vehicles,
-            'groupedTransactions' => $groupedTransactions // Pass the grouped transactions to the view
+            'groupedTransactions' => $groupedTransactions,
+            'unsettledViolations' => $unsettledViolations
         ]);
     }
 

@@ -243,7 +243,7 @@
                 setTimeout(() => {
                     console.log("Hiding message after timeout"); // Debug log
                     hideMessage();
-                }, 3000); // 3000ms = 3 seconds
+                }, 5000); // 3000ms = 3 seconds
             }
 
             // Function to hide the message
@@ -334,7 +334,12 @@
                             handleResponse(data); // Call handleResponse to show the message (THIS CODE SUPPORTS ON HIDING THE ERROR MESSAGE)
                             sideVehicleInfo.classList.add('show'); // Show the div when there's an error
                             sideVehicleInfo.className = 'side_vehicle_info not-found show';
-                            sideVehicleInfo.innerHTML = `<h4>Error: ${data.message || "Vehicle owner not found."}</h4>`;
+                            sideVehicleInfo.innerHTML = `
+                                <div class="title">
+                                    <button class="close-btn" onclick="hideMessage()">×</button>
+                                    <h4>Error: ${data.message || "Vehicle owner not found."}</h4>
+                                </div>
+                            `;
                         }, 300);
                     }
                 })

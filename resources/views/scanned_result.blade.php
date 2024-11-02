@@ -66,7 +66,6 @@
         <div class="title">
             <h3>REGISTERED VEHICLE</h3>
         </div>
-
         <div class="registered_vehicle">
             @if ($groupedTransactions->isEmpty())
                 <p>No registered vehicles found for this owner.</p>
@@ -83,6 +82,24 @@
                             <p>PLATE NUMBER .: <span>{{ $group->first()->vehicle->plate_no ?? 'N/A' }}</span></p>
                             <p>STICKER EXPIRY .: <span>{{ $group->first()->sticker_expiry }}</span></p>
                         </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+
+        <div class="unsettle-vio">
+            <h3>UNSETTLE VIOLATION</h3>
+        </div>
+        <div class="unsettle_violation">
+            @if ($unsettledViolations->isEmpty())
+                <p>No unsettled violations found for this owner.</p>
+            @else
+                @foreach($unsettledViolations as $violation)
+                    <div class="violation_con">
+                        <span>{{ $violation->created_at->format('Y-m-d') }}</span><br>
+                        <span>{{ $violation->violationType->violation_name ?? 'N/A' }}</span><br>
+                        <p><span>{{ $violation->remarks }}</span></p>
+                        <!-- <p>Reported By: <span>{{ $violation->reportedBy->fname ?? 'N/A' }}</span></p> -->
                     </div>
                 @endforeach
             @endif
