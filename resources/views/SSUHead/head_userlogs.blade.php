@@ -253,7 +253,6 @@
 
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
-
     <!-- DATE AND TIME -->
     <script src="{{ asset('js/date_time.js') }}"></script>
 </body>
