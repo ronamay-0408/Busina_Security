@@ -13,41 +13,98 @@ class HeadViewViolationController extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorizeUser();
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            $perPage = $request->input('per_page', 10);
 
-        $perPage = $request->input('per_page', 10);
-        $violations = $this->getFilteredViolations($request)->paginate($perPage)->appends($request->except('page'));
+            $query = Violation::with('violationType', 'vehicle', 'reportedBy')
+                            ->orderBy('created_at', 'desc');
 
-        // Return JSON response for AJAX requests
-        if ($request->ajax()) {
-            return response()->json([
-                'tableHtml' => view('SSUHead.partials.violation_table', ['violations' => $violations])->render(),
-                'paginationHtml' => $violations->links()->render()
-            ]);
+            // Apply filters and search terms to the query
+            if ($request->filled('search')) {
+                $query->where('plate_no', 'like', '%' . $request->input('search') . '%');
+            }
+
+            if ($request->filled('year')) {
+                $query->whereYear('created_at', $request->input('year'));
+            }
+
+            if ($request->filled('month')) {
+                $query->whereMonth('created_at', $request->input('month'));
+            }
+
+            if ($request->filled('day')) {
+                $query->whereDay('created_at', $request->input('day'));
+            }
+
+            if ($request->filled('remarks')) {
+                $query->where('remarks', $request->input('remarks'));
+            }  
+
+             // Paginate and append query parameters
+            $violations = $query->paginate($perPage)->appends($request->except('page'));
+
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'tableHtml' => view('SSUHead.partials.violation_table', ['violations' => $violations])->render(),
+                    'paginationHtml' => $violations->links()->render()
+                ]);
+            }
+
+            // Regular view rendering for non-AJAX requests
+            return view('SSUHead.violation_list', compact('violations', 'request'));
+
+        } else {
+            return redirect()->route('index');
         }
-
-        // Regular view rendering for non-AJAX requests
-        return view('SSUHead.violation_list', compact('violations', 'request'));
     }
 
     public function exportViolationCsv(Request $request)
     {
-        $this->authorizeUser();
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            $query = Violation::orderBy('created_at', 'desc');
 
-        $violations = $this->getFilteredViolations($request)->get();
+            // Apply filters
+            if ($request->filled('search')) {
+                $query->where('plate_no', 'like', '%' . $request->input('search') . '%');
+            }
+            if ($request->filled('year')) {
+                $query->whereYear('created_at', $request->input('year'));
+            }
+            if ($request->filled('month')) {
+                $query->whereMonth('created_at', $request->input('month'));
+            }
+            if ($request->filled('day')) {
+                $query->whereDay('created_at', $request->input('day'));
+            }
+            if ($request->filled('remarks')) { // Add remarks filter
+                $query->where('remarks', $request->input('remarks'));
+            }
 
-        return $this->exportToCsv($violations, 'Violation_Report_FilteredRecord');
+            // Handle pagination
+            $perPage = $request->input('per_page', 10);
+            $page = $request->input('page', 1);
+            $violations = $query->forPage($page, $perPage)->get();
+
+            return $this->exportToCsv($violations, 'Violation_Report_FilteredRecord');
+        }
+
+        return redirect()->route('index');
     }
 
-    public function exportAllViolationCsv()
+    public function exportAllViolationCsv(Request $request)
     {
-        $this->authorizeUser();
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            $violations = Violation::with('violationType', 'vehicle', 'reportedBy')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        $violations = Violation::with('violationType', 'vehicle', 'reportedBy')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return $this->exportToCsv($violations, 'Violation_Report_AllRecord');
+            return $this->exportToCsv($violations, 'Violation_Report_AllRecord');
+        }
+        return redirect()->route('index');
     }
 
     private function exportToCsv($violations, $fileName)
@@ -63,6 +120,8 @@ class HeadViewViolationController extends Controller
             "Expires" => "0"
         ];
 
+        // Define the CSV columns
+        // $columns = ['Date & Time', 'Plate No', 'Violation Type', 'Location', 'Reported By', 'Remarks', 'Proof Image'];
         $columns = ['Date & Time', 'Plate No', 'Violation Type', 'Location', 'Reported By', 'Remarks'];
 
         $callback = function () use ($violations, $columns) {
@@ -73,10 +132,11 @@ class HeadViewViolationController extends Controller
                 $row = [
                     $record->created_at->format('F j, Y, g:i a'),
                     $record->plate_no,
-                    $record->violationType->violation_name ?? 'N/A',
+                    $record->violationType ? $record->violationType->violation_name : 'N/A',
                     $record->location ?? 'N/A',
-                    $record->reportedBy->getFullNameAttribute() ?? 'N/A',
+                    $record->reportedBy ? $record->reportedBy->getFullNameAttribute() : 'N/A',
                     $record->remarks ?? 'N/A',
+                    // $record->proof_image ?? 'N/A' // Adjust as needed
                 ];
 
                 fputcsv($file, $row);
@@ -90,45 +150,14 @@ class HeadViewViolationController extends Controller
 
     public function showSubViolationList($id)
     {
-        $this->authorizeUser();
-
-        $violation = Violation::with('violationType', 'reportedBy')->findOrFail($id);
-        return view('SSUHead.SubViolationList', compact('violation'));
-    }
-
-    private function getFilteredViolations(Request $request)
-    {
-        $query = Violation::with('violationType', 'vehicle', 'reportedBy')
-            ->orderBy('created_at', 'desc');
-
-        if ($request->filled('search')) {
-            $query->where('plate_no', 'like', '%' . $request->input('search') . '%');
-        }
-
-        if ($request->filled('year')) {
-            $query->whereYear('created_at', $request->input('year'));
-        }
-
-        if ($request->filled('month')) {
-            $query->whereMonth('created_at', $request->input('month'));
-        }
-
-        if ($request->filled('day')) {
-            $query->whereDay('created_at', $request->input('day'));
-        }
-
-        if ($request->filled('remarks')) {
-            $query->where('remarks', $request->input('remarks'));
-        }
-
-        return $query;
-    }
-
-    private function authorizeUser()
-    {
         $user = Auth::user();
-        if (!$user || !$user->authorizedUser || $user->authorizedUser->user_type != 3) {
-            return redirect()->route('index');
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            $violation = Violation::with('violationType', 'reportedBy')->findOrFail($id);
+            
+            return view('SSUHead.SubViolationList', compact('violation'));
         }
+
+        return redirect()->route('index');
     }
+
 }

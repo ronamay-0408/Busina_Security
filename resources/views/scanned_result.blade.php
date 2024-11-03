@@ -17,6 +17,46 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+    <style>
+        .unsettle-vio{
+            padding: 0px 0px 10px 0px;
+        }
+        .unsettle-vio h3{
+            margin: 0;
+            color: rgba(4, 0, 68, 1);
+            /* padding: 10px 0px 0px 0px;
+            margin-top: 5px; */
+        }
+        .unsettle_violation{
+            display: flex;
+            gap: 10px;
+        }
+        .violation_con{
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -1px rgba(0, 0, 0, .06);
+            letter-spacing: 1px;
+            width: 100%;
+        }
+        .violation_con span{
+            font-weight: 500;
+            color: coral;
+        }
+        .violation_con p{
+            font-weight: 500;
+            margin: 0;
+            /* color: #797501; */
+            background-color: #FAFFB8;
+        }
+        @media (max-width: 600px) {
+            .unsettle_violation{
+                
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+        }
+    </style>
 
 <body>
     <!-- ======= Header ======= -->
