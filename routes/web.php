@@ -177,7 +177,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Route to export current page CSV
     Route::get('/export-violation-csv', [HeadViewViolationController::class, 'exportViolationCsv'])->name('exportViolationCsv');
-
     // Route to export all records CSV
     Route::get('/export-all-violation-csv', [HeadViewViolationController::class, 'exportAllViolationCsv'])->name('exportAllViolationCsv');
 

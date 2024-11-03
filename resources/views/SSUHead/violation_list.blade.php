@@ -143,6 +143,19 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            function buildUrl(page = 1) {
+                const params = {
+                    search: $('#searchInput').val().trim(),
+                    year: $('#yearFilter').val(),
+                    month: $('#monthFilter').val(),
+                    day: $('#dayFilter').val(),
+                    remarks: $('#remarksFilter').val(),
+                    per_page: $('#per_page').val(),
+                    page: page
+                };
+                return new URLSearchParams(params).toString();
+            }
+
             function fetchData(url) {
                 $.ajax({
                     url: url,
@@ -150,146 +163,59 @@
                     success: function(response) {
                         $('#tableContainer').html(response.tableHtml);
                         $('#paginationLinks').html(response.paginationHtml);
+                    },
+                    error: function(xhr) {
+                        console.error('Error fetching data:', xhr);
                     }
                 });
             }
 
-            function buildUrl() {
-                const search = $('#searchInput').val();
-                const year = $('#yearFilter').val();
-                const month = $('#monthFilter').val();
-                const day = $('#dayFilter').val();
-                const remarks = $('#remarksFilter').val(); // Get remarks filter value
-                const perPage = $('#per_page').val();
-                const url = new URL(window.location.href);
-
-                url.searchParams.set('search', search);
-                url.searchParams.set('year', year);
-                url.searchParams.set('month', month);
-                url.searchParams.set('day', day);
-                url.searchParams.set('remarks', remarks); // Set remarks filter
-                url.searchParams.set('per_page', perPage);
-
-                return url.toString();
+            function handlePagination(page) {
+                const queryParams = buildUrl(page);
+                fetchData(`{{ route('violation_list') }}?${queryParams}`);
             }
 
-            // Initial fetch
-            fetchData(buildUrl());
-
-            // Event listeners for search and filters
-            $('#searchInput, #yearFilter, #monthFilter, #dayFilter, #remarksFilter').on('input change', function() {
-                fetchData(buildUrl());
+            // Handle search and filter events
+            $('#searchInput, #yearFilter, #monthFilter, #dayFilter, #remarksFilter, #per_page').on('input change', function() {
+                fetchData(`{{ route('violation_list') }}?${buildUrl()}`);
             });
 
-            $('#per_page').on('change', function() {
-                fetchData(buildUrl());
-            });
-
-            // Handle pagination clicks
+            // Handle pagination link clicks
             $(document).on('click', '#paginationLinks a', function(e) {
                 e.preventDefault();
-                const url = $(this).attr('href');
-                fetchData(url);
+                const page = new URL(this.href).searchParams.get('page');
+                if (page) handlePagination(page);
             });
-        });
-    </script>
 
-    <!-- JAVASCRIPT FOR EXPORT WITHOUT PAGINATION -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            const yearFilter = document.getElementById('yearFilter');
-            const monthFilter = document.getElementById('monthFilter');
-            const dayFilter = document.getElementById('dayFilter');
-            const remarksFilter = document.getElementById('remarksFilter'); // Add remarks filter
-            const perPageForm = document.getElementById('per_page');
-            const exportCsvButton = document.getElementById('exportCsvButton');
-            const exportAllButton = document.getElementById('exportAllButton');
-
-            // Get query parameters
-            function getQueryParams(page = 1) {
-                const searchText = searchInput.value.trim();
-                const selectedYear = yearFilter.value;
-                const selectedMonth = monthFilter.value;
-                const selectedDay = dayFilter.value;
-                const selectedRemarks = remarksFilter.value; // Get remarks filter value
-                const perPage = perPageForm ? perPageForm.value : 10;
-
-                return new URLSearchParams({
-                    search: searchText,
-                    year: selectedYear,
-                    month: selectedMonth,
-                    day: selectedDay,
-                    remarks: selectedRemarks, // Include remarks in query params
-                    per_page: perPage,
-                    page: page
-                }).toString();
+            // Handle CSV exports
+            function handleExport(url) {
+                const queryParams = buildUrl();
+                window.location.href = `${url}?${queryParams}`;
             }
 
             // Handle the export CSV button click
-            function handleExportCsv() {
+            $('#exportCsvButton').on('click', function() {
                 const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
-                const queryParams = getQueryParams(currentPage);
+                const queryParams = buildUrl(currentPage);
                 const exportUrl = `{{ route('exportViolationCsv') }}?${queryParams}`;
                 window.location.href = exportUrl;
-            }
+            });
 
             // Handle the export All button click
-            function handleExportAll() {
-                const queryParams = getQueryParams();
+            $('#exportAllButton').on('click', function() {
+                const queryParams = buildUrl();
                 const exportUrl = `{{ route('exportAllViolationCsv') }}?${queryParams}`;
                 window.location.href = exportUrl;
-            }
+            });
 
-            // Attach event listeners
-            exportCsvButton.addEventListener('click', handleExportCsv);
-            exportAllButton.addEventListener('click', handleExportAll);
-
-            // Existing code for handling pagination and filters
-            function submitFilters(page = 1) {
-                const queryParams = getQueryParams(page);
-
-                fetch(`{{ route('violation_list') }}?${queryParams}`, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('tableContainer').innerHTML = html;
-                    updatePaginationLinks();
-                })
-                .catch(error => console.error('Error:', error));
-            }
-
-            function updatePaginationLinks() {
-                document.querySelectorAll('.pagination a.page-item').forEach(link => {
-                    link.addEventListener('click', function(event) {
-                        event.preventDefault();
-                        const page = new URL(this.href).searchParams.get('page');
-                        if (page) {
-                            submitFilters(page);
-                        }
-                    });
-                });
-            }
-
-            updatePaginationLinks();
+            // Initial fetch on page load
+            fetchData(`{{ route('violation_list') }}?${buildUrl()}`);
         });
     </script>
 
-    <!-- MODAL AND SEARCH JS -->
-    <!-- <script src="{{ asset('js/head_violation_modal.js') }}"></script> -->
-
-    <!-- Filtering JS File -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{{ asset('js/head_violation_filtering.js') }}"></script>
-
-    <!-- Template Main JS File // NAVBAR // -->
+    <!-- Include other necessary JavaScript files -->
     <script src="{{ asset('js/navbar.js') }}"></script>
-
-    <!-- DATE AND TIME -->
     <script src="{{ asset('js/date_time.js') }}"></script>
+
 </body>
 </html>
