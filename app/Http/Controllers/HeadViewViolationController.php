@@ -37,6 +37,10 @@ class HeadViewViolationController extends Controller
                 $query->whereDay('created_at', $request->input('day'));
             }
 
+            if ($request->filled('remarks')) {
+                $query->where('remarks', $request->input('remarks'));
+            }  
+
              // Paginate and append query parameters
             $violations = $query->paginate($perPage)->appends($request->except('page'));
 
@@ -75,6 +79,9 @@ class HeadViewViolationController extends Controller
             if ($request->filled('day')) {
                 $query->whereDay('created_at', $request->input('day'));
             }
+            if ($request->filled('remarks')) { // Add remarks filter
+                $query->where('remarks', $request->input('remarks'));
+            }
 
             // Handle pagination
             $perPage = $request->input('per_page', 10);
@@ -91,28 +98,12 @@ class HeadViewViolationController extends Controller
     {
         $user = Auth::user();
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
-            $query = Violation::orderBy('created_at', 'desc');
-
-            // Apply filters
-            if ($request->filled('search')) {
-                $query->where('plate_no', 'like', '%' . $request->input('search') . '%');
-            }
-            if ($request->filled('year')) {
-                $query->whereYear('created_at', $request->input('year'));
-            }
-            if ($request->filled('month')) {
-                $query->whereMonth('created_at', $request->input('month'));
-            }
-            if ($request->filled('day')) {
-                $query->whereDay('created_at', $request->input('day'));
-            }
-
-            // Get all records
-            $violations = $query->get();
+            $violations = Violation::with('violationType', 'vehicle', 'reportedBy')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             return $this->exportToCsv($violations, 'Violation_Report_AllRecord');
         }
-
         return redirect()->route('index');
     }
 
@@ -130,7 +121,8 @@ class HeadViewViolationController extends Controller
         ];
 
         // Define the CSV columns
-        $columns = ['Date & Time', 'Plate No', 'Violation Type', 'Location', 'Reported By', 'Remarks', 'Proof Image'];
+        // $columns = ['Date & Time', 'Plate No', 'Violation Type', 'Location', 'Reported By', 'Remarks', 'Proof Image'];
+        $columns = ['Date & Time', 'Plate No', 'Violation Type', 'Location', 'Reported By', 'Remarks'];
 
         $callback = function () use ($violations, $columns) {
             $file = fopen('php://output', 'w');
@@ -144,7 +136,7 @@ class HeadViewViolationController extends Controller
                     $record->location ?? 'N/A',
                     $record->reportedBy ? $record->reportedBy->getFullNameAttribute() : 'N/A',
                     $record->remarks ?? 'N/A',
-                    $record->proof_image ?? 'N/A' // Adjust as needed
+                    // $record->proof_image ?? 'N/A' // Adjust as needed
                 ];
 
                 fputcsv($file, $row);
@@ -155,4 +147,17 @@ class HeadViewViolationController extends Controller
 
         return new StreamedResponse($callback, 200, $headers);
     }
+
+    public function showSubViolationList($id)
+    {
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            $violation = Violation::with('violationType', 'reportedBy')->findOrFail($id);
+            
+            return view('SSUHead.SubViolationList', compact('violation'));
+        }
+
+        return redirect()->route('index');
+    }
+
 }

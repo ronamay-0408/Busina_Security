@@ -18,7 +18,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
 </head>
-
+    <style>
+        @media (max-width: 600px) {
+            .filter-field {
+                flex-wrap: wrap;
+            }
+            th {
+                font-size: 14px;
+            }
+            td{
+                font-size: 12px;
+            }
+        }
+    </style>
 <body>
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
@@ -92,6 +104,13 @@
                             <option value="{{ str_pad($day, 2, '0', STR_PAD_LEFT) }}" {{ request('day') == str_pad($day, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>{{ $day }}</option>
                         @endforeach
                     </select>
+
+                     <!-- Remarks Filter -->
+                    <select id="remarksFilter" name="remarks" class="filter-select" onchange="this.form.submit()">
+                        <option value="">Select Remarks</option>
+                        <option value="Settled" {{ request('remarks') == 'Settled' ? 'selected' : '' }}>Settled</option>
+                        <option value="Not been settled" {{ request('remarks') == 'Not been settled' ? 'selected' : '' }}>Not been settled</option>
+                    </select>
                 </div>
             </div>
             
@@ -113,62 +132,6 @@
                 <!-- Table -->
                 <div id="tableContainer">
                     @include('SSUHead.partials.violation_table', ['violations' => $violations])
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal -->
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div class="modal-details">
-                    <h3>VIOLATION DETAILS</h3>
-                    <div class="vio-details">
-                        <div class="vio-plate">
-                            <h2><span id="modal-plate"></span></h2>
-                            <p>Plate Number</p>
-                        </div>
-                        <div class="vio-second">
-                            <!-- <p><strong>Date & Time:</strong><br><span id="modal-date"></span></p>
-                            <p><strong>Violation Type:</strong><br><span id="modal-violation"></span></p>
-                            <p><strong>Location:</strong><br><span id="modal-location"></span></p>
-                            <p><strong>Reported By:</strong><br><span id="modal-reported"></span></p>
-                            <p><strong>Remarks:</strong><br><span id="modal-remarks"></span></p> -->
-
-                            <div class="vio-sub">
-                                <p>
-                                    <strong>Date & Time</strong><br>
-                                    <input type="text" class="form-control" id="modal-date-input" readonly>
-                                </p>
-                                <p>
-                                    <strong>Location</strong><br>
-                                    <input type="text" class="form-control" id="modal-location-input" readonly>
-                                </p>
-                            </div>
-
-                            <div class="vio-sub-inside">
-                                <p>
-                                    <strong>Violation Type</strong><br>
-                                    <input type="text" class="form-control" id="modal-violation-input" readonly>
-                                </p>
-                            </div>
-
-                            <div class="vio-sub">
-                                <p>
-                                    <strong>Reported By</strong><br>
-                                    <input type="text" class="form-control" id="modal-reported-input" readonly>
-                                </p>
-                                <p>
-                                    <strong>Remarks</strong><br>
-                                    <input type="text" class="form-control" id="modal-remarks-input" readonly>
-                                </p>
-                            </div>
-
-                            <p><strong>Proof Image</strong></p>
-                            <img id="modal-image" src="" alt="Proof Image"/>
-                        </div>
-
-                    </div>
                 </div>
             </div>
         </div>
@@ -196,6 +159,7 @@
                 const year = $('#yearFilter').val();
                 const month = $('#monthFilter').val();
                 const day = $('#dayFilter').val();
+                const remarks = $('#remarksFilter').val(); // Get remarks filter value
                 const perPage = $('#per_page').val();
                 const url = new URL(window.location.href);
 
@@ -203,6 +167,7 @@
                 url.searchParams.set('year', year);
                 url.searchParams.set('month', month);
                 url.searchParams.set('day', day);
+                url.searchParams.set('remarks', remarks); // Set remarks filter
                 url.searchParams.set('per_page', perPage);
 
                 return url.toString();
@@ -212,7 +177,7 @@
             fetchData(buildUrl());
 
             // Event listeners for search and filters
-            $('#searchInput, #yearFilter, #monthFilter, #dayFilter').on('input change', function() {
+            $('#searchInput, #yearFilter, #monthFilter, #dayFilter, #remarksFilter').on('input change', function() {
                 fetchData(buildUrl());
             });
 
@@ -226,55 +191,6 @@
                 const url = $(this).attr('href');
                 fetchData(url);
             });
-
-            // // Modal functionality with event delegation
-            // $(document).on('click', '.view-btn', function() {
-            //     // Update modal content with data attributes
-            //     $('#modal-image').attr('src', $(this).data('image'));
-            //     $('#modal-date').text($(this).data('date'));
-            //     $('#modal-plate').text($(this).data('plate'));
-            //     $('#modal-violation').text($(this).data('violation'));
-            //     $('#modal-location').text($(this).data('location'));
-            //     $('#modal-reported').text($(this).data('reported'));
-            //     $('#modal-remarks').text($(this).data('remarks'));
-
-            //     // Show the modal
-            //     $('#myModal').show();
-            // });
-
-            $(document).on('click', '.view-btn', function() {
-                // Retrieve data from the clicked element
-                const dateValue = $(this).data('date');
-                const violationValue = $(this).data('violation');
-                const locationValue = $(this).data('location');
-                const reportedValue = $(this).data('reported');
-                const remarksValue = $(this).data('remarks');
-                
-                // Populate input fields (for display only)
-                $('#modal-image').attr('src', $(this).data('image'));
-                $('#modal-plate').text($(this).data('plate'));
-
-                $('#modal-date-input').val(dateValue);
-                $('#modal-violation-input').val(violationValue);
-                $('#modal-location-input').val(locationValue);
-                $('#modal-reported-input').val(reportedValue);
-                $('#modal-remarks-input').val(remarksValue);
-
-                // Show the modal (if applicable)
-                $('#myModal').show();
-            });
-
-            // Close the modal
-            $(document).on('click', '.close', function() {
-                $('#myModal').hide();
-            });
-
-            // Hide the modal if the user clicks outside of it
-            $(window).on('click', function(event) {
-                if ($(event.target).is('#myModal')) {
-                    $('#myModal').hide();
-                }
-            });
         });
     </script>
 
@@ -285,6 +201,7 @@
             const yearFilter = document.getElementById('yearFilter');
             const monthFilter = document.getElementById('monthFilter');
             const dayFilter = document.getElementById('dayFilter');
+            const remarksFilter = document.getElementById('remarksFilter'); // Add remarks filter
             const perPageForm = document.getElementById('per_page');
             const exportCsvButton = document.getElementById('exportCsvButton');
             const exportAllButton = document.getElementById('exportAllButton');
@@ -295,6 +212,7 @@
                 const selectedYear = yearFilter.value;
                 const selectedMonth = monthFilter.value;
                 const selectedDay = dayFilter.value;
+                const selectedRemarks = remarksFilter.value; // Get remarks filter value
                 const perPage = perPageForm ? perPageForm.value : 10;
 
                 return new URLSearchParams({
@@ -302,6 +220,7 @@
                     year: selectedYear,
                     month: selectedMonth,
                     day: selectedDay,
+                    remarks: selectedRemarks, // Include remarks in query params
                     per_page: perPage,
                     page: page
                 }).toString();
