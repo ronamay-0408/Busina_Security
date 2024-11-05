@@ -79,7 +79,7 @@
                 </div>
                 <div class="ssu-buttons">
                     <div class="export-tbn">
-                        <button class="export-child" onclick="exportTableToCSV()">EXPORT</button>
+                        <button class="export-child" onclick="exportTableToExcel()">Export</button>
                     </div>
 
                     <div class="add-new">
@@ -200,23 +200,23 @@
             </div>
         </div>
     </main><!-- End #main -->
+    <script>
+        function exportTableToExcel() {
+            window.location.href = "{{ route('export.authorized_users') }}";
+        }
+    </script>
+
 
     @include('SSUHead.partials.footer')
 
     <script src="{{ asset('js/head_ssu_search.js') }}"></script>
 
-    <script src="{{ asset('js/ssu_export.js') }}"></script>
-
     <!-- ERROR AND SUCCESS -->
     <script src="{{ asset('js/error_success_message.js') }}"></script>
-
     <script src="{{ asset('js/validate_email.js') }}"></script>
-
     <script src="{{ asset('js/adduser_popup.js') }}"></script>
-
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
-
     <!-- DATE AND TIME -->
     <script src="{{ asset('js/date_time.js') }}"></script>
 </body>

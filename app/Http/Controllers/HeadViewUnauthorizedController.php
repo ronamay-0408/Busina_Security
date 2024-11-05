@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Exports\UnauthorizedExport; // Add this line
+use Maatwebsite\Excel\Facades\Excel; // Add this line
 
 class HeadViewUnauthorizedController extends Controller
 {
@@ -50,7 +52,7 @@ class HeadViewUnauthorizedController extends Controller
         }
     }
 
-    public function exportCsv(Request $request)
+    public function exportExcel(Request $request)
     {
         $user = Auth::user();
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
@@ -71,71 +73,38 @@ class HeadViewUnauthorizedController extends Controller
                 $query->whereDay('log_date', $request->input('day'));
             }
 
-            // Get pagination parameters
-            $perPage = $request->input('per_page', 10);
-            $page = $request->input('page', 1);
-
-            // Paginate results
-            $unauthorizedRecords = $query->forPage($page, $perPage)->get();
+            // Get records for export
+            $unauthorizedRecords = $query->get();
 
             // If no records are found, return to the previous page with an error message
             if ($unauthorizedRecords->isEmpty()) {
                 return redirect()->back()->with('error', 'No records found for the applied filters.');
             }
 
-            // Export the filtered records to CSV
-            return $this->exportToCsv($unauthorizedRecords, 'Unauthorized_Report_Filtered');
+            // Generate the filename with the current date
+            $currentDate = now()->format('Y-m-d'); // Format the date as desired
+            $filteredexport_filename = "Filtered_Unauthorized_Report_{$currentDate}.xlsx"; // Create the filename
+
+            // Export the filtered records to Excel using Maatwebsite Excel
+            return Excel::download(new UnauthorizedExport($unauthorizedRecords), $filteredexport_filename);
         }
 
-        // If user is not authorized, redirect to the index page
         return redirect()->route('index');
     }
 
-    public function exportAllUnauthorizedCsv()
+    public function exportAllUnauthorizedExcel()
     {
         $user = Auth::user();
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
             $unauthorizedRecords = Unauthorized::orderBy('log_date', 'desc')->orderBy('time_in', 'desc')->get();
-            return $this->exportToCsv($unauthorizedRecords, 'Unauthorized_Report_All');
+
+            // Generate the filename with the current date
+            $currentDate = now()->format('Y-m-d'); // Format the date as desired
+            $Allexport_filename = "All_Unauthorized_Report_{$currentDate}.xlsx"; // Create the filename
+
+            return Excel::download(new UnauthorizedExport($unauthorizedRecords), $Allexport_filename);
         }
         return redirect()->route('index');
-    }
-
-    private function exportToCsv($unauthorizedRecords, $fileName)
-    {
-        $date = Carbon::now()->format('Ymd_His');
-        $fileName = "{$fileName}_{$date}.csv";
-
-        $headers = [
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
-        ];
-
-        $columns = ['Date', 'Plate No', 'Time In', 'Time Out'];
-
-        $callback = function () use ($unauthorizedRecords, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
-
-            foreach ($unauthorizedRecords as $record) {
-                $row = [
-                    // Format the log_date to YYYY-MM-DD (you can adjust this format as needed)
-                    'Date' => Carbon::parse($record->log_date)->format('m/d/Y'),
-                    'Plate No' => $record->plate_no,
-                    'Time In' => Carbon::parse($record->time_in)->format('g:i A'),
-                    'Time Out' => $record->time_out ? Carbon::parse($record->time_out)->format('g:i A') : '',
-                ];
-            
-                fputcsv($file, $row);
-            }
-
-            fclose($file);
-        };
-
-        return new StreamedResponse($callback, 200, $headers);
     }
 }
 

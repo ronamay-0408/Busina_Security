@@ -14,6 +14,12 @@
         </a>
     </li>
     <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('reported_violations') ? 'active' : '' }}" href="{{ route('reported_violations') }}">
+            <i class="bi bi-sign-no-parking-fill"></i>
+            <span>Reported Violations</span>
+        </a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('unauthorized_list') ? 'active' : '' }}" href="{{ route('unauthorized_list') }}">
             <i class="bi bi-car-front-fill"></i>
             <span>Unauthorized Vehicles</span>

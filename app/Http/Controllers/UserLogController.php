@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use App\Exports\UserLogExport; // Add this line
+use Maatwebsite\Excel\Facades\Excel; // Add this line
 
 class UserLogController extends Controller
 {
@@ -51,7 +53,7 @@ class UserLogController extends Controller
         }
     }
 
-    public function exportCsv(Request $request)
+    public function filteredExcelExport(Request $request)
     {
         $user = Auth::user();
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
@@ -66,77 +68,48 @@ class UserLogController extends Controller
             }
             if ($request->filled('year')) {
                 $query->whereYear('log_date', $request->input('year'));
-            }
+            }            
             if ($request->filled('month')) {
-                $query->whereMonth('log_date', $request->input('month'));
+                // Ensure the month is treated as an integer for comparison
+                $month = (int) $request->input('month');
+                $query->whereMonth('log_date', $month);
             }
             if ($request->filled('day')) {
                 $query->whereDay('log_date', $request->input('day'));
             }
 
-            // Get pagination parameters
-            $perPage = $request->input('per_page', 10);
-            $page = $request->input('page', 1);
-
-            // Paginate results
-            $userLogs = $query->forPage($page, $perPage)->get();
+            // Get the filtered results without pagination
+            $userLogs = $query->get();
 
             // If no records are found, return to the previous page with an error message
             if ($userLogs->isEmpty()) {
                 return redirect()->back()->with('error', 'No records found for the applied filters.');
             }
 
-            // Export the filtered records to CSV
-            return $this->exportToCsv($userLogs, 'UserLogs_Filtered');
+            // Generate the filename with the current date
+            $currentDate = now()->format('Y-m-d'); // Format the date as desired
+            $filteredexport_filename = "Filtered_UserLog_Report_{$currentDate}.xlsx"; // Create the filename
+
+            // Export the filtered records to Excel
+            return Excel::download(new UserLogExport($userLogs), $filteredexport_filename);
         }
 
         // If user is not authorized, redirect to the index page
         return redirect()->route('index');
     }
 
-    public function exportAllCsv()
+    public function allExcelExport()
     {
         $user = Auth::user();
         if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
             $userLogs = UserLog::with('vehicleOwner')->orderBy('log_date', 'desc')->get();
-            return $this->exportToCsv($userLogs, 'UserLogs_All');
+
+            // Generate the filename with the current date
+            $currentDate = now()->format('Y-m-d'); // Format the date as desired
+            $Allexport_filename = "All_UserLog_Report_{$currentDate}.xlsx"; // Create the filename
+
+            return Excel::download(new UserLogExport($userLogs), $Allexport_filename);
         }
         return redirect()->route('index');
-    }
-
-    private function exportToCsv($userLogs, $fileName)
-    {
-        $date = Carbon::now()->format('Ymd_His');
-        $fileName = "{$fileName}_{$date}.csv";
-
-        $headers = [
-            "Content-type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$fileName",
-            "Pragma" => "no-cache",
-            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
-            "Expires" => "0"
-        ];
-
-        $columns = ['Date', 'Driver License No', 'Time In', 'Time Out'];
-
-        $callback = function () use ($userLogs, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
-
-            foreach ($userLogs as $log) {
-                $row = [
-                    Carbon::parse($log->log_date)->format('m/d/Y'),
-                    $log->vehicleOwner->driver_license_no,
-                    Carbon::parse($log->time_in)->format('g:i A'),
-                    $log->time_out ? Carbon::parse($log->time_out)->format('g:i A') : '',
-                ];
-
-                fputcsv($file, $row);
-            }
-
-            fclose($file);
-        };
-
-        return new StreamedResponse($callback, 200, $headers);
     }
 }

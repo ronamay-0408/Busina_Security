@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Log; // Add this line
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+use App\Exports\AuthorizedUserExport; // Add this line
+use Maatwebsite\Excel\Facades\Excel; // Add this line
+
 class HeadViewSSUController extends Controller
 {
     public function index()
@@ -41,6 +44,36 @@ class HeadViewSSUController extends Controller
             // // If the user is not authorized, return a 403 Forbidden response
             // abort(Response::HTTP_FORBIDDEN, 'Unauthorized action.');
 
+            // If the user is not authorized, redirect to the index view
+            return redirect()->route('index');
+        }
+    }
+
+    public function export()
+    {
+        // Check if the user is authenticated
+        $user = Auth::user();
+        
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+            // Fetch authorized users with user_type = 2 (Security Personnel) and join with the users table
+            $authorizedUsers = DB::table('authorized_user')
+                ->join('users', 'authorized_user.id', '=', 'users.authorized_user_id')
+                ->select(
+                    'authorized_user.fname',
+                    'authorized_user.lname',
+                    'authorized_user.mname',
+                    'authorized_user.contact_no',
+                    'users.email'
+                )
+                ->where('authorized_user.user_type', 2) // Filtering for Security Personnel
+                ->get();
+
+            // Generate the filename with the current date
+            $currentDate = now()->format('Y-m-d'); // Format the date as desired
+            $export_filename = "Authorized_User_Export{$currentDate}.xlsx"; // Create the filename
+            
+            return Excel::download(new AuthorizedUserExport($authorizedUsers), $export_filename);
+        } else {
             // If the user is not authorized, redirect to the index view
             return redirect()->route('index');
         }

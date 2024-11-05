@@ -57,12 +57,8 @@
             <div class="main-title">
                 <h3 class="per-title">VEHICLE OWNER REPORT</h3>
                 <div class="submain-btn">
-                    <button type="button" id="exportCsvButton" class="buttons">
-                        Export as CSV
-                    </button>
-                    <button type="button" id="exportAllButton" class="buttons">
-                        Export All Details to CSV
-                    </button>
+                    <button type="button" id="exportExcelButton" class="buttons" onclick="exportFiltered()">Export Filtered as Excel</button>
+                    <button type="button" id="exportAllExcelButton" class="buttons" onclick="exportAll()">Export All Details as Excel</button>
                 </div>
             </div>
 
@@ -222,25 +218,62 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const exportCsvButton = document.getElementById('exportCsvButton');
-            const exportAllButton = document.getElementById('exportAllButton');
+        function exportFiltered() {
+            console.log('Export filtered button clicked');
 
-            const getFilterParams = () => {
-                const params = new URLSearchParams(window.location.search);
-                return params.toString();
-            };
+            // Get the current filter values
+            const search = document.getElementById('searchInputUnauthorized').value;
+            const year = document.getElementById('yearFilter').value;
+            const month = document.getElementById('monthFilter').value;
+            const day = document.getElementById('dayFilter').value;
 
-            exportCsvButton.addEventListener('click', () => {
-                const url = `{{ route('userlogs.export') }}?${getFilterParams()}`;
-                window.location.href = url;
-            });
+            // Create a form dynamically to submit the filters
+            const form = document.createElement('form');
+            form.method = 'GET'; // Adjust if necessary
+            form.action = "{{ route('userlogs.export') }}"; // Ensure this route is correct
 
-            exportAllButton.addEventListener('click', () => {
-                const url = `{{ route('userlogs.export.all') }}?${getFilterParams()}`;
-                window.location.href = url;
-            });
-        });
+            // Add filter inputs to the form
+            if (search) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'search';
+                input.value = search;
+                form.appendChild(input);
+            }
+            if (year) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'year';
+                input.value = year;
+                form.appendChild(input);
+            }
+            if (month) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'month';
+                input.value = month;
+                form.appendChild(input);
+            }
+            if (day) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'day';
+                input.value = day;
+                form.appendChild(input);
+            }
+
+            // Log the form data to check correctness
+            console.log('Form data:', { search, year, month, day });
+
+            // Append form to body and submit
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        function exportAll() {
+            // Redirect to the URL that triggers the export for all records
+            window.location.href = '/userlogs/export-all';
+        }
     </script>
     
     <!-- Search Js -->

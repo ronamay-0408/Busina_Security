@@ -36,4 +36,16 @@ class AuthorizedUser extends Model
     {
         return $this->hasOne(Users::class, 'authorized_user_id');
     }
+
+    // Define the relationship to the Employee model using emp_id
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'emp_id', 'emp_no');
+    }
+
+    // Optionally, you can create an accessor for emp_no
+    public function getEmpNoAttribute()
+    {
+        return $this->employee ? $this->employee->emp_no : null;
+    }
 }

@@ -28,6 +28,8 @@ use App\Http\Controllers\GateScannerController;
 use App\Http\Controllers\HeadChangePassController;
 use App\Http\Controllers\VisitorScannerController;
 
+use App\Http\Controllers\ReportedViolationsController;
+
 // Group routes that require authentication and email verification
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route to view the index page using a controller
@@ -172,26 +174,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Route to view the violation list
     Route::get('/violation_list', [HeadViewViolationController::class, 'index'])->name('violation_list');
-
     Route::get('/sub-violation/{id}', [HeadViewViolationController::class, 'showSubViolationList'])->name('subViolationList');
-
     // Route to export current page CSV
     Route::get('/export-violation-csv', [HeadViewViolationController::class, 'exportViolationCsv'])->name('exportViolationCsv');
-    // Route to export all records CSV
     Route::get('/export-all-violation-csv', [HeadViewViolationController::class, 'exportAllViolationCsv'])->name('exportAllViolationCsv');
 
-    Route::get('/SubUserLogs/{vehicleOwnerId}', [SubUserLogsController::class, 'show'])->name('SubUserLogs');
+    Route::get('/reported_violations', [ReportedViolationsController::class, 'index'])->name('reported_violations');
+    Route::get('/rv_details/{id}', [ReportedViolationsController::class, 'showDetails'])->name('rv_details');
+    Route::get('/export/excel', [ReportedViolationsController::class, 'exportAllVioDetailsToExcel'])->name('export.excel');
+    Route::get('/export-filtered-violations', [ReportedViolationsController::class, 'exportFiltered'])->name('export.filtered.excel');
 
     // Route to view the unauthorized list
     Route::get('/unauthorized_list', [HeadViewUnauthorizedController::class, 'index'])->name('unauthorized_list');
-    // Route to export current page CSV
-    Route::get('/export/unauthorized/csv', [HeadViewUnauthorizedController::class, 'exportCsv'])->name('exportUnauthorizedCsv');
-    // Route to export all records CSV
-    Route::get('/export/unauthorized/all', [HeadViewUnauthorizedController::class, 'exportAllUnauthorizedCsv'])->name('exportAllUnauthorizedCsv');
+    Route::get('/export/unauthorized/excel', [HeadViewUnauthorizedController::class, 'exportExcel'])->name('exportUnauthorizedExcel');
+    Route::get('/export/unauthorized/all/excel', [HeadViewUnauthorizedController::class, 'exportAllUnauthorizedExcel'])->name('exportAllUnauthorizedExcel');
 
+    // Route to view the Vehicle Owner Logs
     Route::get('/head_userlogs', [UserLogController::class, 'index'])->name('head_userlogs');
-    Route::get('/userlogs/export', [UserLogController::class, 'exportCsv'])->name('userlogs.export');
-    Route::get('/userlogs/export-all', [UserLogController::class, 'exportAllCsv'])->name('userlogs.export.all');
+    Route::get('/SubUserLogs/{vehicleOwnerId}', [SubUserLogsController::class, 'show'])->name('SubUserLogs');
+    Route::get('/userlogs/export', [UserLogController::class, 'filteredExcelExport'])->name('userlogs.export');
+    Route::get('/userlogs/export-all', [UserLogController::class, 'allExcelExport'])->name('userlogs.export.all');
+
 
     Route::get('/head_account', function () {
         // Check user_type and redirect accordingly
@@ -220,6 +223,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/ssu_personnel', [HeadViewSSUController::class, 'index'])->name('ssu_personnel');
     // Route to handle form submission to add a new user
     Route::post('/ssu_personnel', [HeadViewSSUController::class, 'store'])->name('ssu_personnel');
+    Route::get('/export-authorized-users', [HeadViewSSUController::class, 'export'])->name('export.authorized_users');
+
 });
 
 // Routes that do not require authentication

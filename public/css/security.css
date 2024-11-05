@@ -391,7 +391,7 @@ main{
 }
 @media (max-width: 600px) {
     .submain {
-        padding: 20px;
+        padding: 15px;
     }
     .submain-btn{
         flex-wrap: wrap;

@@ -55,16 +55,13 @@
 
         <div class="submain">
             <div class="main-title">
-                <h3 class="per-title">UNAUTHORIZED VEHICLE REPORT</h3>
+                <h3 class="per-title">VEHICLE OWNER REPORT</h3>
                 <div class="submain-btn">
-                    <button type="button" id="exportCsvButton" class="buttons">
-                        Export as CSV
-                    </button>
-                    <button type="button" id="exportAllButton" class="buttons">
-                        Export All Details to CSV
-                    </button>
+                    <button type="button" id="exportExcelButton" class="buttons" onclick="exportFiltered()">Export Filtered as Excel</button>
+                    <button type="button" id="exportAllExcelButton" class="buttons" onclick="exportAll()">Export All Details as Excel</button>
                 </div>
             </div>
+
 
             <div class="search-filter">
                 <div class="search-bar">
@@ -208,54 +205,70 @@
         }
     </script>
 
-    <!-- JAVASCRIPT FOR EXPORT -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    // Function to get the current URL parameters
-    function getCurrentFilters(page = 1) {
-        let params = new URLSearchParams();
-        // Add search parameter if present
-        let searchInput = document.getElementById('searchInputUnauthorized').value;
-        if (searchInput) {
-            params.append('search', searchInput);
+        function exportFiltered() {
+            console.log('Export filtered button clicked'); // Debugging line
+
+            // Get the current filter values
+            const search = document.getElementById('searchInputUnauthorized').value; // Update ID
+            const year = document.getElementById('yearFilter').value; // Update ID
+            const month = document.getElementById('monthFilter').value; // Update ID
+            const day = document.getElementById('dayFilter').value; // Update ID
+            
+            // Create a form dynamically to submit the filters
+            const form = document.createElement('form');
+            form.method = 'GET'; // Change to 'POST' if necessary
+            form.action = "{{ route('exportUnauthorizedExcel') }}"; // Updated route for filtered export
+            
+            // Add filter inputs to the form
+            if (search) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'search';
+                input.value = search;
+                form.appendChild(input);
+            }
+            if (year) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'year';
+                input.value = year;
+                form.appendChild(input);
+            }
+            if (month) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'month';
+                input.value = month;
+                form.appendChild(input);
+            }
+            if (day) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'day';
+                input.value = day;
+                form.appendChild(input);
+            }
+            
+            // Log the form data to check correctness
+            console.log('Form data:', {
+                search,
+                year,
+                month,
+                day
+            });
+            
+            // Append form to body and submit
+            document.body.appendChild(form);
+            form.submit();
         }
-        // Add year, month, and day filters
-        let year = document.getElementById('yearFilter').value;
-        let month = document.getElementById('monthFilter').value;
-        let day = document.getElementById('dayFilter').value;
-        if (year) params.append('year', year);
-        if (month) params.append('month', month);
-        if (day) params.append('day', day);
-        // Add per-page parameter
-        let perPage = document.getElementById('per_page').value;
-        params.append('per_page', perPage);
-        // Add page parameter
-        params.append('page', page);
-
-        return params.toString();
-    }
-
-    // Export as CSV button click event
-    document.getElementById('exportCsvButton').addEventListener('click', function() {
-        // Get the current page number
-        const currentPage = new URLSearchParams(window.location.search).get('page') || 1;
-        let url = new URL("{{ route('exportUnauthorizedCsv') }}");
-        // Append current filters and pagination parameters
-        url.search = getCurrentFilters(currentPage);
-        window.location.href = url;
-    });
-
-    // Export All Details button click event
-    document.getElementById('exportAllButton').addEventListener('click', function() {
-        let url = "{{ route('exportAllUnauthorizedCsv') }}";
-        // Append current filters
-        url += '?' + getCurrentFilters();
-        window.location.href = url;
-    });
-});
-
+        function exportAll() {
+            // Redirect to the export route for all records
+            window.location.href = "{{ route('exportAllUnauthorizedExcel') }}"; // Updated route for all records
+        }
     </script>
-    
+
+
     <!-- Search Js -->
     <script src="{{ asset('js/head_unauthorized_search.js') }}"></script>
 
