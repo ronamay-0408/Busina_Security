@@ -77,10 +77,15 @@ class QRController extends Controller
             return redirect()->route('scanned_qr')->with('error', 'No vehicles found for this owner.');
         }
 
-        // Fetch transactions related to those vehicles
-        $transactions = Transaction::whereIn('vehicle_id', $vehicles->pluck('id'))->get();
-
-        // Group transactions by registration number to prevent duplication
+        // First, get the latest transaction ID for each registration_no
+        $latestTransactions = Transaction::selectRaw('MAX(id) as latest_id')
+            ->whereIn('vehicle_id', $vehicles->pluck('id'))
+            ->groupBy('registration_no');
+        
+        // Join back to the transactions table to get full transaction details for each latest transaction
+        $transactions = Transaction::whereIn('id', $latestTransactions->pluck('latest_id'))->get();
+        
+        // Group transactions by registration_no to pass to the view
         $groupedTransactions = $transactions->groupBy('registration_no');
 
         // Fetch unsettled violations for the user's vehicles

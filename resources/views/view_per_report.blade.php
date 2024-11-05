@@ -61,27 +61,27 @@
 
                     <div class="input-form">
                         <label for="location">Location</label>
-                        <input type="text" value="{{ $violation->location }}" id="location" name="location" required>
+                        <input type="text" value="{{ $violation->location }}" id="location" name="location" readonly>
                     </div>
 
                     <div class="input-form">
                         <label for="vio_type">Violation Type</label>
-                        <input type="text" value="{{ $violation->violationType->violation_name }}" id="vio_type" name="vio_type" required>
+                        <input type="text" value="{{ $violation->violationType->violation_name }}" id="vio_type" name="vio_type" readonly>
                     </div>
 
                     <div class="input-form">
                         <label for="date">Date</label>
-                        <input type="text" value="{{ $violation->created_at->format('m-d-Y') }}" id="date" required>
+                        <input type="text" value="{{ $violation->created_at->format('m-d-Y') }}" id="date" readonly>
                     </div>
 
                     <div class="input-form">
                         <label for="time">Time</label>
-                        <input type="text" value="{{ $violation->created_at->format('H:i:s') }}" id="time" required>
+                        <input type="text" value="{{ $violation->created_at->format('H:i:s') }}" id="time" readonly>
                     </div>
 
                     <div class="input-form">
                         <label for="report_by">Reported by</label>
-                        <input type="text" value="{{ $violation->reportedBy->full_name ?? 'N/A' }}" id="report_by" required>
+                        <input type="text" value="{{ $violation->reportedBy->full_name ?? 'N/A' }}" id="report_by" readonly>
                     </div>
 
                     <div class="row2">

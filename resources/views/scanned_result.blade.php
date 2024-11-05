@@ -106,7 +106,7 @@
         <div class="title">
             <h3>REGISTERED VEHICLE</h3>
         </div>
-        <div class="registered_vehicle">
+        <!-- <div class="registered_vehicle">
             @if ($groupedTransactions->isEmpty())
                 <p>No registered vehicles found for this owner.</p>
             @else
@@ -123,6 +123,28 @@
                             <p>STICKER EXPIRY .: <span>{{ $group->first()->sticker_expiry }}</span></p>
                         </div>
                     </div>
+                @endforeach
+            @endif
+        </div> -->
+        <div class="registered_vehicle">
+            @if ($groupedTransactions->isEmpty())
+                <p>No registered vehicles found for this owner.</p>
+            @else
+                @foreach($groupedTransactions as $registrationNo => $group)
+                    @if ($loop->first || $group->count() === 1)
+                        <div class="vehicle_con">
+                            <div class="vehicle_info">
+                                <h3>
+                                    REGISTRATION NUMBER .: 
+                                    <a href="{{ route('vehicle.info', ['registration_no' => $registrationNo]) }}" class="btn btn-primary">
+                                        {{ $registrationNo }}
+                                    </a>
+                                </h3>
+                                <p>PLATE NUMBER .: <span>{{ $group->first()->vehicle->plate_no ?? 'N/A' }}</span></p>
+                                <p>STICKER EXPIRY .: <span>{{ $group->first()->sticker_expiry }}</span></p>
+                            </div>
+                        </div>
+                    @endif
                 @endforeach
             @endif
         </div>
