@@ -11,6 +11,8 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ViolationReportMail;
 
 class ReportVehicleController extends Controller
 {
@@ -35,7 +37,7 @@ class ReportVehicleController extends Controller
     {
         // Set the timezone to Asia/Manila
         date_default_timezone_set('Asia/Manila');
-
+    
         // Validate the form input
         $request->validate([
             'plate_no' => 'required|string|max:255',
@@ -44,152 +46,66 @@ class ReportVehicleController extends Controller
             'report_by' => 'required|integer|exists:authorized_user,id',
             'photo' => 'nullable|image'
         ]);
-
+    
         // Check if the plate number exists in the vehicle table
         $vehicle = Vehicle::where('plate_no', $request->input('plate_no'))->first();
-
+    
         if (!$vehicle) {
             return redirect()->back()->with('error', 'Vehicle with this plate number does not exist.');
         }
-
+    
         // CHECK FOR DUPLICATES VIOLATION REPORT
         $existingViolation = Violation::where('plate_no', $request->input('plate_no'))
-        ->where('violation_type_id', $request->input('vio_type'))
-        ->where('remarks', 'Not been settled')
-        ->whereDate('created_at', now()->toDateString())
-        ->first();
-
+            ->where('violation_type_id', $request->input('vio_type'))
+            ->where('remarks', 'Not been settled')
+            ->whereDate('created_at', now()->toDateString())
+            ->first();
+    
         if ($existingViolation) {
             return redirect()->back()->with('error', 'This violation has already been reported.');
         }
-
-        // Handle file upload
-        $proofImagePath = null;
-        if ($request->hasFile('photo')) {
-            $proofImage = $request->file('photo');
-
-            // Generate a new filename with plate number and date/time
-            $timestamp = now()->format('Ymd_His'); // Current date and time in 'YYYYMMDD_HHMMSS' format
-            $newFilename = $request->input('plate_no') . '_' . $timestamp . '.' . $proofImage->getClientOriginalExtension();
-            
-            // Store the image with the new filename
-            $proofImagePath = $proofImage->storeAs('proof_images', $newFilename, 'public');
-
-            // When Hosting the system to Hostinger //
-            // $proofImagePath = $proofImage->move(public_path('../../uploads/violation_images'), $newFilename);
-        }
-
+    
         // Default value for remarks
         $remarks = 'Not been settled';
-
+    
+        // Initialize proof image data
+        $proofImageData = null;
+        if ($request->hasFile('photo')) {
+            $proofImage = $request->file('photo');
+    
+            // Read the contents of the image file and convert to binary
+            $proofImageData = file_get_contents($proofImage->getRealPath());
+        }
+    
         // Create a new violation record
         $violation = Violation::create([
             'plate_no' => $request->input('plate_no'),
             'location' => $request->input('location'),
             'violation_type_id' => $request->input('vio_type'),
             'remarks' => $remarks,
-            'proof_image' => $proofImagePath,
+            'proof_image' => $proofImageData, // Store the image data directly as BLOB
             'reported_by' => $request->input('report_by'),
             'vehicle_id' => $vehicle->id
         ]);
-
+    
         // Retrieve the vehicle owner ID
         $vehicleOwnerId = $vehicle->vehicle_owner_id;
-
+    
         // Retrieve the email of the vehicle owner
         $vehicleOwnerUser = Users::where('vehicle_owner_id', $vehicleOwnerId)->first();
-
+    
         // Retrieve the penalty fee for the violation type
         $violationType = ViolationType::find($violation->violation_type_id);
         $penaltyFee = $violationType ? $violationType->penalty_fee : 'Unknown';
-
+    
         if ($vehicleOwnerUser) {
-            // Send email with violation details
-            $this->sendViolationEmail($vehicleOwnerUser, $violation, $penaltyFee);
+            // Send email using the Mailable
+            Mail::to($vehicleOwnerUser->email)->send(new ViolationReportMail($vehicleOwnerUser, $violation, $penaltyFee));
         } else {
             Log::warning("No user found for vehicle owner ID: $vehicleOwnerId");
         }
-
+    
         // Redirect with success message
         return redirect()->route('report.vehicle.form')->with('success', 'Violation report submitted successfully.');
-    }
-
-
-    private function sendViolationEmail($user, $violation, $penaltyFee)
-    {
-        $mail = new PHPMailer(true);
-    
-        try {
-            // Server settings
-            $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'businabicoluniversity@gmail.com'; // Your Gmail address
-            $mail->Password   = 'jpic klzq vxkd cwwc';        // Your Gmail password
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 587;
-    
-            // Recipients
-            $mail->setFrom('businabicoluniversity@gmail.com', 'BUsina');
-            $mail->addAddress($user->email);  // Add recipient email
-    
-            // Attach proof image if available
-            if ($violation->proof_image) {
-                // Create a temporary file for the image
-                $tempImagePath = tempnam(sys_get_temp_dir(), 'proof_image') . '.jpg';
-                file_put_contents($tempImagePath, $violation->proof_image);
-    
-                // Attach the image to the email
-                $mail->addAttachment($tempImagePath, 'violation_proof_image.jpg');
-            }
-    
-            // Content
-            $mail->isHTML(true); // Set to true if sending HTML email
-            $mail->Subject = 'Violation Report Notification';
-            $mail->Body    = "
-            <html>
-            <head>
-                <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'>
-            </head>
-            <body style='font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; font-weight: 500;'>
-                <div style='background-color: white; border-radius: 10px; width: 100%; max-width: 600px; margin: 20px auto; text-align: left;'>
-                    <div style='background-color: #161a39; align-items: center; text-align: center; padding: 20px;'>
-                        <h3 style='color: white; font-size: 20px;'>Violation Report Submitted</h3>
-                    </div>
-                    <div style='padding: 40px;'>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Hello <span style='font-weight: 600;'>{$user->fname} {$user->lname}</span>,</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>A new violation report has been submitted for your vehicle with the following details:</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Location:</strong> {$violation->location}</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Date and Time:</strong> {$violation->created_at}</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'><strong>Penalty Fee:</strong> ₱{$penaltyFee}</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Don't forget to settle your violation as soon as possible to lessen inconvenience on your Vehicle Renewal.</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>If you have any questions or need further assistance, please contact us at <a href='mailto:businabicoluniversity@gmail.com' style='color: #161a39; text-decoration: none;'>busina@gmail.com</a>.</p>
-                        <p style='margin: 10px 0; color: #666666; font-size: 14px;'>Best regards,<br><span style='font-weight: 600;'>Bicol University BUsina</span></p>
-                    </div>
-                    <div style='background-color: #161a39; padding: 20px 20px 5px 20px;'>
-                        <div style='color: #f4f4f4; font-size: 12px;'>
-                            <p><span style='font-size: 14px; font-weight: 600;'>Contact</span></p>
-                            <p>businabicoluniversity@gmail.com</p>
-                            <p>Legazpi City, Albay, Philippines 13°08′39″N 123°43′26″E</p>
-                        </div>
-                        <div style='text-align: center;'>
-                            <p style='color: #f4f4f4; font-size: 14px;'>Company © All Rights Reserved</p>
-                        </div>
-                    </div>
-                </div>
-            </body>
-            </html>
-            ";
-    
-            $mail->send();
-    
-            // Remove the temporary file after sending the email
-            if (isset($tempImagePath)) {
-                unlink($tempImagePath);
-            }
-        } catch (Exception $e) {
-            // Handle errors
-            Log::error("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
-        }
     }
 }
