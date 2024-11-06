@@ -72,7 +72,7 @@
             font-size: 1.5rem;
             color: white;
             /* background-image: linear-gradient(195deg, #42424a, #191919); */
-            background-image: linear-gradient(195deg, #03A9F4, #FF9800);
+            background-image: linear-gradient(195deg, #03A9F4, #03A9F4);
             border-radius: 10px;
             box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(64, 64, 64, .4) !important;
         }
@@ -126,6 +126,20 @@
             margin: 0;
             padding: 0px 0px 10px 0px;
         }
+
+        /* Responsive Media Query */
+        @media (max-width: 1550px) {
+            .icon-box i {
+                padding: 10px 15px;
+            }
+            .reports .main-box {
+                padding: 15px;
+            }
+            .info-box p {
+                padding: 0px 0px 0px 52px;
+            }
+        }
+
         /* Responsive Media Query */
         @media (max-width: 1240px) {
             .reports .main-box{

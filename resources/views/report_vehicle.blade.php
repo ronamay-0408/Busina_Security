@@ -149,13 +149,10 @@
     </main><!-- End #main -->
 
     <script src="{{ asset('js/hide_errors_success_unauthorized.js') }}"></script>
-    
     <!-- SELECTED IMAGE -->
     <script src="{{ asset('js/selected_img.js') }}"></script>
-
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
-
     <!-- DATE AND TIME -->
     <script src="{{ asset('js/twodisplayed_DateTime.js') }}"></script>
 </body>

@@ -19,6 +19,13 @@
     
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+    <style>
+        @media (max-width: 600px) {
+            .forgot-info2 {
+                margin-top: 3.5rem;
+            }
+        }
+    </style>
 
 <body>
 <div class="semi-body">
@@ -61,7 +68,7 @@
                     @endif
 
                     <div class="forgot-info3">
-                        <div class="forgot-info">
+                        <div class="forgot-info2">
                             <p>Enter your desire password, make sure to consider changing it to something memorable and secure. </p>
                         </div>
 
@@ -79,7 +86,7 @@
                                     <i class="fa fa-eye-slash eye-icon2" aria-hidden="true" onclick="togglePassword()" id="togglePassword"></i>
                                 </div>
                             </div>
-                            <div id="passwordError" class="inside-error-message">Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.</div>
+                            <div id="passwordError" class="inside-error-message">Password must be 8+ characters with uppercase, lowercase, digit, and special character.</div>
                             <div id="passwordSuccess" class="inside-success-message" style="display: none;">Password strength: <span id="passwordStrength"></span></div>
                             <div id="passwordAccept" class="inside-weak-message" style="display: none;">Password strength: <span id="passwordStrength"></span></div>
 

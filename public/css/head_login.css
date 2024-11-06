@@ -22,37 +22,35 @@ a:hover {
 # LOG IN MAIN DIV CSS
 --------------------------------------------------------------*/
 .semi-body{
-    font-family: 'Poppins';
-    height: 100vh; /* Full height of the viewport */
+    font-family: Poppins;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 45px 20px;
 }
 .container{
     position: relative;
-    max-width: 60%;
-    width: 100%;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-    perspective: 2700px;
+    box-shadow: 0 5px 10px #0003;
+    width: 900px;
     display: flex;
     border-radius: 20px;
 }
 .cover{
-    background-color: rgba(94, 197, 239, 1);
+    background-color: #5ec5ef;
     width: 50%;
-    border-radius: 20px 0px 0px 20px;
-    padding: 0px 25px;
+    border-radius: 20px 0 0 20px;
+    padding: 0 25px;
 }
 .login-name{
-    background-color: rgba(232, 232, 232, 0.75);
+    background-color: #e8e8e8bf;
     text-align: center;
     padding: 10px;
     margin-top: 2.5rem;
     border-radius: 20px;
 }
 .login-name h3{
-    color: rgba(0, 155, 221, 1);
+    color: #009bdd;
     font-size: 20px;
     margin: 0;
     margin-top: 1rem;
@@ -62,19 +60,18 @@ a:hover {
     color: rgba(242, 117, 43, 1);
 }
 .login-name h1{
-    color: rgba(4, 0, 68, 1);
+    color: #040044;
     font-size: 25px;
-    font-size: 28px;
     margin: 0;
     padding: 15px;
     line-height: 1;
 }
 .login-asset img{
-    margin-left: -2.3rem;
-    margin-top: 6rem;
-    margin-bottom: -2.3rem;
-    width: 90%;
-    height: 450px;
+    margin-left: -2.2rem;
+    margin-top: .5rem;
+    margin-bottom: -2rem;
+    width: 400px;
+    height: 400px;
 }
 .forms{
     width: 50%;
@@ -84,7 +81,7 @@ a:hover {
 .login-title h2{
     font-size: 24px;
     text-align: center;
-    color: rgba(4, 0, 68, 1);
+    color: #040044;
     font-weight: 550;
     margin-top: 4rem;
 }
@@ -108,8 +105,8 @@ a:hover {
 }
 .login-input-form label{
     text-align: left;
-    color: black;
-    font-weight: 500;
+    color: #5077A5;
+    font-weight: 600;
     font-family: 'Poppins';
     font-size: 14px;
 }
@@ -150,7 +147,7 @@ a:hover {
     font-size: 16px;
     background-color: #009bdd;
     font-family: 'Poppins';
-    margin-top: 2rem;
+    margin-top: 1rem;
     color: white;
     border: none;
     border-radius: 10px;
@@ -381,7 +378,7 @@ a:hover {
     padding: 5px 0px;
     font-size: 14px;
     text-align: left;
-    color: black;
+    color: #5077A5;
     font-size: 14px;
     font-weight: 500;
     font-family: 'Poppins';
@@ -406,13 +403,21 @@ a:hover {
     font-weight: 500;
     text-align: justify;
 }
+.forgot-info2{
+    color: rgba(80, 119, 165, 1);
+    margin-top: 1rem;
+    /* padding: 0px 40px; */
+    font-size: 12px;
+    font-weight: 500;
+    text-align: justify;
+}
 .forgot-info span{
     font-weight: 700;
 }
 .forgot1 button{
     font-size: 16px;
     font-family: 'Poppins';
-    margin-top: 5rem;
+    /* margin-top: 5rem; */
     color: white;
     background-color: #009bdd;
     border: none;
@@ -526,17 +531,17 @@ a:hover {
 }
 
 .inside-error-message{
-    font-size: 14px;
+    font-size: 12px;
     color: red;
     display: none;
 }
 .inside-success-message{
-    font-size: 14px;
+    font-size: 12px;
     color: rgb(34 153 80);
     /* padding: 0px 10px; */
 }
 .inside-weak-message{
-    font-size: 14px;
+    font-size: 12px;
     color: rgb(0, 153, 255);
     /* padding: 0px 10px; */
 }
@@ -544,6 +549,9 @@ a:hover {
 /*--------------------------------------------------------------
 # RESET NEW PASSWORD MAIN DIV CSS
 --------------------------------------------------------------*/
+.reset-form2{
+    padding: 0px 20px;
+}
 .eye-icon2 {
     position: absolute;
     right: 1px;
@@ -559,14 +567,15 @@ a:hover {
 .reset-error-message {
     color: red;
     display: none;
-    padding: 5px 0px;
-    font-size: 13px;
+    padding: 2px 0px;
+    font-size: 12px;
 }
 .resetnew-login-title h2{
     font-size: 25px;
     text-align: center;
     color: rgba(4, 0, 68, 1);
     font-weight: 550;
+    margin: 0;
 }
 
 

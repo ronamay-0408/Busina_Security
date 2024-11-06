@@ -30,7 +30,7 @@
                 </div>
             </div>
 
-            <div class="forgot1">
+            <div class="forms">
                 <div class="login-title">
                     <h2>FORGOT PASSWORD</h2>
                 </div>
