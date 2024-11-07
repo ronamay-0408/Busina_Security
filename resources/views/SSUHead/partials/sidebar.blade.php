@@ -8,7 +8,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('violation_list') ? 'active' : '' }}" href="{{ route('violation_list') }}">
+        <a class="nav-link {{ request()->routeIs('report_violation_list') ? 'active' : '' }}" href="{{ route('report_violation_list') }}">
             <i class="bi bi-sign-no-parking-fill"></i>
             <span>Violations</span>
         </a>

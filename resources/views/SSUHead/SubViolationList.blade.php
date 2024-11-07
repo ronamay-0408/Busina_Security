@@ -114,7 +114,7 @@
                 </div>
             </div>
             <div class="back-btn3">
-                <a class="nav-link" href="{{ url('/violation_list') }}">BACK</a>
+                <a class="nav-link" href="{{ url('/report_violation_list') }}">BACK</a>
             </div>
         </div>
     </main><!-- End #main -->

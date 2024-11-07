@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
-use App\Http\Controllers\HeadViewViolationController;
+use App\Http\Controllers\HeadReportViolationController;
 use App\Http\Controllers\HeadViewUnauthorizedController;
 use App\Http\Controllers\HeadViewSSUController;
 use App\Http\Controllers\HeadReportsController;
@@ -173,11 +173,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/head_index', [HeadReportsController::class, 'index'])->name('head_index');
 
     // Route to view the violation list
-    Route::get('/violation_list', [HeadViewViolationController::class, 'index'])->name('violation_list');
-    Route::get('/sub-violation/{id}', [HeadViewViolationController::class, 'showSubViolationList'])->name('subViolationList');
+    Route::get('/report_violation_list', [HeadReportViolationController::class, 'index'])->name('report_violation_list');
+    Route::get('/sub-violation/{id}', [HeadReportViolationController::class, 'showSubViolationList'])->name('subViolationList');
     // Route to export current page CSV
-    Route::get('/export-violation-csv', [HeadViewViolationController::class, 'exportViolationCsv'])->name('exportViolationCsv');
-    Route::get('/export-all-violation-csv', [HeadViewViolationController::class, 'exportAllViolationCsv'])->name('exportAllViolationCsv');
+    // Route::get('/export-violation-csv', [HeadViewViolationController::class, 'exportViolationCsv'])->name('exportViolationCsv');
+    // Route::get('/export-all-violation-csv', [HeadViewViolationController::class, 'exportAllViolationCsv'])->name('exportAllViolationCsv');
 
     Route::get('/reported_violations', [ReportedViolationsController::class, 'index'])->name('reported_violations');
     Route::get('/rv_details/{id}', [ReportedViolationsController::class, 'showDetails'])->name('rv_details');
