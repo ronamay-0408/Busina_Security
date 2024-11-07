@@ -68,14 +68,14 @@
             <div class="main-title">
                 <h3 class="per-title">REPORTED VIOLATIONS</h3>
                 <div class="submain-btn">
-                    <button type="submit" id="exportExcelButton" class="buttons">Export as Filtered Excel</button>
-                    <button type="button" id="exportAllButton" class="buttons">Export All as Excel</button>
+                    <button type="button" id="exportExcelButton" class="buttons" onclick="exportFiltered()">Export as Filtered Excel</button>
+                    <button type="button" id="exportAllButton" class="buttons" onclick="exportAll()">Export All as Excel</button>
                 </div>
             </div>
 
             <div class="search-filter">
                 <div class="search-bar">
-                    <input type="text" id="searchInput" name="search" placeholder="Search by plate number">
+                    <input type="text" id="searchInput" name="search" placeholder="Search by plate no or violation type">
                 </div>
 
                 <div class="filter-field">
@@ -106,11 +106,12 @@
                     </select>
 
                      <!-- Remarks Filter -->
-                    <select id="remarksFilter" name="remarks" class="filter-select" onchange="this.form.submit()">
-                        <option value="">Select Remarks</option>
-                        <option value="Settled" {{ request('remarks') == 'Settled' ? 'selected' : '' }}>Settled</option>
-                        <option value="Not been settled" {{ request('remarks') == 'Not been settled' ? 'selected' : '' }}>Not been settled</option>
+                     <select id="remarksFilter" class="filter-select">
+                        <option value="">Remarks</option>
+                        <option value="1">Not been settled</option>
+                        <option value="2">Settled</option>
                     </select>
+
                 </div>
             </div>
             
@@ -141,48 +142,124 @@
 
     <!-- JAVASCRIPT FOR AUTOMATIC SEARCH AND FILTERING -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        const $tableContainer = $('#tableContainer');
-        const $paginationLinks = $('#paginationLinks');
-        const $filters = $('#searchInput, #yearFilter, #monthFilter, #dayFilter, #remarksFilter, #per_page');
+    <script>
+        $(document).ready(function() {
+            const $tableContainer = $('#tableContainer');
+            const $paginationLinks = $('#paginationLinks');
+            const $filters = $('#searchInput, #yearFilter, #monthFilter, #dayFilter, #remarksFilter, #per_page');
 
-        function fetchData(url) {
-            $.ajax({
-                url: url,
-                method: 'GET',
-                success: function(response) {
-                    $tableContainer.html(response.tableHtml);
-                    $paginationLinks.html(response.paginationHtml);
-                }
+            function fetchData(url) {
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(response) {
+                        $tableContainer.html(response.tableHtml);
+                        $paginationLinks.html(response.paginationHtml);
+                    }
+                });
+            }
+
+            function buildUrl() {
+                // Get the remarks filter value
+                const remarks = $('#remarksFilter').val();
+
+                // Map remarks numeric values to text or send as is (1 or 2)
+                const remarksParam = (remarks === "1") ? "Not been settled" : (remarks === "2") ? "Settled" : "";
+
+                const params = {
+                    search: $('#searchInput').val(),
+                    year: $('#yearFilter').val(),
+                    month: $('#monthFilter').val(),
+                    day: $('#dayFilter').val(),
+                    remarks: remarksParam,  // Pass the mapped value for remarks
+                    per_page: $('#per_page').val(),
+                };
+
+                const url = new URL(window.location.href);
+                Object.keys(params).forEach(key => url.searchParams.set(key, params[key] || ''));
+                return url.toString();
+            }
+
+            // Fetch data initially and on filter change
+            fetchData(buildUrl());
+            $filters.on('input change', () => fetchData(buildUrl()));
+
+            // Handle pagination
+            $(document).on('click', '#paginationLinks a', function(e) {
+                e.preventDefault();
+                fetchData($(this).attr('href'));
             });
-        }
-
-        function buildUrl() {
-            const params = {
-                search: $('#searchInput').val(),
-                year: $('#yearFilter').val(),
-                month: $('#monthFilter').val(),
-                day: $('#dayFilter').val(),
-                remarks: $('#remarksFilter').val(),
-                per_page: $('#per_page').val(),
-            };
-            const url = new URL(window.location.href);
-            Object.keys(params).forEach(key => url.searchParams.set(key, params[key] || ''));
-            return url.toString();
-        }
-
-        // Fetch data initially and on filter change
-        fetchData(buildUrl());
-        $filters.on('input change', () => fetchData(buildUrl()));
-
-        // Handle pagination
-        $(document).on('click', '#paginationLinks a', function(e) {
-            e.preventDefault();
-            fetchData($(this).attr('href'));
         });
-    });
-</script>
+    </script>
+
+
+    <script>
+        function exportFiltered() {
+            console.log('Export filtered button clicked');
+
+            // Get the current filter values
+            const search = document.getElementById('searchInput').value;
+            const year = document.getElementById('yearFilter').value;
+            const month = document.getElementById('monthFilter').value;
+            const day = document.getElementById('dayFilter').value;
+            const remarks = document.getElementById('remarksFilter').value;
+
+            // Create a form dynamically to submit the filters
+            const form = document.createElement('form');
+            form.method = 'GET'; // Use GET for passing parameters
+            form.action = "{{ route('export.filtered.excel') }}"; // Ensure this route is correct
+
+            // Add filter inputs to the form as hidden inputs
+            if (search) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'search';
+                input.value = search;
+                form.appendChild(input);
+            }
+            if (year) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'year';
+                input.value = year;
+                form.appendChild(input);
+            }
+            if (month) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'month';
+                input.value = month;
+                form.appendChild(input);
+            }
+            if (day) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'day';
+                input.value = day;
+                form.appendChild(input);
+            }
+            if (remarks) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'remarks';
+                input.value = remarks; // Remarks now passes 1 or 2
+                form.appendChild(input);
+            }
+
+            // Log the form data to check correctness
+            console.log('Form data:', { search, year, month, day, remarks });
+
+            // Append form to body and submit it
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
+        function exportAll() {
+            // Redirect to the URL that triggers the export for all records
+            window.location.href = '/violations/export-all'; // Update with the correct route if needed
+        }
+
+    </script>
 
 
     <!-- Template Main JS File // NAVBAR // -->

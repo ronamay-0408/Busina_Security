@@ -175,9 +175,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route to view the violation list
     Route::get('/report_violation_list', [HeadReportViolationController::class, 'index'])->name('report_violation_list');
     Route::get('/sub-violation/{id}', [HeadReportViolationController::class, 'showSubViolationList'])->name('subViolationList');
-    // Route to export current page CSV
-    // Route::get('/export-violation-csv', [HeadViewViolationController::class, 'exportViolationCsv'])->name('exportViolationCsv');
-    // Route::get('/export-all-violation-csv', [HeadViewViolationController::class, 'exportAllViolationCsv'])->name('exportAllViolationCsv');
+    Route::get('/export-filtered-violations', [HeadReportViolationController::class, 'exportFiltered'])->name('export.filtered.excel');
+    Route::get('/violations/export-all', [HeadReportViolationController::class, 'exportAllVioDetailsToExcel'])->name('export.all.excel');
 
     Route::get('/reported_violations', [ReportedViolationsController::class, 'index'])->name('reported_violations');
     Route::get('/rv_details/{id}', [ReportedViolationsController::class, 'showDetails'])->name('rv_details');
