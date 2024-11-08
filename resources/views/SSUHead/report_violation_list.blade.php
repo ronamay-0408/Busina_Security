@@ -70,6 +70,7 @@
                 <div class="submain-btn">
                     <button type="button" id="exportExcelButton" class="buttons" onclick="exportFiltered()">Export as Filtered Excel</button>
                     <button type="button" id="exportAllButton" class="buttons" onclick="exportAll()">Export All as Excel</button>
+                    <button type="button" id="printViolation" class="buttons">Print</button>
                 </div>
             </div>
 
@@ -192,7 +193,6 @@
         });
     </script>
 
-
     <script>
         function exportFiltered() {
             console.log('Export filtered button clicked');
@@ -258,10 +258,129 @@
             // Redirect to the URL that triggers the export for all records
             window.location.href = '/violations/export-all'; // Update with the correct route if needed
         }
-
     </script>
 
+    <script>
+        document.getElementById('printViolation').addEventListener('click', function() {
+            printFilteredTable();
+        });
 
+        function printFilteredTable() {
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const formattedTime = currentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            const tableContent = document.getElementById('tableContainer').innerHTML;
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.open();
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print Reported Violations</title>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                            }
+                            @media print {
+                                /* Hide default browser print header and footer */
+                                @page {
+                                    margin: 0 20px 20px 20px;
+                                }
+                                    
+                                /* Hide the default header (browser-specific) */
+                                .no-print {
+                                    display: none;
+                                }
+
+                                /* Header Styles */
+                                .print-header {
+                                    text-align: center;
+                                    font-family: Arial, sans-serif;
+                                    margin-bottom: 20px;
+                                }
+                                .print-header h1 {
+                                    margin: 0;
+                                    font-size: 20px;
+                                    font-weight: bold;
+                                }
+                                .print-header h2 {
+                                    margin: 0;
+                                    font-size: 16px;
+                                    font-weight: normal;
+                                }
+                                .print-header h3 {
+                                    margin: 0;
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    text-decoration: underline;
+                                    color: black;
+                                }
+                                .details {
+                                    margin: 10px 0;
+                                    font-family: Arial, sans-serif;
+                                    font-size: 14px;
+                                    line-height: 1.5;
+                                }
+                                .details p {
+                                    margin: 0;
+                                }
+                                .details b {
+                                    font-weight: bold;
+                                }
+                                /* Table Styles */
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-top: 20px;
+                                }
+                                th, td {
+                                    border: 1px solid #000;
+                                    padding: 8px;
+                                    text-align: left;
+                                    font-size: 14px;
+                                }
+                                .settled { 
+                                    color: #097901ed; 
+                                }
+                                .not-settled { 
+                                    color: #f44336; 
+                                }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <!-- Header -->
+                        <div class="print-header">
+                            <h1>Bicol University</h1>
+                            <h2>Rizal St., Legazpi City, Albay</h2>
+                            <h3>BU Head SSU Section</h3>
+                        </div>
+                        <!-- Details Section -->
+                        <div class="details">
+                            <p><b>Title:</b> Reported Violations</p>
+                            <p><b>Print By:</b> 
+                                @if(Session::has('user'))
+                                    {{ Session::get('user')['fname'] }} {{ Session::get('user')['lname'] }}
+                                @else
+                                    Unknown User
+                                @endif
+                            </p>
+                            <p><b>Date:</b> {{ now()->format('F j, Y') }} at {{ now()->format('h:i A') }}</p>
+                        </div>
+                        <!-- Filtered Table Content -->
+                        ${tableContent}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+
+            printWindow.onload = function() {
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+    </script>
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
     <!-- DATE AND TIME -->

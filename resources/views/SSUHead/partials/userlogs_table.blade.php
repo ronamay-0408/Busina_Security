@@ -31,7 +31,7 @@
 </script>
 
 <!-- Showing X to Y of Z results -->
-<div class="results-info">
+<div class="results-info no-print">
     @php
         $start = ($userLogs->currentPage() - 1) * $userLogs->perPage() + 1;
         $end = min($start + $userLogs->perPage() - 1, $userLogs->total());
@@ -39,6 +39,7 @@
     <p>Showing {{ $start }} to {{ $end }} of {{ $userLogs->total() }} results</p>
 </div>
 
-
-<!-- {{-- Include the pagination --}} -->
-@include('SSUHead.partials.userlogs_pagination')
+<!-- Include pagination links -->
+<div class="pagination no-print">
+    @include('SSUHead.partials.userlogs_pagination')
+</div>

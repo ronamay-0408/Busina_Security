@@ -390,11 +390,11 @@ main{
     color: #566a7f;
 }
 @media (max-width: 600px) {
+    .main-title{
+        display: block;
+    }
     .submain {
         padding: 15px;
-    }
-    .submain-btn{
-        flex-wrap: wrap;
     }
     .search-filter {
         flex-wrap: wrap;
@@ -1973,9 +1973,9 @@ hr.horizontal.dark {
 }
 
 
-
-
-/* GUIDELINES */
+/*--------------------------------------------------------------
+# GUIDELINES
+--------------------------------------------------------------*/
 .cont-g {
     margin: 20px 0px;
 }
@@ -2168,5 +2168,194 @@ hr {
     }
     .box-g-2 {
         padding: 0px 10px 0px 10px;
+    }
+}
+
+
+/*--------------------------------------------------------------
+# HEAD INDEX (VIOLATION RATES)
+--------------------------------------------------------------*/
+.reports .main-box {
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    /* border: 0.5px solid rgba(0, 0, 0, .125); */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -1px rgba(0, 0, 0, .06);
+    width: calc(100% / 4 - 15px);
+}
+.count-box p {
+    margin: 0;
+    padding: 5px 0px;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.info-box {
+    text-align: right !important;
+}
+.info-box p{
+    margin: 0;
+    font-size: .875rem !important;
+    font-weight: 300;
+    padding: 0px 0px 0px 65px;
+}
+
+.info-box h2{
+    margin: 0;
+}
+
+.icon-box {
+    position: absolute;
+    margin-top: -1.5rem;
+}
+.icon-box i{
+    /* background-color: #8bc34a8a; */
+    padding: 15px 20px;
+    font-size: 1.5rem;
+    color: white;
+    /* background-image: linear-gradient(195deg, #42424a, #191919); */
+    background-image: linear-gradient(195deg, #03A9F4, #03A9F4);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(64, 64, 64, .4) !important;
+}
+.count-box span{
+    font-weight: 550;
+    color: green;
+}
+.increase{
+    color: green !important;
+}
+.decrease{
+    color: red !important;
+}
+.charts{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.charts .chart-main-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    /* border: 0.5px solid rgba(0, 0, 0, .125); */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -1px rgba(0, 0, 0, .06);
+    width: calc(100% / 2 - 15px);
+}
+.chart-main-box .sub-box h3{
+    margin: 0;
+    padding: 0px 0px 10px 0px;
+}
+.chart-subsub-box{
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+.chart-sub3-box{
+    display: flex;
+    gap: 20px;
+}
+.chart-option {
+    position: relative;
+}
+.chart-title{
+    align-items: end;
+}
+.chart-dropdown {
+    font-size: 14px;
+    font-weight: 550;
+    font-family: 'Poppins';
+    border-radius: 10px;
+    padding: 0px 5px;
+}
+.chart-export i {
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.pop-violations{
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .1), 0 2px 4px -1px rgba(0, 0, 0, .06);
+}
+.pop-title h3{
+    margin: 0;
+}
+.violations-list{
+    padding: 10px 20px;
+}
+#pdf-content {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow to the table */
+}
+#pdf-content th,
+#pdf-content td {
+    padding: 10px 20px;
+    text-align: left;
+}
+#pdf-content th {
+    background-color: #063458; /* Optional: adds a background color for the header */
+    color: white;
+    font-weight: 500;
+}
+#pdf-content td {
+    font-weight: 550;
+}
+#pdf-content tr:nth-child(odd) td {
+    background-color: #f9f9f9; /* Light color for odd rows */
+}
+#pdf-content tr:nth-child(even) td {
+    background-color: #e0e0e0; /* Slightly darker color for even rows */
+}
+#pdf-content tr:last-child td {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+button#rate-print-button {
+    border: none;
+    background: none;
+}
+i.bi.bi-printer {
+    font-size: 20px;
+    color: #2196F3;
+}
+/* Responsive Media Query */
+@media (max-width: 1550px) {
+    .icon-box i {
+        padding: 10px 15px;
+    }
+    .reports .main-box {
+        padding: 15px;
+    }
+    .info-box p {
+        padding: 0px 0px 0px 52px;
+    }
+}
+
+/* Responsive Media Query */
+@media (max-width: 1240px) {
+    .reports .main-box{
+        width: calc(100% / 2 - 15px);
+        margin-bottom: 15px;
+    }
+    .charts .chart-main-box {
+        width: 100%;
+    }
+}
+@media (max-width: 650px) {
+    .reports .main-box{
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .violations-list{
+        padding: 0;
     }
 }

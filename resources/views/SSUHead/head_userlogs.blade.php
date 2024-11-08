@@ -59,6 +59,7 @@
                 <div class="submain-btn">
                     <button type="button" id="exportExcelButton" class="buttons" onclick="exportFiltered()">Export Filtered as Excel</button>
                     <button type="button" id="exportAllExcelButton" class="buttons" onclick="exportAll()">Export All Details as Excel</button>
+                    <button type="button" id="printUserLogs" class="buttons">Print</button>
                 </div>
             </div>
 
@@ -275,15 +276,120 @@
             window.location.href = '/userlogs/export-all';
         }
     </script>
+
+    <script>
+        document.getElementById('printUserLogs').addEventListener('click', function() {
+            printUserLogsTable();
+        });
+
+        function printUserLogsTable() {
+            // Fetch the current user data (Blade data passed into JS)
+            const userFname = '{{ Session::get("user")["fname"] ?? "Unknown" }}';
+            const userLname = '{{ Session::get("user")["lname"] ?? "User" }}';
+
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const formattedTime = currentDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            // Get the content of the userlogs table
+            const tableContent = document.getElementById('userlogsTable').outerHTML;
+
+            // Open the print window
+            const printWindow = window.open('', '_blank');
+            printWindow.document.open();
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print User Logs</title>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                            }
+                            @media print {
+                                /* Hide default browser print header and footer */
+                                @page {
+                                    margin: 10px 20px 20px 20px;
+                                }
+                                    
+                                /* Hide the default header (browser-specific) */
+                                .no-print {
+                                    display: none;
+                                }
+                                /* Header Styles */
+                                .print-header {
+                                    text-align: center;
+                                    margin-bottom: 20px;
+                                }
+                                .print-header h1 {
+                                    margin: 0;
+                                    font-size: 20px;
+                                    font-weight: bold;
+                                }
+                                .print-header h2 {
+                                    margin: 0;
+                                    font-size: 16px;
+                                    font-weight: normal;
+                                }
+                                .print-header h3 {
+                                    margin: 0;
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    text-decoration: underline;
+                                    color: black;
+                                }
+                                .details p {
+                                    margin: 0;
+                                }
+                                /* Table Styles */
+                                table { 
+                                    width: 100%; 
+                                    border-collapse: collapse; 
+                                    margin-top: 20px; 
+                                }
+                                th, td { 
+                                    border: 1px solid #000; 
+                                    padding: 8px; 
+                                    text-align: left; 
+                                } 
+                            }
+                            /* Optional styles for "Time In/Out" formatting */
+                            .time-format { font-style: italic; }
+                        </style>
+                    </head>
+                    <body>
+                        <!-- Header -->
+                        <div class="print-header">
+                            <h1>Bicol University</h1>
+                            <h2>Rizal St., Legazpi City, Albay</h2>
+                            <h3>BU Head SSU Section</h3>
+                        </div>
+                        <!-- Details Section -->
+                        <div class="details">
+                            <p><b>Title:</b> User Logs Records</p>
+                            <p><b>Print By:</b> ${userFname} ${userLname}</p>
+                            <p><b>Date:</b> ${formattedDate} at ${formattedTime}</p>
+                        </div>
+                        <!-- User Logs Table -->
+                        ${tableContent}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+
+            // Trigger print dialog and close the window afterward
+            printWindow.onload = function() {
+                printWindow.print();
+                printWindow.close();
+            };
+        }
+    </script>
     
     <!-- Search Js -->
     <script src="{{ asset('js/head_unauthorized_search.js') }}"></script>
-
     <!-- Filtering and EXPORT JS File -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="{{ asset('js/head_unauthorized_filtering.js') }}"></script>
-
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
     <!-- DATE AND TIME -->

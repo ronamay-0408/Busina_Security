@@ -26,7 +26,7 @@
 </table>
 
 <!-- Showing X to Y of Z results -->
-<div class="results-info">
+<div class="results-info no-print">
     @php
         $start = ($unauthorizedRecords->currentPage() - 1) * $unauthorizedRecords->perPage() + 1;
         $end = min($start + $unauthorizedRecords->perPage() - 1, $unauthorizedRecords->total());
@@ -36,7 +36,7 @@
 
 
 <!-- Include pagination links -->
-<div class="pagination">
+<div class="pagination no-print">
     @include('SSUHead.partials.pagination_links', ['unauthorizedRecords' => $unauthorizedRecords])
 </div>
 

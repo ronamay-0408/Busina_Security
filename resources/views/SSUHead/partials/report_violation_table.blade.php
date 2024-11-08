@@ -35,7 +35,7 @@
 </script>
 
 <!-- Showing X to Y of Z results -->
-<div class="results-info">
+<div class="results-info no-print">
     @php
         $start = ($violations->currentPage() - 1) * $violations->perPage() + 1;
         $end = min($start + $violations->perPage() - 1, $violations->total());
@@ -45,7 +45,7 @@
 
 
 <!-- Include pagination links -->
-<div class="pagination" >
+<div class="pagination no-print">
     @include('SSUHead.partials.pagination', ['violations' => $violations])
 </div>
 
