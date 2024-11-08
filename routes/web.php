@@ -178,11 +178,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/export-filtered-violations', [HeadReportViolationController::class, 'exportFiltered'])->name('export.filtered.excel');
     Route::get('/violations/export-all', [HeadReportViolationController::class, 'exportAllVioDetailsToExcel'])->name('export.all.excel');
 
-    Route::get('/reported_violations', [ReportedViolationsController::class, 'index'])->name('reported_violations');
-    Route::get('/rv_details/{id}', [ReportedViolationsController::class, 'showDetails'])->name('rv_details');
-    Route::get('/export/excel', [ReportedViolationsController::class, 'exportAllVioDetailsToExcel'])->name('export.excel');
-    Route::get('/export-filtered-violations', [ReportedViolationsController::class, 'exportFiltered'])->name('export.filtered.excel');
-
     // Route to view the unauthorized list
     Route::get('/unauthorized_list', [HeadViewUnauthorizedController::class, 'index'])->name('unauthorized_list');
     Route::get('/export/unauthorized/excel', [HeadViewUnauthorizedController::class, 'exportExcel'])->name('exportUnauthorizedExcel');

@@ -10,12 +10,6 @@
     <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('report_violation_list') ? 'active' : '' }}" href="{{ route('report_violation_list') }}">
             <i class="bi bi-sign-no-parking-fill"></i>
-            <span>Violations</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('reported_violations') ? 'active' : '' }}" href="{{ route('reported_violations') }}">
-            <i class="bi bi-sign-no-parking-fill"></i>
             <span>Reported Violations</span>
         </a>
     </li>
