@@ -993,7 +993,6 @@ select#month-type {
 #video {
     width: 100%;
     height: 100%;
-    border-radius: 8px;
 }
 
 #scanner-frame {
@@ -1082,6 +1081,30 @@ select#month-type {
     width: 40%;
 }
 
+@media (max-width: 550px) {
+    #video-container {
+        position: relative;
+        width: 100%; /* Make it take full width of its container */
+        max-width: 80vw; /* Adjust as needed for mobile responsiveness */
+        height: 246px;
+        aspect-ratio: 1 / 1; /* This keeps it square */
+        overflow: hidden;
+        border-radius: 10px; /* Apply rounded corners to the container */
+    }
+    
+    #video {
+        width: 100%;
+        height: auto; /* This maintains aspect ratio for the video */
+        border-radius: 10px; /* Apply rounded corners to the container */
+        object-fit: none; /* REMOVE THIS IF YOU WANT A NORMAL ZOOM OF CAMERA ON PHONE */
+    }
+    
+    .corner {
+        width: 20px;
+        height: 20px;
+        border: 5px solid black;
+    }
+}
 
 /*--------------------------------------------------------------
 # VEHICLE INFO AFTER SCANNED MAIN DIV CSS
