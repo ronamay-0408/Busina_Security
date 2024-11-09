@@ -1716,7 +1716,6 @@ select#month-type {
 }
 @media (max-width: 600px) {
     .unsettle_violation{
-        
         flex-wrap: wrap;
         gap: 10px;
     }

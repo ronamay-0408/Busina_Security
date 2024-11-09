@@ -77,7 +77,7 @@
                     </div>
 
                     <div class="input-form">
-                        <label for="expiry_date">Registration Expiration Date</label>
+                        <label for="expiry_date">Vehicle Expiration Date</label>
                         <input type="text" value="{{ $vehicle->expiry_date ? \Carbon\Carbon::parse($vehicle->expiry_date)->toDateString() : 'N/A' }}" readonly>
                     </div>
 
