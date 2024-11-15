@@ -40,9 +40,25 @@ a {
     /* Toggle Sidebar Button */
     /* Search Bar */
 }
-.header .toggle-sidebar-btn {
+/* .header .toggle-sidebar-btn {
     font-size: 32px;
     cursor: pointer;
+} */
+
+/* Hide toggle button by default */
+.toggle-sidebar-btn {
+    display: none;
+}
+
+/* Show sidebar when toggled */
+body.toggle-sidebar #sidebar {
+    transform: translateX(0);
+}
+
+/* Add a blur effect on the main content area when sidebar is open */
+body.toggle-sidebar .main {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
 }
 
 .bar{
@@ -91,7 +107,7 @@ a {
 --------------------------------------------------------------*/
 .sidebar {
     position: fixed;
-    top: 50px;
+    top: 0px;
     left: 0;
     bottom: 0;
     width: 260px;
@@ -160,14 +176,14 @@ a {
 }
 
 .sidebar-nav .nav-item {
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .sidebar-nav .nav-item span{
     margin-left: 1rem;
     text-decoration: none;
     font-weight: 500;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .sidebar li a.active {
@@ -201,7 +217,7 @@ a {
     font-weight: 600;
     color: #697a8d;
     transition: 0.3;
-    padding: 12px 15px;
+    padding: 0.625rem 1rem;
 }
 
 .sidebar-nav .nav-link i {
@@ -225,9 +241,102 @@ a {
 
 .active{
     background-color: rgba(53, 192, 247, 0.3);
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
+/* Sidebar header (where the icon is) */
+.sidebar-header {
+    position: absolute; /* Keep the header above the sidebar */
+    top: 20px;  /* Adjust this value to place it where you want */
+    left: 20px; /* Adjust this value for placement */
+    cursor: move;  /* Add move cursor when dragging */
+    z-index: 10001; /* Ensure the sidebar header is above the sidebar */
+}
+
+/* Close icon */
+.sidebar-header i {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    line-height: 23px;
+    text-align: center;
+    background-color: #0099cb;
+    color: white;
+    border-radius: 50%;
+    font-size: 15px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    z-index: 10002;
+    position: relative;
+    border: 6px solid #f5f5f9;
+}
+.sidebar-header i:hover {
+    background-color: #0e546b;  /* Change color on hover */
+}
+/* Prevent clipping or overflow */
+.sidebar-header, .sidebar {
+    overflow: visible;
+}
+/* Close button (chevron) styling */
+.sidebar-header {
+    display: none;
+}
+
+.toggle-sidebar-close {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Sidebar default position (desktop/laptop mode) */
+#sidebar {
+    position: fixed;
+    width: 260px;
+    height: 100%;
+    transform: translateX(0); /* Sidebar is visible */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Mobile view (smaller than 1200px) */
+@media (max-width: 1200px) {
+    /* Sidebar off-screen by default */
+    #sidebar {
+        transform: translateX(-250px); /* Hide sidebar off-screen */
+    }
+
+    body.toggle-sidebar #sidebar {
+        transform: translateX(0); /* Show sidebar when toggled */
+    }
+
+    .date-time {
+        padding-left: 10px;
+    }
+    .toggle-sidebar-btn {
+        display: inline-block; /* or block, depending on your layout */
+        font-size: 24px;
+        cursor: pointer;
+    }
+    
+    /* Make the sidebar header visible in mobile mode */
+    .sidebar-header {
+        display: inline-block;
+        cursor: pointer;
+        padding: 10px;
+        left: 14.5rem;
+    }
+}
+
+/* Sidebar visible on larger screens */
+@media (min-width: 1200px) {
+    /* Ensure sidebar is visible when resizing to desktop mode */
+    #sidebar {
+        transform: translateX(0); /* Sidebar should always be visible */
+    }
+
+    /* Hide the toggle button on larger screens */
+    .toggle-sidebar-btn {
+        display: none;
+    }
+}
 /*--------------------------------------------------------------
 # With QR Code Scanner Sidebar
 --------------------------------------------------------------*/
@@ -306,7 +415,7 @@ body.toggle-sidebar .qr_sidebar {
     padding: 10px 15px;
     color: rgba(97, 103, 121, 1);
 }
-.image i{
+.bi-person-circle{
     font-size: 70px;
 }
 
@@ -330,12 +439,13 @@ body.toggle-sidebar .qr_sidebar {
 
 .head_info h2{
     margin: 0;
-    font-size: 22px;
+    font-size: 20px;
+    font-weight: 600;
 }
 .head_info h3{
     margin: 0;
-    font-weight: 300;
-    font-size: 16px;
+    font-weight: 400;
+    font-size: 15px;
 }
 
 /*--------------------------------------------------------------
@@ -399,26 +509,28 @@ main{
     .search-filter {
         flex-wrap: wrap;
     }
-    .filter-field {
+    /* .filter-field {
         gap: 5px;
-    }
+    } */
     .filter-select {
         padding: 8px;
     }
 }
 
-.date-time {
-    color: black;
-    /* font-size: 14px; */
+.datetime-btn{
+    display: flex;
     padding: 15px 15px 15px 25px;
-    /* font-weight: 600; */
-    /* background-color: white; */
-    /* border-radius: 5px; */
-    margin-top: 4.5rem;
-    /* border: 0.1px solid #80808061; */
     background-color: #ffffff;
     box-shadow: 0 0 0.375rem 0.25rem rgba(161, 172, 184, 0.15);
     border-radius: 5px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #697a8d;
+    margin-top: 0.6rem;
+    align-items: center; /* Vertically aligns items to the center */
+}
+.date-time{
+    color: black;
     font-size: 15px;
     font-weight: 500;
     color: #697a8d;
@@ -468,8 +580,26 @@ main{
 }
 .reports{
     display: flex;
-    margin-top: 1rem;
-    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    gap: 20px;
+}
+.ssu-reports{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin-top: 2rem;
+    gap: 20px;
+}
+.ssu-reports a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
 }
 .filed{
     background-color: white;
@@ -534,7 +664,7 @@ main{
 
 .upload{
     display: flex;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     text-align: center;
     gap: 10px;
 }
@@ -544,6 +674,9 @@ main{
     color: inherit;
     width: 100%;
     height: 100%;
+}
+.upload img{
+    width: 40px;
 }
 .child{
     background-color: rgba(242, 117, 43, 0.2);
@@ -646,16 +779,16 @@ main{
 
     .input-form label {
         flex: 1.4;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .input-form{
         align-items: center;
     }
 
-    /* .input-form input, .input-form select {
-        font-size: 14px;
-    } */
+    .input-form input, .input-form select {
+        flex: 3.5;
+    }
 
     select#vio_type {
         width: 10%;
@@ -1845,9 +1978,6 @@ p#message-text {
     font-weight: 400;
     font-size: 16px;
 }
-hr.horizontal.dark {
-    background-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .4), transparent);
-}
 
 @media (max-width: 600px) {
     .account-mainsub{
@@ -2041,7 +2171,7 @@ hr.horizontal.dark {
     font-weight: 600;
 } 
 .box-g-2 h4 {
-    color:#566a7f;
+    color: #09b3e4;
     font-weight: 600;
 }
 .box-g-2 p {
@@ -2128,10 +2258,18 @@ hr.horizontal.dark {
     color: #566a7f;
 }
 hr {
-    border: 0;
+    border-top: none;
     height: 1px;
     background-color: #ccc; /* Customize color */
-    /* margin: 20px 0; Customize space around the line */
+    color: inherit;
+    border: 0;
+    opacity: .25;
+}
+hr.horizontal {
+    background-color: transparent;
+}
+hr.horizontal.dark {
+    background-image: linear-gradient(90deg, transparent, rgba(0, 0, 0, .4), transparent);
 }
 .highlight {
     background-color: rgba(53, 192, 247, 0.3);

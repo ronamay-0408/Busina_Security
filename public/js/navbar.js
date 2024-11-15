@@ -15,10 +15,25 @@
         }
     };
 
-    // Sidebar toggle
+    // Sidebar toggle (button in the date-time div)
     document.addEventListener('click', function(e) {
         if (e.target.matches('.toggle-sidebar-btn')) {
             select('body').classList.toggle('toggle-sidebar');
         }
     });
+
+    // Sidebar close button (inside sidebar)
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.toggle-sidebar-close')) {
+            select('body').classList.remove('toggle-sidebar');
+        }
+    });
+
+    // Auto-close the sidebar when the window is resized to 1200px or larger
+    window.addEventListener('resize', function() {
+        if (window.innerWidth >= 1200) {
+            select('body').classList.remove('toggle-sidebar'); // Remove toggle class for larger screens
+        }
+    });
+
 })();

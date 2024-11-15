@@ -112,11 +112,11 @@ class HeadReportViolationController extends Controller
             if ($request->filled('remarks')) {
                 $remarks = $request->input('remarks');
 
-                // Map numeric remarks to their text values
+                // Map numeric remarks to their exact text values
                 if ($remarks == 1) {
-                    $query->where('remarks', 'like', '%Not been settled%');
+                    $query->where('remarks', '=', 'Not been settled');
                 } elseif ($remarks == 2) {
-                    $query->where('remarks', 'like', '%Settled%');
+                    $query->where('remarks', '=', 'Settled');
                 }
             }
 

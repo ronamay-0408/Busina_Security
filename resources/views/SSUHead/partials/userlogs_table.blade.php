@@ -40,6 +40,28 @@
 </div>
 
 <!-- Include pagination links -->
-<div class="pagination no-print">
-    @include('SSUHead.partials.userlogs_pagination')
+<div id="userlogsPagination" class="pagination no-print">
+    {{-- Previous Page Link --}}
+    @if ($userLogs->onFirstPage())
+        <span class="page-item disabled">« Previous</span>
+    @else
+        <a class="page-item" href="{{ $userLogs->previousPageUrl() }}&search={{ request('search') }}&year={{ request('year') }}&month={{ request('month') }}&day={{ request('day') }}&per_page={{ request('per_page', 10) }}">« Previous</a>
+    @endif
+
+    {{-- Pagination Links --}}
+    @foreach ($userLogs->getUrlRange(1, $userLogs->lastPage()) as $page => $url)
+        @if ($page == $userLogs->currentPage())
+            <span class="page-item active">{{ $page }}</span>
+        @else
+            <a class="page-item" href="{{ $url }}&search={{ request('search') }}&year={{ request('year') }}&month={{ request('month') }}&day={{ request('day') }}&per_page={{ request('per_page', 10) }}">{{ $page }}</a>
+        @endif
+    @endforeach
+
+    {{-- Next Page Link --}}
+    @if ($userLogs->hasMorePages())
+        <a class="page-item" href="{{ $userLogs->nextPageUrl() }}&search={{ request('search') }}&year={{ request('year') }}&month={{ request('month') }}&day={{ request('day') }}&per_page={{ request('per_page', 10) }}">Next »</a>
+    @else
+        <span class="page-item disabled">Next »</span>
+    @endif
 </div>
+

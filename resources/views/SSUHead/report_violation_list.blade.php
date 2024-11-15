@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
     <style>
         @media (max-width: 600px) {
@@ -32,37 +34,13 @@
         }
     </style>
 <body>
-    <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
-        <div class="bar">
-            <i class="bi bi-list toggle-sidebar-btn"></i>
-        </div>
-        
-        <div class="logo">
-            <img src="{{ asset('images/BUsina logo (1) 2.png') }}" alt="">
-        </div>
-    </header><!-- End Header -->
-
-    <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
-
-        <div class="profile">
-            <div class="image">
-                <img src="{{ asset('images/BUsina logo (1) 1.png') }}" alt="">
-            </div>
-            <div class="head_info">
-                @if(Session::has('user'))
-                    <h2>{{ Session::get('user')['fname'] }} {{ Session::get('user')['lname'] }}</h2>
-                    <h3>{{ Session::get('user')['email'] }}</h3>
-                @endif
-            </div>
-        </div>
-
-        @include('SSUHead.partials.sidebar')
-    </aside><!-- End Sidebar-->
+    @include('SSUHead.partials.sidebar')
 
     <main id="main" class="main">
-        <div class="date-time"></div>
+        <div class="datetime-btn">
+            <div class="burger-btn"><i class="bi bi-list toggle-sidebar-btn"></i> <!-- Moved toggle button here --></div>
+            <div class="date-time"></div>
+        </div>
 
         <div class="submain">
             <div class="main-title">
@@ -149,19 +127,8 @@
             const $paginationLinks = $('#paginationLinks');
             const $filters = $('#searchInput, #yearFilter, #monthFilter, #dayFilter, #remarksFilter, #per_page');
 
-            function fetchData(url) {
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(response) {
-                        $tableContainer.html(response.tableHtml);
-                        $paginationLinks.html(response.paginationHtml);
-                    }
-                });
-            }
-
+            // Function to build the URL with filters
             function buildUrl() {
-                // Get the remarks filter value
                 const remarks = $('#remarksFilter').val();
 
                 // Map remarks numeric values to text or send as is (1 or 2)
@@ -183,13 +150,28 @@
 
             // Fetch data initially and on filter change
             fetchData(buildUrl());
+
+            // Apply filter change
             $filters.on('input change', () => fetchData(buildUrl()));
 
             // Handle pagination
             $(document).on('click', '#paginationLinks a', function(e) {
                 e.preventDefault();
+                // When clicking pagination, pass the updated URL with filters
                 fetchData($(this).attr('href'));
             });
+
+            function fetchData(url) {
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function(response) {
+                        $tableContainer.html(response.tableHtml);
+                        // Ensure pagination links are updated with filters
+                        $paginationLinks.html(response.paginationHtml);
+                    }
+                });
+            }
         });
     </script>
 
@@ -202,7 +184,10 @@
             const year = document.getElementById('yearFilter').value;
             const month = document.getElementById('monthFilter').value;
             const day = document.getElementById('dayFilter').value;
-            const remarks = document.getElementById('remarksFilter').value;
+            const remarks = document.getElementById('remarksFilter').value; // Get the selected remarks filter value
+
+            // Log the selected remarks value to ensure it is being captured correctly
+            console.log('Selected remarks:', remarks);
 
             // Create a form dynamically to submit the filters
             const form = document.createElement('form');
@@ -242,7 +227,7 @@
                 const input = document.createElement('input');
                 input.type = 'hidden';
                 input.name = 'remarks';
-                input.value = remarks; // Remarks now passes 1 or 2
+                input.value = remarks; // Pass the numeric value for remarks (1 or 2)
                 form.appendChild(input);
             }
 

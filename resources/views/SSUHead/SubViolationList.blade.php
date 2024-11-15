@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
     <style>
         .subsubmain{
@@ -43,37 +45,14 @@
     </style>
 
 <body>
-    <!-- ======= Header ======= -->
-    <header id="header" class="header fixed-top d-flex align-items-center">
-        <div class="bar">
-            <i class="bi bi-list toggle-sidebar-btn"></i>
-        </div>
-        
-        <div class="logo">
-            <img src="{{ asset('images/BUsina logo (1) 2.png') }}" alt="">
-        </div>
-    </header><!-- End Header -->
 
-    <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
-
-        <div class="profile">
-            <div class="image">
-                <img src="{{ asset('images/BUsina logo (1) 1.png') }}" alt="">
-            </div>
-            <div class="head_info">
-                @if(Session::has('user'))
-                    <h2>{{ Session::get('user')['fname'] }} {{ Session::get('user')['lname'] }}</h2>
-                    <h3>{{ Session::get('user')['email'] }}</h3>
-                @endif
-            </div>
-        </div>
-
-        @include('SSUHead.partials.sidebar')
-    </aside><!-- End Sidebar-->
+    @include('SSUHead.partials.sidebar')
 
     <main id="main" class="main">
-        <div class="date-time"></div>
+        <div class="datetime-btn">
+            <div class="burger-btn"><i class="bi bi-list toggle-sidebar-btn"></i> <!-- Moved toggle button here --></div>
+            <div class="date-time"></div>
+        </div>
 
         <div class="submain">
             <div class="main-title">

@@ -24,6 +24,7 @@ th {
 .head_view_ssu_table{
     padding: 20px 0px;
     overflow-y: hidden;
+    scrollbar-width: thin;
 }
 .add-new img{
     padding: 10px;
