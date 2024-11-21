@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Carbon\Carbon;
 use App\Exports\ViolationsExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReportedViolationsMail;
 
 class HeadReportViolationController extends Controller
 {
@@ -152,6 +154,73 @@ class HeadReportViolationController extends Controller
 
             return Excel::download(new ViolationsExport($violations), $filename);
         }
+        return redirect()->route('index');
+    }
+
+    public function sendReport(Request $request)
+    {
+        $user = Auth::user();
+        if ($user && $user->authorizedUser && $user->authorizedUser->user_type == 3) {
+
+            // Filter the violations based on the current filters
+            $query = Violation::with(['violationType', 'reportedBy'])->orderBy('created_at', 'desc');
+            
+            // Search by plate no or violation type
+            if ($request->filled('search')) {
+                $query->where(function ($q) use ($request) {
+                    $q->where('plate_no', 'like', '%' . $request->input('search') . '%')
+                    ->orWhereHas('violationType', function ($q) use ($request) {
+                        $q->where('violation_name', 'like', '%' . $request->input('search') . '%');
+                    });
+                });
+            }
+
+            // Apply other filters (year, month, etc.)
+            if ($request->filled('year')) {
+                $query->whereYear('created_at', $request->input('year'));
+            }
+            if ($request->filled('month')) {
+                $query->whereMonth('created_at', $request->input('month'));
+            }
+            if ($request->filled('day')) {
+                $query->whereDay('created_at', $request->input('day'));
+            }
+
+            // Apply remarks filter (assuming it's stored in the 'remarks' column)
+            if ($request->filled('remarks')) {
+                $remarks = $request->input('remarks');
+                if ($remarks == 1) {
+                    // Filter for 'Not been settled' - Assuming 1 means 'Not settled'
+                    $query->where('remarks', 'Not been settled');
+                } elseif ($remarks == 2) {
+                    // Filter for 'Settled' - Assuming 2 means 'Settled'
+                    $query->where('remarks', 'Settled');
+                }
+            }
+
+            // Get the filtered violations
+            $violations = $query->get();
+
+            // If no records found, return an error response
+            if ($violations->isEmpty()) {
+                return response()->json(['error' => 'No records found for the applied filters.'], 400);
+            }
+
+            // Generate the Excel file from the filtered violations
+            $excelFile = Excel::raw(new ViolationsExport($violations), \Maatwebsite\Excel\Excel::XLSX);
+
+            // Send the email with the attachment
+            try {
+                Mail::to('headssu@gmail.com') // Change this to the recipient email address
+                    ->send(new ReportedViolationsMail($excelFile));
+                
+                return response()->json(['success' => 'Report sent successfully!'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Failed to send the email.'], 500);
+            }
+        }
+
+        // Unauthorized access
         return redirect()->route('index');
     }
 }

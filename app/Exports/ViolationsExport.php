@@ -32,7 +32,7 @@ class ViolationsExport implements FromCollection, WithHeadings, WithMapping, Wit
         return [
             ['Bicol University'],
             ['Rizal St., Legazpi City, Albay'],
-            ['BU Motorpool Section'],
+            ['BU Head SSU Section'],
             ['Plate No.', 'Violation Type', 'Location', 'Remarks', 'Reported By', 'Date']
         ];
     }

@@ -46,6 +46,7 @@
             <div class="main-title">
                 <h3 class="per-title">REPORTED VIOLATIONS</h3>
                 <div class="submain-btn">
+                    <button type="button" id="emailButton" class="buttons">Send Report</button>
                     <button type="button" id="exportExcelButton" class="buttons" onclick="exportFiltered()">Export as Filtered Excel</button>
                     <button type="button" id="exportAllButton" class="buttons" onclick="exportAll()">Export All as Excel</button>
                     <button type="button" id="printViolation" class="buttons">Print</button>
@@ -175,6 +176,7 @@
         });
     </script>
 
+    <!-- JAVASCRIPT FOR EXCEL EXPORTATION -->
     <script>
         function exportFiltered() {
             console.log('Export filtered button clicked');
@@ -245,6 +247,7 @@
         }
     </script>
 
+    <!-- JAVASCRIPT FOR PRINTING THE REPORT -->
     <script>
         document.getElementById('printViolation').addEventListener('click', function() {
             printFilteredTable();
@@ -365,6 +368,69 @@
                 printWindow.close();
             };
         }
+    </script>
+    
+    <!-- JAVASCRIPT FOR SENDING THE REPORT TO BUHEAD EMAIL -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('emailButton').addEventListener('click', function() {
+            const search = document.getElementById('searchInput').value;
+            const year = document.getElementById('yearFilter').value;
+            const month = document.getElementById('monthFilter').value;
+            const day = document.getElementById('dayFilter').value;
+            const remarks = document.getElementById('remarksFilter').value;
+
+            // Show SweetAlert2 loading spinner
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Sending the report...',
+                showConfirmButton: false,  // Hide the confirm button
+                allowOutsideClick: false,  // Prevent closing by clicking outside
+                didOpen: () => {
+                    Swal.showLoading();  // Show the loading animation
+                }
+            });
+
+            // Send an AJAX request to send the report via email
+            $.ajax({
+                url: '/send-report',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    search: search,
+                    year: year,
+                    month: month,
+                    day: day,
+                    remarks: remarks
+                },
+                success: function(response) {
+                    // Hide the loading spinner and show success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Report sent successfully!',
+                        text: response.success,
+                        timer: 3000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Optionally reload the page or perform other actions
+                        // location.reload();  // Reload the page after the success message
+                    });
+                },
+                error: function(xhr) {
+                    // Hide the loading spinner and show error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed to send the email.',
+                        text: xhr.responseJSON.error,
+                        timer: 3000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Optionally reload the page or perform other actions
+                        location.reload();  // Reload the page after the error message
+                    });
+                }
+            });
+        });
     </script>
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>

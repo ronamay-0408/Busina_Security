@@ -483,6 +483,10 @@ main{
     cursor: pointer;
 }
 
+.main-title button:hover {
+    background-color: #536376;
+}
+
 .search-filter {
     display: flex;
     justify-content: space-between;

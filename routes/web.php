@@ -177,6 +177,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/sub-violation/{id}', [HeadReportViolationController::class, 'showSubViolationList'])->name('subViolationList');
     Route::get('/export-filtered-violations', [HeadReportViolationController::class, 'exportFiltered'])->name('export.filtered.excel');
     Route::get('/violations/export-all', [HeadReportViolationController::class, 'exportAllVioDetailsToExcel'])->name('export.all.excel');
+    Route::post('/send-report', [HeadReportViolationController::class, 'sendReport'])->name('send.report');
+
 
     // Route to view the unauthorized list
     Route::get('/unauthorized_list', [HeadViewUnauthorizedController::class, 'index'])->name('unauthorized_list');
