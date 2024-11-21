@@ -29,7 +29,7 @@
         <div class="to_report">
             <h3>REPORT A VEHICLE</h3>
             <!-- Display success or error messages -->
-            @if ($errors->any())
+            <!-- @if ($errors->any())
                 <div class="main-error unauthorized_report_error">
                     <p id="errorMessage" class="error-message">
                         <span><i class="bi bi-exclamation-circle"></i></span>
@@ -57,7 +57,7 @@
                         <a class="cancel-button-success" onclick="hideMessage('successMessage')"><i class="bi bi-x"></i></a>
                     </p>
                 </div>
-            @endif
+            @endif -->
 
             <form action="{{ route('report.vehicle.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -118,9 +118,64 @@
                 </div>
             </form>
         </div>
-        
     </main><!-- End #main -->
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Pass session data safely into JavaScript
+        var successMessage = "{{ session('success') }}";
+        var errorMessage = "{{ session('error') }}";
+        var validationErrors = "{{ $errors->first() }}";
+
+        // Trigger SweetAlert2 based on the session data
+        if (successMessage) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: successMessage,
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+
+        if (errorMessage) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: errorMessage,
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+
+        if (validationErrors) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: validationErrors,
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+
+        // To show a simple processing message on form submit
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();  // Prevent the form from submitting right away
+
+            // Show SweetAlert processing message instantly
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Sending the report...',
+                showConfirmButton: false,
+                allowOutsideClick: false
+            });
+
+            // Submit the form immediately after showing the message
+            form.submit();  // Proceed with form submission right after showing the alert
+        });
+    </script>
+    
     <script src="{{ asset('js/hide_errors_success_unauthorized.js') }}"></script>
     <!-- SELECTED IMAGE -->
     <script src="{{ asset('js/selected_img.js') }}"></script>
