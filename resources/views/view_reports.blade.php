@@ -22,80 +22,69 @@
 
     <main id="main" class="main">
         <div class="datetime-btn">
-            <div class="burger-btn"><i class="bi bi-list toggle-sidebar-btn"></i> <!-- Moved toggle button here --></div>
+            <div class="burger-btn"><i class="bi bi-list toggle-sidebar-btn"></i></div>
             <div class="date-time"></div>
         </div>
-        
+
         <div class="submain">
             <div class="main-title">
                 <h3 class="per-title">MY REPORTS</h3>
             </div>
 
             <div class="search-bar">
-                <form action="{{ route('violations.index') }}" method="GET">
-                    <input type="text" placeholder="Search by Plate Number" name="search" value="{{ request('search') }}">
-                    <button type="submit">Search</button>
-                </form>
+                <!-- Search Input -->
+                <input type="text" placeholder="Search by Plate Number" name="search" id="search-input">
             </div>
 
-            <!-- resources/views/view_reports.blade.php -->
-            <div class="myreports">
-                @forelse($violations as $violation)
-                    <div class="filed-child">
-                        <div class="myfiled">
-                            <h3><a href="{{ route('violation.show', $violation->id) }}">{{ $violation->plate_no }}</a></h3>
-                            <p>{{ $violation->violationType->violation_name }}</p>
-                            <div class="date">
-                                <p>{{ $violation->created_at->format('m-d-Y') }}</p>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <p class="no-result">No results found.</p>
-                @endforelse
-            </div>
-
-            <!-- Showing X to Y of Z results -->
-            <div class="results-info">
-                @php
-                    $start = ($violations->currentPage() - 1) * $violations->perPage() + 1;
-                    $end = min($start + $violations->perPage() - 1, $violations->total());
-                @endphp
-                <p>Showing {{ $start }} to {{ $end }} of {{ $violations->total() }} results</p>
-            </div>
-
-            <!-- Custom Pagination -->
-            <div class="pagination">
-                {{-- Previous Page Link --}}
-                @if ($violations->onFirstPage())
-                    <span class="page-item disabled">« Previous</span>
-                @else
-                    <a class="page-item" href="{{ $violations->previousPageUrl() }}&per_page={{ request('per_page', 10) }}">« Previous</a>
-                @endif
-
-                {{-- Pagination Links --}}
-                @foreach ($violations->getUrlRange(1, $violations->lastPage()) as $page => $url)
-                    @if ($page == $violations->currentPage())
-                        <span class="page-item active">{{ $page }}</span>
-                    @else
-                        <a class="page-item" href="{{ $url }}&per_page={{ request('per_page', 10) }}">{{ $page }}</a>
-                    @endif
-                @endforeach
-
-                {{-- Next Page Link --}}
-                @if ($violations->hasMorePages())
-                    <a class="page-item" href="{{ $violations->nextPageUrl() }}&per_page={{ request('per_page', 10) }}">Next »</a>
-                @else
-                    <span class="page-item disabled">Next »</span>
-                @endif
+            <!-- Violation List -->
+            <div class="myreports-con">
+                @include('MainPartials.myviolation', ['violations' => $violations])
             </div>
         </div>
     </main><!-- End #main -->
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Check if the URL has a 'search' query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('search');
 
+            // If there's a search query in the URL, populate the search input field with the search query
+            if (searchQuery) {
+                document.getElementById('search-input').value = searchQuery;
+            }
+
+            // Listen for input changes in the search bar
+            const searchInput = document.getElementById('search-input');
+
+            searchInput.addEventListener('keyup', function() {
+                const searchQuery = searchInput.value;
+
+                // Send the search query via AJAX to the server
+                $.ajax({
+                    url: "{{ route('view_reports') }}", // Correct route for your reports
+                    method: 'GET',
+                    data: { search: searchQuery }, // Send the search query to the controller
+                    success: function(response) {
+                        console.log('AJAX Response:', response); // Log the response data to the console
+
+                        // Ensure the response contains the expected HTML (the entire content for violations, results info, and pagination)
+                        if (response.html) {
+                            // Replace the existing content with the updated HTML from the AJAX response
+                            document.querySelector('.myreports-con').innerHTML = response.html;
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("There was an error with the AJAX request:", error);
+                        alert('There was an error with the search request. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
-
     <!-- DATE AND TIME -->
     <script src="{{ asset('js/date_time.js') }}"></script>
 </body>

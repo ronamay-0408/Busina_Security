@@ -288,13 +288,13 @@ body.toggle-sidebar .main {
 }
 
 /* Sidebar default position (desktop/laptop mode) */
-#sidebar {
+/* #sidebar {
     position: fixed;
     width: 260px;
     height: 100%;
-    transform: translateX(0); /* Sidebar is visible */
+    transform: translateX(0);
     transition: transform 0.3s ease-in-out;
-}
+} */
 
 /* Mobile view (smaller than 1200px) */
 @media (max-width: 1200px) {
