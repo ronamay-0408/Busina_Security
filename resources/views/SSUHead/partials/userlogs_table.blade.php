@@ -15,7 +15,10 @@
                 <td>{{ \Carbon\Carbon::parse($log->log_date)->format('Y-m-d') }}</td>  <!-- Parse log_date -->
                 <td>{{ $log->vehicleOwner->driver_license_no }}</td>
                 <td>{{ \Carbon\Carbon::parse($log->time_in)->format('g:i A') }}</td>
-                <td>{{ \Carbon\Carbon::parse($log->time_out)->format('g:i A') }}</td>
+                <td>@if($log->time_out)
+                        {{ \Carbon\Carbon::parse($log->time_out)->format('g:i A') }}
+                    @endif
+                </td>
             </tr>
         @endforeach
     </tbody>

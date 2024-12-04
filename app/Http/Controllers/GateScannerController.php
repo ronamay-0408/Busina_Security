@@ -10,6 +10,7 @@ use App\Models\UserLog; // Import the UserLog model
 use App\Models\Violation; // Import the Violation model
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class GateScannerController extends Controller
 {
@@ -25,8 +26,7 @@ class GateScannerController extends Controller
 
             try {
                 // Find the vehicle owner
-                // $vehicleOwner = VehicleOwner::where('id', $qrCodeData)->first(); //Code using vehicle_owner id
-                $vehicleOwner = VehicleOwner::where('driver_license_no', $qrCodeData)->first(); //Code using drivers license
+                $vehicleOwner = VehicleOwner::where('driver_license_no', $qrCodeData)->first();
                 Log::info('Vehicle owner found: ' . ($vehicleOwner ? 'Yes' : 'No'));
 
                 if (!$vehicleOwner) {
@@ -40,66 +40,62 @@ class GateScannerController extends Controller
                 // Get all vehicles owned by the vehicle owner
                 $vehicles = $vehicleOwner->vehicles;
 
-                // CHECK FOR UNSETTLED VIOLATIONS THAT ARE OVERDUE FOR ALL VEHICLES
-                $unsettledViolations = Violation::whereIn('vehicle_id', $vehicles->pluck('id'))
-                    ->where('remarks', 'Not been settled')
-                    ->where('created_at', '<=', now()->subDays(1)) // Check if violation is over 1 day old
-                    ->get();
-
-                // Check if the number of unsettled violations equals the number of vehicles
-                if ($unsettledViolations->count() === $vehicles->count()) {
-                    // Get all plate numbers for the owner's vehicles
-                    $vehiclePlateNumbers = $vehicles->pluck('plate_no')->implode(', '); // Join plate numbers into a single string
-
-                    return response()->json([
-                        'success' => false,
-                        'message' => "This vehicle owner cannot bring the vehicles with plate numbers {$vehiclePlateNumbers} onto campus for 2 months due to unresolved violations."
-                    ]);
-                }
-
-                // Get vehicles associated with the owner
-                $vehicles = Vehicle::where('vehicle_owner_id', $vehicleOwner->id)->get();
-                
-                // Fetch transactions for these vehicles
-                $transactions = Transaction::whereIn('vehicle_id', $vehicles->pluck('id'))->get();
-
-                // Extract the relevant details
-                $vehicleData = $vehicles->map(function($vehicle) use ($transactions) {
-                    $transaction = $transactions->firstWhere('vehicle_id', $vehicle->id);
-                    return [
-                        'plate_no' => $vehicle->plate_no,
-                        'registration_no' => $transaction ? $transaction->registration_no : 'N/A',
-                        'sticker_expiry' => $transaction ? $transaction->sticker_expiry : 'N/A'
-                    ];
-                });
-
                 // Get current date and time
                 $currentDate = now()->toDateString();
                 $currentTime = now()->toTimeString();
 
-                // Check if there's an existing log entry without time_out for today
+                // CHECK IF THERE'S AN EXISTING LOG ENTRY WITHOUT time_out FOR TODAY
                 $userLog = UserLog::where('vehicle_owner_id', $vehicleOwner->id)
                     ->where('log_date', $currentDate)
                     ->whereNull('time_out')
                     ->first();
 
                 if ($userLog) {
-                    // Fetch the relevant transaction for the vehicle
-                    $transaction = $transactions->first(); // Assuming the first transaction is relevant
+                    // Fetch the relevant transaction for the vehicle linked to this log entry
+                    $transaction = Transaction::where('vehicle_id', $userLog->vehicle_id)->first();
 
                     // Use a placeholder if no transaction is found
-                    $registrationNo = $transaction ? $transaction->registration_no : 'Unknown';
+                    if ($transaction) {
+                        $registrationNo = $transaction->registration_no;
+                    } else {
+                        Log::warning('Transaction not found for vehicle ID: ' . $userLog->vehicle_id);
+                        $registrationNo = 'Unknown';  // Handle the case where no transaction is found
+                    }
 
                     // Update time_out and return the alert message
                     $userLog->update(['time_out' => $currentTime]);
 
                     return response()->json([
                         'success' => true,
-                        'message' => "Vehicle with Registration Number {$registrationNo} is Leaving the University Premises"
+                        'message' => "{$vehicleOwner->fname} {$vehicleOwner->lname} is Leaving the University Premises"
                     ]);
                 }
 
-                // Create a new log entry for time_in
+                // If no time_out exists, proceed with checking unsettled violations
+                $unsettledViolations = Violation::whereIn('vehicle_id', $vehicles->pluck('id'))
+                    ->where('remarks', 'Not been settled')
+                    ->where('created_at', '<=', now('UTC')->subDays(20)->startOfDay()) // Using UTC time zone
+                    ->get();
+
+                // Check if at least one vehicle has an unsettled violation
+                $vehiclesWithViolations = $vehicles->filter(function ($vehicle) use ($unsettledViolations) {
+                    return $unsettledViolations->contains('vehicle_id', $vehicle->id);
+                });
+                
+                // If there are any vehicles with unresolved violations, flag the owner
+                if ($vehiclesWithViolations->isNotEmpty()) {
+                    // Get plate numbers for only the vehicles with unresolved violations
+                    $vehiclePlateNumbersWithViolations = $vehiclesWithViolations->pluck('plate_no')->implode(', '); // Join plate numbers into a single string
+                
+                    return response()->json([
+                        'success' => false,
+                        'message' => "This vehicle owner cannot bring the vehicles with plate numbers {$vehiclePlateNumbersWithViolations} onto campus for 2 months due to unresolved violations.",
+                        'showButtons' => true, // Flag to show the buttons in the frontend
+                        'plateNumbers' => $vehiclePlateNumbersWithViolations, // Pass the plate numbers for use in the frontend
+                    ]);
+                }
+
+                // Create a new log entry for time_in if no prior log exists
                 UserLog::create([
                     'vehicle_owner_id' => $vehicleOwner->id,
                     'log_date' => $currentDate,
@@ -108,8 +104,7 @@ class GateScannerController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'vehicleOwner' => $vehicleOwner,
-                    'vehicles' => $vehicleData
+                    'message' => "Vehicle entry successful! Welcome {$vehicleOwner->fname} {$vehicleOwner->lname}."
                 ]);
 
             } catch (\Exception $e) {
@@ -121,8 +116,62 @@ class GateScannerController extends Controller
             }
         } else {
             // Redirect to index if not authorized
-            // abort(403, 'Unauthorized action.');
             return redirect()->route('head_index');
         }
+    }
+
+    public function saveTimeIn(Request $request)
+    {
+        $plateNumbers = $request->input('plate_numbers');
+    
+        // Log the received data for debugging
+        Log::info('Plate numbers: ' . $plateNumbers);
+    
+        // Assuming you have a way to identify the vehicle(s) based on plate numbers
+        $vehicles = Vehicle::whereIn('plate_no', explode(',', $plateNumbers))->get();
+    
+        // Log the vehicles found for the plate numbers
+        Log::info('Vehicles found: ' . $vehicles->pluck('plate_no')->implode(', '));
+    
+        if ($vehicles->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No vehicles found for the provided plate numbers.'
+            ]);
+        }
+    
+        // Save time_in for each vehicle
+        foreach ($vehicles as $vehicle) {
+            // Assuming UserLog has a vehicle_id and other relevant fields
+            UserLog::create([
+                'vehicle_owner_id' => $vehicle->vehicle_owner_id, // You should have this relation
+                'vehicle_id' => $vehicle->id,
+                'log_date' => now()->toDateString(),
+                'time_in' => now()->toTimeString(),
+            ]);
+        }
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Vehicle entry has been recorded.'
+        ]);
+    }
+    
+    public function viewLogs(Request $request)
+    {
+        // Get today's date using Carbon
+        $today = Carbon::today();  // This returns the current date (00:00:00 of today)
+
+        // Create a query to fetch logs for today with vehicle owner details, ordered by log date and time in
+        $query = UserLog::with('vehicleOwner')
+            ->whereDate('log_date', $today)  // Only fetch records where the log_date is today's date
+            ->orderBy('log_date', 'desc')    // Sort by log date in descending order
+            ->orderBy('time_in', 'desc');    // Then by time_in in descending order
+
+        // Fetch the results for today
+        $userLog = $query->get();
+
+        // Return the view with the logs
+        return view('gate_scanner', ['userLog' => $userLog]);
     }
 }

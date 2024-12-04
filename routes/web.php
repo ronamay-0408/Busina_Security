@@ -133,6 +133,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('gate_scanner');
     
     Route::post('/scan-qr', [GateScannerController::class, 'scanQR'])->name('gate_scanner.scan');
+    Route::post('/allow', [GateScannerController::class, 'allowEntry'])->name('gate_scanner.allow_entry');
+    Route::post('/deny', [GateScannerController::class, 'denyEntry'])->name('gate_scanner.deny_entry');
+    Route::post('/save-time-in', [GateScannerController::class, 'saveTimeIn']);
+    // Route::get('/gate_scanner/logs', [GateScannerController::class, 'viewLogs']);
+    Route::get('/gate_scanner', [GateScannerController::class, 'viewLogs'])->name('gate_scanner');
 
     // Route to display scanned QR code page
     // Route::get('/scanned_qr', function () {

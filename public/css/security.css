@@ -1860,14 +1860,22 @@ select#month-type {
 /*--------------------------------------------------------------
 # GATE SCANNER CSS
 --------------------------------------------------------------*/
-/* .gate-scanner{
+.gate-scanner{
     display: flex;
-    justify-content: space-between;
+    gap: 20px;
     flex-wrap: wrap;
-} */
-/* .gate-scanner2{
-    width: calc(100% / 2 - 10px);
-} */
+}
+.tDiv{
+    flex: 3;
+    background-color: white;
+    padding: 10px 15px;
+    margin-top: 20px;
+    border: 0.1px solid #80808061;
+}
+.gate-scanner2{
+    flex: 2;
+    border-radius: none;
+}
 .side_vehicle_info{
     background-color: white;
     padding: 20px;

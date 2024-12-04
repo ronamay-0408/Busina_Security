@@ -26,7 +26,7 @@
 </table>
 
 <script>
-    document.querySelectorAll('#violationTable tr').forEach(function(row) {
+    document.querySelectorAll('#violationTable tbody tr').forEach(function(row) {
         row.addEventListener('click', function() {
             var url = this.getAttribute('data-url');
             window.location.href = url;
