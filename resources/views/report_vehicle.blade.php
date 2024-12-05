@@ -28,7 +28,7 @@
 
         <div class="to_report">
             <h3>REPORT A VEHICLE</h3>
-            <form action="{{ route('report.vehicle.store') }}" method="POST" enctype="multipart/form-data">
+            <form id="reportForm" action="{{ route('report.vehicle.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="inputs">
                     <div class="input-form">
@@ -89,59 +89,59 @@
         </div>
     </main><!-- End #main -->
 
+    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Pass session data safely into JavaScript
-        var successMessage = "{{ session('success') }}";
-        var errorMessage = "{{ session('error') }}";
-        var validationErrors = "{{ $errors->first() }}";
+        $(document).ready(function () {
+            $('#reportForm').on('submit', function (e) {
+                e.preventDefault();  // Prevent the default form submission
 
-        // Trigger SweetAlert2 based on the session data
-        if (successMessage) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: successMessage,
-                timer: 3000,
-                showConfirmButton: false
+                // Show SweetAlert2 loading spinner
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Submitting the report...',
+                    showConfirmButton: false,  // Hide the confirm button
+                    allowOutsideClick: false,  // Prevent closing by clicking outside
+                    didOpen: () => {
+                        Swal.showLoading();  // Show the loading animation
+                    }
+                });
+
+                // Send the form data via AJAX
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: new FormData(this),  // Use FormData to submit form with file
+                    processData: false,  // Don't process the data
+                    contentType: false,  // Don't set content type
+                    success: function (response) {
+                        // Hide the loading spinner and show success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Violation report submitted successfully.',
+                            timer: 3000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();  // Reload the page after success message
+                        });
+                    },
+                    error: function (xhr) {
+                        // Hide the loading spinner and show error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: xhr.responseJSON.error || 'An error occurred while submitting the form.',
+                            timer: 3000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();  // Reload the page after error message
+                        });
+                    }
+                });
             });
-        }
-
-        if (errorMessage) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: errorMessage,
-                timer: 3000,
-                showConfirmButton: false
-            });
-        }
-
-        if (validationErrors) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                text: validationErrors,
-                timer: 3000,
-                showConfirmButton: false
-            });
-        }
-
-        // To show a simple processing message on form submit
-        const form = document.querySelector('form');
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();  // Prevent the form from submitting right away
-
-            // Show SweetAlert processing message instantly
-            Swal.fire({
-                title: 'Processing...',
-                text: 'Sending the report...',
-                showConfirmButton: false,
-                allowOutsideClick: false
-            });
-
-            // Submit the form immediately after showing the message
-            form.submit();  // Proceed with form submission right after showing the alert
         });
     </script>
     
