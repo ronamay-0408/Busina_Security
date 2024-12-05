@@ -28,37 +28,6 @@
 
         <div class="to_report">
             <h3>REPORT A VEHICLE</h3>
-            <!-- Display success or error messages -->
-            <!-- @if ($errors->any())
-                <div class="main-error unauthorized_report_error">
-                    <p id="errorMessage" class="error-message">
-                        <span><i class="bi bi-exclamation-circle"></i></span>
-                        {{ $errors->first() }}
-                        <a class="cancel-button" onclick="hideMessage('errorMessage')"><i class="bi bi-x"></i></a>
-                    </p>
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="main-error unauthorized_report_error">
-                    <p id="errorMessage" class="error-message">
-                        <span><i class="bi bi-exclamation-circle"></i></span>
-                        {{ session('error') }}
-                        <a class="cancel-button" onclick="hideMessage('errorMessage')"><i class="bi bi-x"></i></a>
-                    </p>
-                </div>
-            @endif
-
-            @if (session('success'))
-                <div class="main-success unauthorized_report_success">
-                    <p id="successMessage" class="success-message">
-                        <span><i class="bi bi-check-circle"></i></span>
-                        {{ session('success') }}
-                        <a class="cancel-button-success" onclick="hideMessage('successMessage')"><i class="bi bi-x"></i></a>
-                    </p>
-                </div>
-            @endif -->
-
             <form action="{{ route('report.vehicle.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="inputs">
