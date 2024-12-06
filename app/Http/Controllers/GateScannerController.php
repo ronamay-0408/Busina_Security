@@ -102,10 +102,19 @@ class GateScannerController extends Controller
                     'time_in' => $currentTime
                 ]);
 
+                // Get all plate numbers of the vehicles owned by the vehicle owner
+                $plateNumbers = $vehicles->pluck('plate_no')->implode(', ');
+
+                // Modify the success message to include the plate numbers
                 return response()->json([
                     'success' => true,
-                    'message' => "Vehicle entry successful! Welcome {$vehicleOwner->fname} {$vehicleOwner->lname}."
+                    'message' => "Vehicle entry successful! Welcome {$vehicleOwner->fname} {$vehicleOwner->lname}. Vehicles: {$plateNumbers}"
                 ]);
+
+                // return response()->json([
+                //     'success' => true,
+                //     'message' => "Vehicle entry successful! Welcome {$vehicleOwner->fname} {$vehicleOwner->lname}."
+                // ]);
 
             } catch (\Exception $e) {
                 Log::error('Error processing QR code: ' . $e->getMessage());
