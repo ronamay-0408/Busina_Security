@@ -140,9 +140,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/gate_scanner', [GateScannerController::class, 'viewLogs'])->name('gate_scanner');
     // In routes/web.php
     Route::post('/logTimeout', [GateScannerController::class, 'logTimeout'])->name('logTimeout');
-    Route::post('/scan-qr', [GateScannerController::class, 'scanQR'])->name('scanQR');
-
-
 
     // Route to display scanned QR code page
     // Route::get('/scanned_qr', function () {
