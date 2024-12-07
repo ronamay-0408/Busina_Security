@@ -50,26 +50,20 @@ class GateScannerController extends Controller
                     ->whereNull('time_out')
                     ->first();
 
-                if ($userLog) {
-                    // Fetch the relevant transaction for the vehicle linked to this log entry
-                    $transaction = Transaction::where('vehicle_id', $userLog->vehicle_id)->first();
-
-                    // Use a placeholder if no transaction is found
-                    if ($transaction) {
-                        $registrationNo = $transaction->registration_no;
-                    } else {
-                        Log::warning('Transaction not found for vehicle ID: ' . $userLog->vehicle_id);
-                        $registrationNo = 'Unknown';  // Handle the case where no transaction is found
+                    if ($userLog) {
+                        Log::info('User log ID: ' . $userLog->id);
+        
+                        return response()->json([
+                            'success' => false,
+                            'message' => "
+                                <div class='unsolved-vio'>
+                                    <p>This vehicle is leaving. Do you want to log the time-out?</p>
+                                </div>
+                            ",
+                            'timeoutbutton' => true, // Flag to trigger SweetAlert buttons
+                            'user_log_id' => $userLog->id, // Pass only the user log ID
+                        ]);
                     }
-
-                    // Update time_out and return the alert message
-                    $userLog->update(['time_out' => $currentTime]);
-
-                    return response()->json([
-                        'success' => true,
-                        'message' => "{$vehicleOwner->fname} {$vehicleOwner->lname} is Leaving the University Premises"
-                    ]);
-                }
 
                 // If no time_out exists, proceed with checking unsettled violations
                 $unsettledViolations = Violation::whereIn('vehicle_id', $vehicles->pluck('id'))
@@ -82,6 +76,9 @@ class GateScannerController extends Controller
                     return $unsettledViolations->contains('vehicle_id', $vehicle->id);
                 });
                 
+                // Get all plate numbers of vehicles owned by the owner
+                $allPlateNumbers = $vehicles->pluck('plate_no')->implode(', ');
+
                 // If there are any vehicles with unresolved violations, flag the owner
                 if ($vehiclesWithViolations->isNotEmpty()) {
                     // Get plate numbers for only the vehicles with unresolved violations
@@ -89,7 +86,13 @@ class GateScannerController extends Controller
                 
                     return response()->json([
                         'success' => false,
-                        'message' => "This vehicle owner cannot bring the vehicles with plate numbers {$vehiclePlateNumbersWithViolations} onto campus for 2 months due to unresolved violations.",
+                        'message' => "
+                            <div class='unsolved-vio'>
+                                <p>Registered vehicles : <span style='font-weight: bold;'>{$allPlateNumbers}</span></p>
+                                <p>The vehicle owner is restricted from bringing vehicles with plate numbers
+                                <span style='font-weight: bold;'>{$vehiclePlateNumbersWithViolations}</span> onto campus for 2 months due to unresolved violations.</p>
+                            </div>
+                        ",
                         'showButtons' => true, // Flag to show the buttons in the frontend
                         'plateNumbers' => $vehiclePlateNumbersWithViolations, // Pass the plate numbers for use in the frontend
                     ]);
@@ -107,7 +110,14 @@ class GateScannerController extends Controller
 
                 return response()->json([
                     'success' => null, // Indicates decision is required
-                    'message' => "Do you want to allow these vehicles: {$plateNumbers} inside the University Premises?",
+                    // 'message' => "Do you want to allow these vehicles: {$plateNumbers} inside the University Premises?",
+                    'message' => "
+                        <div class='unsolved-vio'>
+                            <p>Registered vehicles : <span style='font-weight: bold;'>{$allPlateNumbers}</span></p>
+                            <p>Check if the vehicle in use is registered.</p>
+                            <h4>Owner : <span class='flname'>{$vehicleOwner->fname} {$vehicleOwner->lname}</span></h4>
+                        </div>
+                    ",
                     'timeinbutton' => true, // Flag to show the buttons in the frontend
                     'plateNumbers' => $plateNumbers,
                     'vehicleOwner' => [
@@ -129,32 +139,69 @@ class GateScannerController extends Controller
         }
     }
 
-    // public function confirmTimeIn(Request $request)
-    // {
-    //     $vehicleOwnerId = $request->input('vehicle_owner_id');
-    //     $plateNumbers = $request->input('plate_numbers');
-    //     $ownerName = $request->input('owner_name');  // Capture the owner's name if needed
-    
-    //     try {
-    //         // Create a new log entry for time_in
-    //         UserLog::create([
-    //             'vehicle_owner_id' => $vehicleOwnerId,
-    //             'log_date' => now()->toDateString(),
-    //             'time_in' => now()->toTimeString(),
-    //         ]);
-    
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => "Vehicle entry successful! Welcome {$ownerName}. Vehicles: {$plateNumbers}",
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         Log::error('Error saving time-in: ' . $e->getMessage());
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'An error occurred while saving the time-in.',
-    //         ]);
-    //     }
-    // }
+    public function logTimeout(Request $request)
+    {
+        // Log the incoming request for debugging
+        Log::info('Received log timeout request:', $request->all());
+
+        $userLogId = $request->input('user_log_id');
+        $action = $request->input('action'); // 'allow' or 'deny'
+
+        // Check if the user_log_id is passed and valid
+        if (!$userLogId) {
+            Log::warning('No user_log_id provided.');
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid user log ID.',
+            ]);
+        }
+
+        // Find the user log entry
+        $userLog = UserLog::find($userLogId);
+
+        if (!$userLog) {
+            Log::warning('User log not found for ID: ' . $userLogId);  // Log if user log is not found
+            return response()->json([
+                'success' => false,
+                'message' => 'Log entry not found.',
+            ]);
+        }
+
+        // Process action: 'allow' or 'deny'
+        if ($action === 'allow') {
+            Log::info('Allowing time-out for user log ID: ' . $userLogId);
+
+            // Update the time_out field
+            $updateSuccess = $userLog->update(['time_out' => now()]);
+
+            if ($updateSuccess) {
+                Log::info('Time-out successfully logged for user log ID: ' . $userLogId);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Time-out logged successfully.',
+                ]);
+            } else {
+                Log::warning('Failed to log time-out for user log ID: ' . $userLogId);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to log time-out.',
+                ]);
+            }
+        } elseif ($action === 'deny') {
+            Log::info('Time-out denied for user log ID: ' . $userLogId);
+            // Perform deny-related actions (e.g., logging or notifying)
+            return response()->json([
+                'success' => false,
+                'message' => 'Time-out log denied by the user.',
+            ]);
+        }
+
+        // Return error if action is invalid
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid action.',
+        ]);
+    }
     
     public function saveTimeIn(Request $request)
     {

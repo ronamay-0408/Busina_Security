@@ -206,6 +206,43 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
+        .unsolved-vio{
+            text-align: justify;
+            font-size: 18px;
+        }
+        .unsolved-vio p{
+            margin: 0;
+            padding: 5px 0px;
+        }
+        .unsolved-vio h4{
+            margin: 0;
+            padding: 5px 0px;
+        }
+        h2#swal2-title {
+            padding: 10px 0px 0px 0px;
+        }
+        div#swal2-html-container {
+            padding: 0em 1.6em 0em;
+        }
+        .swal2-actions {
+            gap: 50px;
+        }
+        .flname{
+            font-weight: 400;
+        }
+
+        @media (max-width: 600px) {
+            .unsolved-vio{
+                font-size: 16px;
+            }
+            h2#swal2-title {
+                font-size: 26px;
+            }
+            .swal2-icon.swal2-question.swal2-icon-show {
+                font-size: 15px;
+            }
+        }
     </style>
 
 </head>
@@ -378,14 +415,13 @@
                         location.reload();
                     });
                 } else {
-                    errorAudio.play();
-
+                    // errorAudio.play();
                     // Check if 'showButtons' is true (indicating unsettled violations)
                     if (data.showButtons) {
                         // Show SweetAlert with two buttons (Deny and Allow) for unresolved violations
                         Swal.fire({
                             title: 'Unresolved Violations',
-                            text: data.message,
+                            html: data.message, // Ensure 'html' is used to render HTML content
                             icon: 'warning',
                             showCancelButton: true,
                             cancelButtonText: 'Deny',
@@ -403,8 +439,10 @@
                     } else if (data.timeinbutton) {
                         // Show SweetAlert with two buttons (Deny and Allow) for time-in confirmation
                         Swal.fire({
-                            title: 'Time-in Confirmation',
-                            text: `Do you want to allow these vehicles: ${data.plateNumbers} inside the University Premises?`,
+                            title: 'Time-In Confirmation',
+                            // text: `Do you want to allow these vehicles: ${data.plateNumbers} inside the University Premises?`,
+                            // html: `${data.message} <p><strong>Owner: </strong>${data.vehicleOwner.fname} ${data.vehicleOwner.lname}</p>`,  // Add vehicle owner's name
+                            html: data.message,
                             icon: 'question',
                             showCancelButton: true,
                             cancelButtonText: 'Deny',
@@ -419,6 +457,24 @@
                                 cancelLog();  // Ensure that this function doesn't save the time-in
                             }
                         });
+                    } else if (data.timeoutbutton) {
+                        Swal.fire({
+                            title: 'Time-Out Confirmation',
+                            // text: `Are you sure you want to Timeout this vehicle?`,
+                            html: data.message,
+                            icon: 'question',
+                            showCancelButton: true,
+                            cancelButtonText: 'Deny',
+                            confirmButtonText: 'Allow',
+                            reverseButtons: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Allow: Log the timeout for the vehicles
+                                logTimeOut(data.user_log_id);  // Only pass the user log ID
+                            } else {
+                                cancelLog();  // Deny action
+                            }
+                        });
                     } else {
                         // Show a normal error SweetAlert if no buttons are needed
                         Swal.fire({
@@ -430,6 +486,44 @@
                         });
                     }
                 }
+            }
+
+            function logTimeOut(userLogId) {
+                // console.log("Allowing vehicle exit for user log ID: " + userLogId);
+
+                // Example AJAX request to save the time-out (use your actual endpoint)
+                $.ajax({
+                    url: '/logTimeout', // Replace with your actual endpoint
+                    method: 'POST',
+                    data: {
+                        user_log_id: userLogId, // Pass the user_log_id only
+                        action: 'allow', // Indicate that we are allowing the time-out
+                        _token: $('meta[name="csrf-token"]').attr('content') // CSRF token for Laravel
+                    },
+                    success: function (response) {
+                        console.log("AJAX response:", response);  // Log the response for debugging
+                        Swal.fire({
+                            title: 'Success',
+                            text: 'Time Out has been recorded.',
+                            icon: 'success',
+                            timer: 2000, // Automatically close after 2 seconds
+                            showConfirmButton: false // Hide the confirm button
+                        }).then(() => {
+                            // Reload the page after the success alert closes
+                            location.reload();
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX error:", error);  // Log any errors for debugging
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong while saving the exit.',
+                            icon: 'error',
+                            timer: 3000, // Automatically close after 2 seconds
+                            showConfirmButton: false // Hide the confirm button
+                        });
+                    }
+                });
             }
 
             // Function to save the time-in to the database
@@ -447,7 +541,7 @@
                     success: function(response) {
                         Swal.fire({
                             title: 'Success',
-                            text: 'Vehicle entry has been recorded.',
+                            text: 'Time In has been recorded.',
                             icon: 'success',
                             timer: 2000, // Automatically close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
@@ -461,7 +555,7 @@
                             title: 'Error',
                             text: 'Something went wrong while saving the entry.',
                             icon: 'error',
-                            timer: 2000, // Automatically close after 3 seconds
+                            timer: 3000, // Automatically close after 3 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
                     }
@@ -472,9 +566,9 @@
             function cancelLog() {
                 Swal.fire({
                     title: 'Log Canceled',
-                    text: 'Vehicle entry has been denied.',
+                    text: 'Entry has been denied.',
                     icon: 'info',
-                    timer: 2000, // Automatically close after 3 seconds
+                    timer: 3000, // Automatically close after 3 seconds
                     showConfirmButton: false // Hide the confirm button
                 }).then(() => {
                     // Reload the page after the success alert closes
