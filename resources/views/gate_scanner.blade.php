@@ -482,48 +482,6 @@
                 });
             }
 
-            // function confirmTimeIn(vehicleOwnerId, plateNumbers) {
-            //     // Prepare the data to send to the server
-            //     const data = {
-            //         vehicle_owner_id: vehicleOwnerId,
-            //         plate_numbers: plateNumbers,
-            //         owner_name: `${data.vehicleOwner.fname} ${data.vehicleOwner.lname}`
-            //     };
-
-            //     // Send AJAX request to confirm the time-in
-            //     $.ajax({
-            //         url: '/confirmTimeIn',  // Ensure this URL matches the backend route
-            //         method: 'POST',
-            //         data: data,
-            //         success: function(response) {
-            //             if (response.success) {
-            //                 Swal.fire({
-            //                     title: 'Success!',
-            //                     text: response.message,
-            //                     icon: 'success',
-            //                     timer: 2000, // Automatically close after 2 seconds
-            //                     showConfirmButton: false
-            //                 }).then(() => {
-            //                     location.reload();  // Reload the page after successful time-in
-            //                 });
-            //             } else {
-            //                 Swal.fire({
-            //                     title: 'Error!',
-            //                     text: response.message,
-            //                     icon: 'error'
-            //                 });
-            //             }
-            //         },
-            //         error: function(xhr, status, error) {
-            //             Swal.fire({
-            //                 title: 'Error!',
-            //                 text: 'An error occurred while confirming the time-in.',
-            //                 icon: 'error'
-            //             });
-            //         }
-            //     });
-            // }
-
             function sendQRCodeDataToServer(qrCodeData) {
                 const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
                 if (!csrfTokenMeta) {
