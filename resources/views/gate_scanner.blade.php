@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="{{ asset('css/security.css') }}">
     <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <!-- Include jQuery from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     
     <style>
         .side_vehicle_info {
@@ -117,6 +117,95 @@
                 display: none;
             }
         }
+
+        /* The modal background */
+        .custom-modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black with transparency */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 380px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .modal-header h5 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        /* Close button */
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        #cancelBtn {
+            background-color: #ccc;
+        }
+
+        #cancelBtn:hover {
+            background-color: #999;
+        }
+
+        /* Input field */
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
     </style>
 
 </head>
@@ -151,42 +240,63 @@
                     <p>Ensure QR is fully visible in the viewfinder</p>
                 </div>
                 <div class="back-btn2">
+                    <a class="nav-link log-link">LOG</a>
                     <a class="nav-link" href="{{ url('/index') }}">BACK</a>
                 </div>
             </div>
             <div class="tDiv">
-            <div class="userlog-tDiv">
-                <table id="userlogsTable">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Full Name</th>
-                            <th>Time In</th>
-                            <th>Time Out</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if($userLog->isEmpty())
+                <div class="userlog-tDiv">
+                    <table id="userlogsTable">
+                        <thead>
                             <tr>
-                                <td colspan="4">No logs available.</td>
+                                <th>Date</th>
+                                <th>Full Name</th>
+                                <th>Time In</th>
+                                <th>Time Out</th>
                             </tr>
-                        @else
-                            @foreach($userLog as $log)
+                        </thead>
+                        <tbody>
+                            @if($userLog->isEmpty())
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($log->log_date)->format('Y-m-d') }}</td>  
-                                    <td>{{ $log->vehicleOwner->fname }} {{ $log->vehicleOwner->lname }}</td>
-                                    <td class="logs-timein">{{ \Carbon\Carbon::parse($log->time_in)->format('g:i A') }}</td>
-                                    <td>
-                                        @if($log->time_out)
-                                            {{ \Carbon\Carbon::parse($log->time_out)->format('g:i A') }}
-                                        @endif
-                                    </td>
+                                    <td colspan="4">No logs available.</td>
                                 </tr>
-                            @endforeach
-                        @endif
-                    </tbody>
-                </table>
+                            @else
+                                @foreach($userLog as $log)
+                                    <tr>
+                                        <td>{{ \Carbon\Carbon::parse($log->log_date)->format('Y-m-d') }}</td>  
+                                        <td>{{ $log->vehicleOwner->fname }} {{ $log->vehicleOwner->lname }}</td>
+                                        <td class="logs-timein">{{ \Carbon\Carbon::parse($log->time_in)->format('g:i A') }}</td>
+                                        <td>
+                                            @if($log->time_out)
+                                                {{ \Carbon\Carbon::parse($log->time_out)->format('g:i A') }}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            <!-- Custom Modal -->
+            <div id="driverLicenseModal" class="custom-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Please enter the Driver License</h5>
+                        <span class="close" id="closeModal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form id="driverLicenseForm">
+                            <label for="driverLicenseInput">Driver License</label>
+                            <input type="text" placeholder="A00-00-000000" id="driverLicenseInput" required>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelBtn" class="btn">Cancel</button>
+                        <button type="button" id="saveDriverLicenseBtn" class="btn">Save</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -261,9 +371,9 @@
                         title: 'Success!',
                         text: data.message,
                         icon: 'success',
-                        timer: 2000, // Automatically close after 3 seconds
+                        timer: 2000, // Automatically close after 2 seconds
                         showConfirmButton: false // Hide the confirm button
-                        }).then(() => {
+                    }).then(() => {
                         // Reload the page after the success alert closes
                         location.reload();
                     });
@@ -272,7 +382,7 @@
 
                     // Check if 'showButtons' is true (indicating unsettled violations)
                     if (data.showButtons) {
-                        // Show SweetAlert with two buttons (Deny and Allow)
+                        // Show SweetAlert with two buttons (Deny and Allow) for unresolved violations
                         Swal.fire({
                             title: 'Unresolved Violations',
                             text: data.message,
@@ -290,13 +400,32 @@
                                 cancelLog();
                             }
                         });
+                    } else if (data.timeinbutton) {
+                        // Show SweetAlert with two buttons (Deny and Allow) for time-in confirmation
+                        Swal.fire({
+                            title: 'Time-in Confirmation',
+                            text: `Do you want to allow these vehicles: ${data.plateNumbers} inside the University Premises?`,
+                            icon: 'question',
+                            showCancelButton: true,
+                            cancelButtonText: 'Deny',
+                            confirmButtonText: 'Allow',
+                            reverseButtons: true // Optional: makes 'Allow' the primary button
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Allow: Save the time-in in the database
+                                saveTimeIn(data.plateNumbers);
+                            } else {
+                                // Deny: Cancel the time-in request
+                                cancelLog();  // Ensure that this function doesn't save the time-in
+                            }
+                        });
                     } else {
                         // Show a normal error SweetAlert if no buttons are needed
                         Swal.fire({
                             title: 'Error!',
                             text: data.message || "Vehicle owner not found.",
                             icon: 'error',
-                            timer: 2000, // Automatically close after 3 seconds
+                            timer: 2000, // Automatically close after 2 seconds
                             showConfirmButton: false // Hide the confirm button
                         });
                     }
@@ -347,8 +476,53 @@
                     icon: 'info',
                     timer: 2000, // Automatically close after 3 seconds
                     showConfirmButton: false // Hide the confirm button
+                }).then(() => {
+                    // Reload the page after the success alert closes
+                    location.reload();
                 });
             }
+
+            // function confirmTimeIn(vehicleOwnerId, plateNumbers) {
+            //     // Prepare the data to send to the server
+            //     const data = {
+            //         vehicle_owner_id: vehicleOwnerId,
+            //         plate_numbers: plateNumbers,
+            //         owner_name: `${data.vehicleOwner.fname} ${data.vehicleOwner.lname}`
+            //     };
+
+            //     // Send AJAX request to confirm the time-in
+            //     $.ajax({
+            //         url: '/confirmTimeIn',  // Ensure this URL matches the backend route
+            //         method: 'POST',
+            //         data: data,
+            //         success: function(response) {
+            //             if (response.success) {
+            //                 Swal.fire({
+            //                     title: 'Success!',
+            //                     text: response.message,
+            //                     icon: 'success',
+            //                     timer: 2000, // Automatically close after 2 seconds
+            //                     showConfirmButton: false
+            //                 }).then(() => {
+            //                     location.reload();  // Reload the page after successful time-in
+            //                 });
+            //             } else {
+            //                 Swal.fire({
+            //                     title: 'Error!',
+            //                     text: response.message,
+            //                     icon: 'error'
+            //                 });
+            //             }
+            //         },
+            //         error: function(xhr, status, error) {
+            //             Swal.fire({
+            //                 title: 'Error!',
+            //                 text: 'An error occurred while confirming the time-in.',
+            //                 icon: 'error'
+            //             });
+            //         }
+            //     });
+            // }
 
             function sendQRCodeDataToServer(qrCodeData) {
                 const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
@@ -375,6 +549,75 @@
                 });
             }
         </script>
+
+        <!-- // MODAL SCRIPT // -->
+        <script>
+            // Get the modal and buttons
+            const logLink = document.querySelector('.log-link');
+            const driverLicenseModal = document.getElementById('driverLicenseModal');
+            const saveDriverLicenseBtn = document.getElementById('saveDriverLicenseBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const closeModal = document.getElementById('closeModal');
+            const driverLicenseInput = document.getElementById('driverLicenseInput');
+
+            // Open the modal when the LOG link is clicked
+            logLink.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent the default action (if it's a link)
+                driverLicenseModal.style.display = "block"; // Show the modal
+            });
+
+            // Close the modal when the user clicks on (x)
+            closeModal.addEventListener('click', function () {
+                driverLicenseModal.style.display = "none";
+            });
+
+            // Close the modal when the Cancel button is clicked
+            cancelBtn.addEventListener('click', function () {
+                driverLicenseModal.style.display = "none";
+            });
+
+            // Handle the Save button click
+            saveDriverLicenseBtn.addEventListener('click', function () {
+                const driverLicense = driverLicenseInput.value.trim();
+
+                if (driverLicense === '') {
+                    alert('Please enter the Driver License.');
+                    return;
+                }
+
+                // Here you can handle the form submission, like sending data to the server.
+                // Example of sending data using AJAX (make sure to update the URL and data format as needed):
+
+                // You can send it via an AJAX request, for example:
+                $.ajax({
+                    url: '/save-driver-license', // Update with your actual endpoint
+                    method: 'POST',
+                    data: {
+                        driver_license: driverLicense,
+                        _token: $('meta[name="csrf-token"]').attr('content') // CSRF token for Laravel
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Driver License saved successfully.');
+                            driverLicenseModal.style.display = "none"; // Close the modal
+                        } else {
+                            alert('Error saving driver license.');
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred.');
+                    }
+                });
+            });
+
+            // Close the modal if the user clicks outside of the modal content
+            window.addEventListener('click', function (event) {
+                if (event.target == driverLicenseModal) {
+                    driverLicenseModal.style.display = "none";
+                }
+            });
+        </script>
+
     </main><!-- End #main -->
 
     <!-- Template Main JS File // NAVBAR // -->

@@ -95,26 +95,26 @@ class GateScannerController extends Controller
                     ]);
                 }
 
-                // Create a new log entry for time_in if no prior log exists
-                UserLog::create([
-                    'vehicle_owner_id' => $vehicleOwner->id,
-                    'log_date' => $currentDate,
-                    'time_in' => $currentTime
-                ]);
+                // // Create a new log entry for time_in if no prior log exists
+                // UserLog::create([
+                //     'vehicle_owner_id' => $vehicleOwner->id,
+                //     'log_date' => $currentDate,
+                //     'time_in' => $currentTime
+                // ]);
 
-                // Get all plate numbers of the vehicles owned by the vehicle owner
+                // If no unresolved violations, check if it's a new time-in request
                 $plateNumbers = $vehicles->pluck('plate_no')->implode(', ');
 
-                // Modify the success message to include the plate numbers
                 return response()->json([
-                    'success' => true,
-                    'message' => "Vehicle entry successful! Welcome {$vehicleOwner->fname} {$vehicleOwner->lname}. Vehicles: {$plateNumbers}"
+                    'success' => null, // Indicates decision is required
+                    'message' => "Do you want to allow these vehicles: {$plateNumbers} inside the University Premises?",
+                    'timeinbutton' => true, // Flag to show the buttons in the frontend
+                    'plateNumbers' => $plateNumbers,
+                    'vehicleOwner' => [
+                        'fname' => $vehicleOwner->fname,
+                        'lname' => $vehicleOwner->lname,
+                    ]
                 ]);
-
-                // return response()->json([
-                //     'success' => true,
-                //     'message' => "Vehicle entry successful! Welcome {$vehicleOwner->fname} {$vehicleOwner->lname}."
-                // ]);
 
             } catch (\Exception $e) {
                 Log::error('Error processing QR code: ' . $e->getMessage());
@@ -129,6 +129,33 @@ class GateScannerController extends Controller
         }
     }
 
+    // public function confirmTimeIn(Request $request)
+    // {
+    //     $vehicleOwnerId = $request->input('vehicle_owner_id');
+    //     $plateNumbers = $request->input('plate_numbers');
+    //     $ownerName = $request->input('owner_name');  // Capture the owner's name if needed
+    
+    //     try {
+    //         // Create a new log entry for time_in
+    //         UserLog::create([
+    //             'vehicle_owner_id' => $vehicleOwnerId,
+    //             'log_date' => now()->toDateString(),
+    //             'time_in' => now()->toTimeString(),
+    //         ]);
+    
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => "Vehicle entry successful! Welcome {$ownerName}. Vehicles: {$plateNumbers}",
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         Log::error('Error saving time-in: ' . $e->getMessage());
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'An error occurred while saving the time-in.',
+    //         ]);
+    //     }
+    // }
+    
     public function saveTimeIn(Request $request)
     {
         $plateNumbers = $request->input('plate_numbers');
