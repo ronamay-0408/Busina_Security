@@ -317,25 +317,92 @@
             </div>
 
             <!-- Custom Modal -->
-            <div id="driverLicenseModal" class="custom-modal">
+            <div id="qrCodeDataModal" class="custom-modal">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5>Please enter the Driver License</h5>
+                        <h5>Please enter the QR Code Data</h5>
                         <span class="close" id="closeModal">&times;</span>
                     </div>
                     <div class="modal-body">
-                        <form id="driverLicenseForm">
-                            <label for="driverLicenseInput">Driver License</label>
-                            <input type="text" placeholder="A00-00-000000" id="driverLicenseInput" required>
+                        <form id="qrCodeDataForm" method="POST" action="{{ route('gate_scanner.scan') }}">
+                            @csrf <!-- Add CSRF token for security -->
+                            <label for="qrCodeDataInput">QR Code Data</label>
+                            <input type="text" id="qrCodeDataInput" name="qr_code" placeholder="A00-00-000000" required>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="cancelBtn" class="btn">Cancel</button>
-                        <button type="button" id="saveDriverLicenseBtn" class="btn">Save</button>
+                        <button type="submit" form="qrCodeDataForm" class="btn">Save</button> <!-- Submit the form -->
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- // MODAL SCRIPT // -->
+        <script>
+            // Get the modal and buttons
+            const logLink = document.querySelector('.log-link');
+            const qrCodeDataModal = document.getElementById('qrCodeDataModal');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const closeModal = document.getElementById('closeModal');
+            const qrCodeDataInput = document.getElementById('qrCodeDataInput');
+
+            // Open the modal when the LOG link is clicked
+            logLink.addEventListener('click', function (e) {
+                e.preventDefault(); // Prevent the default action (if it's a link)
+                qrCodeDataModal.style.display = "block"; // Show the modal
+            });
+
+            // Close the modal when the user clicks on (x)
+            closeModal.addEventListener('click', function () {
+                qrCodeDataModal.style.display = "none";
+            });
+
+            // Close the modal when the Cancel button is clicked
+            cancelBtn.addEventListener('click', function () {
+                qrCodeDataModal.style.display = "none";
+            });
+
+            // Handle the Save button click (submit the form using AJAX)
+            $('#qrCodeDataForm').on('submit', function(e) {
+                e.preventDefault();  // Prevent the default form submission
+
+                const qrCodeData = qrCodeDataInput.value.trim();
+
+                if (qrCodeData === '') {
+                    alert('Please enter the QR Code Data.');
+                    return;
+                }
+
+                $.ajax({
+                    url: '{{ route("gate_scanner.scan") }}',  // Ensure the correct route is used
+                    method: 'POST',
+                    data: {
+                        qr_code: qrCodeData,
+                        _token: $('meta[name="csrf-token"]').attr('content')  // CSRF token for Laravel
+                    },
+                    success: function(response) {
+                        handleResponse(response);  // Use the new function to handle different response scenarios
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred during the request.',
+                            icon: 'error',
+                            timer: 3000,  // Auto-close after 3 seconds
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            });
+
+            // Close the modal if the user clicks outside of the modal content
+            window.addEventListener('click', function (event) {
+                if (event.target == qrCodeDataModal) {
+                    qrCodeDataModal.style.display = "none";
+                }
+            });
+        </script>
 
         <!-- SweetAlert2 CDN -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -603,73 +670,227 @@
         </script>
 
         <!-- // MODAL SCRIPT // -->
-        <script>
+        <!-- <script>
             // Get the modal and buttons
             const logLink = document.querySelector('.log-link');
-            const driverLicenseModal = document.getElementById('driverLicenseModal');
-            const saveDriverLicenseBtn = document.getElementById('saveDriverLicenseBtn');
+            const qrCodeDataModal = document.getElementById('qrCodeDataModal');
             const cancelBtn = document.getElementById('cancelBtn');
             const closeModal = document.getElementById('closeModal');
-            const driverLicenseInput = document.getElementById('driverLicenseInput');
+            const qrCodeDataInput = document.getElementById('qrCodeDataInput');
 
             // Open the modal when the LOG link is clicked
             logLink.addEventListener('click', function (e) {
                 e.preventDefault(); // Prevent the default action (if it's a link)
-                driverLicenseModal.style.display = "block"; // Show the modal
+                qrCodeDataModal.style.display = "block"; // Show the modal
             });
 
             // Close the modal when the user clicks on (x)
             closeModal.addEventListener('click', function () {
-                driverLicenseModal.style.display = "none";
+                qrCodeDataModal.style.display = "none";
             });
 
             // Close the modal when the Cancel button is clicked
             cancelBtn.addEventListener('click', function () {
-                driverLicenseModal.style.display = "none";
+                qrCodeDataModal.style.display = "none";
             });
 
-            // Handle the Save button click
-            saveDriverLicenseBtn.addEventListener('click', function () {
-                const driverLicense = driverLicenseInput.value.trim();
+            // Handle the Save button click (submit the form using AJAX)
+            $('#qrCodeDataForm').on('submit', function(e) {
+                e.preventDefault();  // Prevent the default form submission
 
-                if (driverLicense === '') {
-                    alert('Please enter the Driver License.');
+                const qrCodeData = qrCodeDataInput.value.trim();
+
+                if (qrCodeData === '') {
+                    alert('Please enter the QR Code Data.');
                     return;
                 }
 
-                // Here you can handle the form submission, like sending data to the server.
-                // Example of sending data using AJAX (make sure to update the URL and data format as needed):
-
-                // You can send it via an AJAX request, for example:
                 $.ajax({
-                    url: '/save-driver-license', // Update with your actual endpoint
+                    url: '{{ route("gate_scanner.scan") }}',  // Ensure the correct route is used
                     method: 'POST',
                     data: {
-                        driver_license: driverLicense,
-                        _token: $('meta[name="csrf-token"]').attr('content') // CSRF token for Laravel
+                        qr_code: qrCodeData,
+                        _token: $('meta[name="csrf-token"]').attr('content')  // CSRF token for Laravel
                     },
                     success: function(response) {
-                        if (response.success) {
-                            alert('Driver License saved successfully.');
-                            driverLicenseModal.style.display = "none"; // Close the modal
-                        } else {
-                            alert('Error saving driver license.');
-                        }
+                        handleResponse(response);  // Use the new function to handle different response scenarios
                     },
                     error: function() {
-                        alert('An error occurred.');
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred during the request.',
+                            icon: 'error',
+                            timer: 3000,  // Auto-close after 3 seconds
+                            showConfirmButton: false
+                        });
                     }
                 });
+
+                function handleResponse(data) {
+                    if (data.success) {
+                        successAudio.play();
+                        Swal.fire({
+                            title: 'Success!',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 2000, // Automatically close after 2 seconds
+                            showConfirmButton: false // Hide the confirm button
+                        }).then(() => {
+                            // Reload the page after the success alert closes
+                            location.reload();
+                        });
+                    } else {
+                        // Check for specific conditions
+                        if (data.timeoutbutton) {
+                            Swal.fire({
+                                title: 'Time-Out Confirmation',
+                                html: data.message,  // Display the time-out message
+                                icon: 'question',
+                                showCancelButton: true,
+                                cancelButtonText: 'Deny',
+                                confirmButtonText: 'Allow',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Confirming time-out, log the timeout
+                                    logTimeOut(data.user_log_id); // Pass the user log ID
+                                } else {
+                                    cancelLog();  // Deny the action
+                                }
+                            });
+                        } else if (data.showButtons) {
+                            // Show SweetAlert with two buttons for unresolved violations
+                            Swal.fire({
+                                title: 'Unresolved Violations',
+                                html: data.message, // Render HTML content for violations
+                                icon: 'warning',
+                                showCancelButton: true,
+                                cancelButtonText: 'Deny',
+                                confirmButtonText: 'Allow',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Allow: Save the time-in to the database
+                                    saveTimeIn(data.plateNumbers);
+                                } else {
+                                    // Deny: Cancel the log entry
+                                    cancelLog();
+                                }
+                            });
+                        } else if (data.timeinbutton) {
+                            // Show SweetAlert for time-in confirmation
+                            Swal.fire({
+                                title: 'Time-In Confirmation',
+                                html: data.message,
+                                icon: 'question',
+                                showCancelButton: true,
+                                cancelButtonText: 'Deny',
+                                confirmButtonText: 'Allow',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Allow: Save the time-in
+                                    saveTimeIn(data.plateNumbers);
+                                } else {
+                                    cancelLog();  // Deny action
+                                }
+                            });
+                        } else {
+                            // Show a generic error message
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.message || "Vehicle owner not found.",
+                                icon: 'error',
+                                timer: 2000, // Auto-close after 2 seconds
+                                showConfirmButton: false
+                            });
+                        }
+                    }
+                }
+
+                function logTimeOut(userLogId) {
+                    $.ajax({
+                        url: '/logTimeout',  // Replace with actual endpoint for logging time-out
+                        method: 'POST',
+                        data: {
+                            user_log_id: userLogId,
+                            action: 'allow',  // Indicate that the time-out is allowed
+                            _token: $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Time-Out has been recorded.',
+                                icon: 'success',
+                                timer: 2000,  // Auto-close after 2 seconds
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();  // Reload the page after success
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Something went wrong while saving the exit.',
+                                icon: 'error',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
+
+                function saveTimeIn(plateNumbers) {
+                    $.ajax({
+                        url: '/save-time-in',  // Replace with your actual time-in endpoint
+                        method: 'POST',
+                        data: {
+                            plate_numbers: plateNumbers,
+                            _token: $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Time-In has been recorded.',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();  // Reload the page after success
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Something went wrong while saving the entry.',
+                                icon: 'error',
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                }
+
+                function cancelLog() {
+                    Swal.fire({
+                        title: 'Log Canceled',
+                        text: 'Entry has been denied.',
+                        icon: 'info',
+                        timer: 3000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();  // Reload the page after cancel
+                    });
+                }
             });
 
             // Close the modal if the user clicks outside of the modal content
             window.addEventListener('click', function (event) {
-                if (event.target == driverLicenseModal) {
-                    driverLicenseModal.style.display = "none";
+                if (event.target == qrCodeDataModal) {
+                    qrCodeDataModal.style.display = "none";
                 }
             });
-        </script>
-
+        </script> -->
     </main><!-- End #main -->
 
     <!-- Template Main JS File // NAVBAR // -->

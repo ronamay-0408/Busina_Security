@@ -28,6 +28,7 @@ use App\Http\Controllers\GateScannerController;
 use App\Http\Controllers\HeadChangePassController;
 use App\Http\Controllers\VisitorScannerController;
 
+use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\ReportedViolationsController;
 
 // Group routes that require authentication and email verification
@@ -132,14 +133,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         }
     })->name('gate_scanner');
     
+    // Gate Scanner Route - Only authorized users with user_type 2 can access
+    Route::get('/gate_scanner', [GateScannerController::class, 'viewLogs'])->name('gate_scanner');
+
+    // QR Code scan route
+    // Route::post('/input-qr', [QRCodeController::class, 'scanQRCode'])->name('input.qr');
+
+    // Scan and other actions (handled by GateScannerController)
     Route::post('/scan-qr', [GateScannerController::class, 'scanQR'])->name('gate_scanner.scan');
     Route::post('/allow', [GateScannerController::class, 'allowEntry'])->name('gate_scanner.allow_entry');
     Route::post('/deny', [GateScannerController::class, 'denyEntry'])->name('gate_scanner.deny_entry');
-    Route::post('/save-time-in', [GateScannerController::class, 'saveTimeIn']);
-    // Route::get('/gate_scanner/logs', [GateScannerController::class, 'viewLogs']);
-    Route::get('/gate_scanner', [GateScannerController::class, 'viewLogs'])->name('gate_scanner');
-    // In routes/web.php
+    Route::post('/save-time-in', [GateScannerController::class, 'saveTimeIn'])->name('gate_scanner.save_time_in');
+
+    // Timeout logging route
     Route::post('/logTimeout', [GateScannerController::class, 'logTimeout'])->name('logTimeout');
+
 
     // Route to display scanned QR code page
     // Route::get('/scanned_qr', function () {
