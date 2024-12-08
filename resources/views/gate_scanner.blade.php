@@ -486,6 +486,7 @@
                     // Check if 'showButtons' is true (indicating unsettled violations)
                     if (data.showButtons) {
                         // Show SweetAlert with two buttons (Deny and Allow) for unresolved violations
+                        errorAudio.play();
                         Swal.fire({
                             title: 'Unresolved Violations',
                             html: data.message, // Ensure 'html' is used to render HTML content

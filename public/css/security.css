@@ -1232,7 +1232,8 @@ select#month-type {
         width: 100%;
         height: auto; /* This maintains aspect ratio for the video */
         border-radius: 10px; /* Apply rounded corners to the container */
-        object-fit: none; /* REMOVE THIS IF YOU WANT A NORMAL ZOOM OF CAMERA ON PHONE */
+        /* REMOVE THIS IF YOU WANT A NORMAL ZOOM OF CAMERA ON PHONE */
+        /* object-fit: none;  */
     }
     
     .corner {
