@@ -66,13 +66,13 @@
                 @csrf
                 <div class="inputs">
                     <div class="input-form">
-                        <label for="plate_no">Plate No.</label>
-                        <input type="text" placeholder="LLL-DDDD or DDD-LLL/L-DDD-LL" id="plate_no" name="plate_no" required>
+                        <label for="fullname">Full Name</label>
+                        <input type="text" placeholder="Full Name" id="fullname" name="fullname" required>
                     </div>
 
                     <div class="input-form">
-                        <label for="fullname">Full Name</label>
-                        <input type="text" placeholder="Full Name" id="fullname" name="fullname" required>
+                        <label for="plate_no">Plate No.</label>
+                        <input type="text" placeholder="LLL-DDDD or DDD-LLL/L-DDD-LL" id="plate_no" name="plate_no" required>
                     </div>
 
                     <!-- <div class="input-form">
@@ -80,14 +80,16 @@
                         <input type="text" placeholder="Submission of Document" id="purpose" name="purpose" required>
                     </div> -->
 
-                    <div class="input-form">
-                        <label for="date">Date</label>
-                        <input type="text" placeholder="" id="date" readonly>
-                    </div>
+                    <div id="date-time-container">
+                        <div class="input-form" style="display: none;">
+                            <label for="date">Date</label>
+                            <input type="text" placeholder="" id="date" readonly>
+                        </div>
 
-                    <div class="input-form">
-                        <label for="time">Time</label>
-                        <input type="text" placeholder="" id="time" readonly>
+                        <div class="input-form" style="display: none;">
+                            <label for="time">Time</label>
+                            <input type="text" placeholder="" id="time" readonly>
+                        </div>
                     </div>
 
                     <div class="save_not_btn">
@@ -103,7 +105,6 @@
     <script src="{{ asset('js/hide_errors_success_unauthorized.js') }}"></script>
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
-
     <!-- DATE AND TIME -->
     <script src="{{ asset('js/twodisplayed_DateTime.js') }}"></script>
 </body>

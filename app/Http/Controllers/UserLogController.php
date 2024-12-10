@@ -28,8 +28,9 @@ class UserLogController extends Controller
             ->orderBy('time_in', 'desc');         // Then by time_in in descending order
 
             if ($search) {
+                // Searching by Full Name (first name, middle name, last name)
                 $query->whereHas('vehicleOwner', function ($q) use ($search) {
-                    $q->where('driver_license_no', 'like', "%$search%");
+                    $q->whereRaw("CONCAT_WS(' ', fname, mname, lname) LIKE ?", ["%$search%"]);
                 });
             }
 
@@ -62,17 +63,16 @@ class UserLogController extends Controller
 
             // Apply search filters if provided
             if ($request->filled('search')) {
+                // Modify the search to work with Full Name (first, middle, and last names)
                 $query->whereHas('vehicleOwner', function ($q) use ($request) {
-                    $q->where('driver_license_no', 'like', '%' . $request->input('search') . '%');
+                    $q->whereRaw("CONCAT_WS(' ', fname, mname, lname) LIKE ?", ['%' . $request->input('search') . '%']);
                 });
             }
             if ($request->filled('year')) {
                 $query->whereYear('log_date', $request->input('year'));
-            }            
+            }
             if ($request->filled('month')) {
-                // Ensure the month is treated as an integer for comparison
-                $month = (int) $request->input('month');
-                $query->whereMonth('log_date', $month);
+                $query->whereMonth('log_date', $request->input('month'));
             }
             if ($request->filled('day')) {
                 $query->whereDay('log_date', $request->input('day'));

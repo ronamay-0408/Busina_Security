@@ -41,7 +41,7 @@
 
             <div class="search-filter">
                 <div class="search-bar">
-                    <input type="text" id="searchInputUnauthorized" placeholder="Search by Drivers License">
+                    <input type="text" id="searchInputUnauthorized" placeholder="Search by Registered Full Name">
                 </div>
                 <!-- Filter Fields -->
                 <div class="filter-field">
@@ -137,7 +137,6 @@
                 window.history.replaceState({}, '', url.toString()); // Update URL without reloading
             };
 
-            // Function to fetch user logs with updated filters
             const fetchUserLogs = async () => {
                 const url = new URL(window.location.href);
                 try {
@@ -154,13 +153,32 @@
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, 'text/html');
 
+                    // Update the user logs table and pagination
                     document.getElementById('userlogs-data').innerHTML = doc.querySelector('#userlogs-data').innerHTML;
                     document.getElementById('userlogsPagination').innerHTML = doc.querySelector('#userlogsPagination').innerHTML;
                     document.querySelector('.results-info').innerHTML = doc.querySelector('.results-info').innerHTML;
+
+                    // Rebind the click event listener for the new rows
+                    bindClickEventToRows();
                 } catch (error) {
                     console.error('Error fetching user logs:', error);
                 }
             };
+
+            // Function to bind the click event to rows
+            function bindClickEventToRows() {
+                document.querySelectorAll('#userlogsTable tr').forEach(function(row) {
+                    row.addEventListener('click', function() {
+                        var url = this.getAttribute('data-url');
+                        window.location.href = url;
+                    });
+                });
+            }
+
+            // Bind the click event to rows when the page loads initially
+            document.addEventListener('DOMContentLoaded', () => {
+                bindClickEventToRows();
+            });
 
             // Event listeners for filters and search input
             searchInput.addEventListener('input', () => {
@@ -359,12 +377,6 @@
         }
     </script>
     
-    <!-- Search Js -->
-    <script src="{{ asset('js/head_unauthorized_search.js') }}"></script>
-    <!-- Filtering and EXPORT JS File -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="{{ asset('js/head_unauthorized_filtering.js') }}"></script>
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
     <!-- DATE AND TIME -->

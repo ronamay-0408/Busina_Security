@@ -284,12 +284,13 @@ th {
 
 .page-item {
     margin: 1px;
-    padding: 8px 16px;
+    padding: 8px 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
     text-decoration: none;
     color: #007bff;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .page-item.active {

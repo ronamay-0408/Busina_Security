@@ -32,8 +32,8 @@ class UserLogExport implements FromCollection, WithHeadings, WithMapping, WithEv
         return [
             ['Bicol University'],
             ['Rizal St., Legazpi City, Albay'],
-            ['User Logs'],
-            ['Date', 'Driver License No', 'Time In', 'Time Out'] // Updated headers
+            ['VEHICLES LOG'],
+            ['Date', 'Registered Full Name', 'Time In', 'Time Out'] // Updated headers
         ];
     }
 
@@ -42,7 +42,7 @@ class UserLogExport implements FromCollection, WithHeadings, WithMapping, WithEv
     {
         return [
             $userLog->log_date ? date('Y-m-d', strtotime($userLog->log_date)) : 'N/A', // Format log_date
-            $userLog->vehicleOwner->driver_license_no,
+            $userLog->vehicleOwner->fname . ' ' . $userLog->vehicleOwner->mname . ' ' . $userLog->vehicleOwner->lname,  // Full Name
             $userLog->time_in ? date('g:i A', strtotime($userLog->time_in)) : 'N/A', // Format time_in to 12-hour format with AM/PM
             $userLog->time_out ? date('g:i A', strtotime($userLog->time_out)) : 'N/A', // Format time_out to 12-hour format with AM/PM
         ];
