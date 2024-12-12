@@ -17,10 +17,36 @@
     <link rel="stylesheet" href="{{ asset('css/ssu_head.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-
+    <style>
+        /* Initial styles for the license number */
+        .driver-license .license-number {
+            padding-left: 5px;
+        }
+        .fa-eye-slash{
+            position: absolute;
+            cursor: pointer;
+            color: #566a7f;
+            font-size: 14px;
+            right: 37px;
+        }
+        #eye-icon{
+            position: absolute;
+            cursor: pointer;
+            color: #566a7f;
+            font-size: 14px;
+            right: 36px;
+        }
+        @media (max-width: 600px) {
+            .fa-eye-slash{
+                position: revert;
+            }
+            #eye-icon{
+                position: revert;
+            }
+        }
+    </style>
 <body>
     @include('SSUHead.partials.sidebar')
 
@@ -46,7 +72,11 @@
                 <ul>
                     <li>
                         <span>Driver's License :</span>
-                        <span class="deets">{{ $vehicleOwner->driver_license_no }}</span>
+                        <span class="deets driver-license">
+                            <span class="license-number">••••••••••••••</span>
+                            <span class="actual-license-number" style="display: none;">{{ $vehicleOwner->driver_license_no }}</span>
+                        </span>
+                        <i class="fa fa-eye-slash" aria-hidden="true" id="eye-icon" onclick="toggleLicenseVisibility()"></i>
                     </li>
                     <li>
                         <span>Owner Type :</span> 
@@ -114,6 +144,26 @@
 
     @include('SSUHead.partials.footer')
     
+    <script>
+        function toggleLicenseVisibility() {
+            var maskedLicense = document.querySelector('.driver-license .license-number');
+            var actualLicense = document.querySelector('.driver-license .actual-license-number');
+            var eyeIcon = document.getElementById('eye-icon');
+            
+            // Toggle the visibility of the actual license number and masked version
+            if (maskedLicense.style.display === "none") {
+                maskedLicense.style.display = "inline";  // Show the masked number
+                actualLicense.style.display = "none";    // Hide the actual number
+                eyeIcon.classList.remove('fa-eye');        // Remove normal eye icon
+                eyeIcon.classList.add('fa-eye-slash');     // Add slashed eye icon
+            } else {
+                maskedLicense.style.display = "none";   // Hide the masked number
+                actualLicense.style.display = "inline"; // Show the actual number
+                eyeIcon.classList.remove('fa-eye-slash'); // Remove slashed eye icon
+                eyeIcon.classList.add('fa-eye');          // Add normal eye icon
+            }
+        }
+    </script>
     <!-- MODAL AND SEARCH JS -->
     <!-- <script src="{{ asset('js/head_violation_modal.js') }}"></script> -->
 
