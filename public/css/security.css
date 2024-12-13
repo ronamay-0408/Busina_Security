@@ -105,20 +105,33 @@ body.toggle-sidebar .main {
 /*--------------------------------------------------------------
 # Sidebar
 --------------------------------------------------------------*/
+/* Overlay style */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    z-index: 995; /* Overlay below the sidebar, above page content */
+    pointer-events: auto; /* Ensure clicks on the overlay are blocked */
+}
+
+/* Sidebar styles */
 .sidebar {
     position: fixed;
-    top: 0px;
+    top: 0;
     left: 0;
     bottom: 0;
     width: 260px;
-    z-index: 996;
+    z-index: 996; /* Sidebar above overlay */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    /* padding: 20px; */
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #aab7cf transparent;
     background-color: #ffffff;
     box-shadow: 0 0.125rem 0.375rem 0 rgba(161, 172, 184, 0.12);
+}
+
+body.toggle-sidebar .sidebar-overlay {
+    display: block; /* Show overlay only when sidebar is open */
 }
 
 .sidebar li a{
