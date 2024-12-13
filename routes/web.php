@@ -233,7 +233,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     Route::get('/ssu_personnel', [HeadViewSSUController::class, 'index'])->name('ssu_personnel');
     // Route to handle form submission to add a new user
-    Route::post('/ssu_personnel', [HeadViewSSUController::class, 'store'])->name('ssu_personnel');
+    Route::post('/ssu_personnel', [HeadViewSSUController::class, 'store'])->name('ssu_personnel.store');
     Route::get('/export-authorized-users', [HeadViewSSUController::class, 'export'])->name('export.authorized_users');
 
 });
