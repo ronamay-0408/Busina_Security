@@ -28,7 +28,7 @@
             <div class="date-time"></div>
         </div>
 
-        @if (session('error'))
+        <!-- @if (session('error'))
             <div class="main-error unauthorized_report_error">
                 <p id="errorMessage" class="error-message">
                     <span><i class="bi bi-exclamation-circle"></i></span>
@@ -46,7 +46,7 @@
                     <a class="cancel-button-success" onclick="hideMessage('successMessage')"><i class="bi bi-x"></i></a>
                 </p>
             </div>
-        @endif
+        @endif -->
 
         <!-- Display messages if present in local storage -->
         <div id="message-container" style="display: none;">
@@ -251,15 +251,35 @@
     </main><!-- End #main -->
 
     <script src="{{ asset('js/hide_errors_success_unauthorized.js') }}"></script>
-
     <!-- Template Main JS File // NAVBAR // -->
     <script src="{{ asset('js/navbar.js') }}"></script>
-
     <!-- DATE AND TIME -->
     <script src="{{ asset('js/date_time.js') }}"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.1/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.1/dist/sweetalert2.min.js"></script>
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "{{ session('error') }}",  <!-- Using double quotes around session data -->
+                timer: 3000, // Closes after 3 seconds
+                showConfirmButton: false
+            });
+        </script>
+    @endif
 
-    <!--- QR CAMERA ---->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
-    <script src="{{ asset('js/qr_camera.js') }}"></script> -->
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "Visitor Time In is Log",  <!-- Using double quotes around session data -->
+                timer: 3000, // Closes after 3 seconds
+                showConfirmButton: false
+            });
+        </script>
+    @endif
 </body>
 </html>

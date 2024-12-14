@@ -786,6 +786,9 @@ main{
     color: rgba(97, 103, 121, 1);
     font-size: 13px;
 }
+.wv input{
+    background: #607d8b57;
+}
 
 @media (max-width: 600px) {
     /* .input-form{

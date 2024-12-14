@@ -51,17 +51,17 @@
                         </select>
                     </div>
 
-                    <div class="input-form">
+                    <div class="input-form wv">
                         <label for="date">Date</label>
                         <input type="text" placeholder="" id="date" readonly>
                     </div>
 
-                    <div class="input-form">
+                    <div class="input-form wv">
                         <label for="time">Time</label>
                         <input type="text" placeholder="" id="time" readonly>
                     </div>
 
-                    <div class="input-form">
+                    <div class="input-form wv">
                         <label for="report_by">Reported by</label>
                         <input type="hidden" name="report_by" value="{{ Session::get('user')['id'] }}">
                         <input type="text" placeholder="" id="report_by" value="{{ Session::get('user')['fname'] }} {{ Session::get('user')['lname'] }}" readonly>

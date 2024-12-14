@@ -32,6 +32,27 @@
             border-radius: 5px;
             font-size: 16px;
         }
+        .input-form1 span{
+            padding: 5px 5px 5px 10px;
+            border: 0.5px solid #80808066;
+            border-radius: 5px 0px 0px 5px;
+            /* box-sizing: border-box; */
+            font-family: 'Poppins';
+            background: #607d8b42;
+            color: black;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        input#contact {
+            border-radius: 0px 5px 5px 0px;
+            flex: 4.5;
+        }
+
+        @media (max-width: 600px) {
+            input#contact {
+                flex: 0.2;
+            }
+        }
     </style>
 </head>
 
@@ -68,7 +89,7 @@
                 </div>
             </div>
 
-            @if ($errors->any())
+            <!-- @if ($errors->any())
             <div class="main-error head-main-error">
                 <p id="errorMessage" class="error-message">
                     <span><i class="bi bi-exclamation-circle"></i></span>
@@ -96,7 +117,7 @@
                     <a class="cancel-button-success" onclick="hideSuccessMessage()"><i class="bi bi-x"></i></a>
                 </p>
             </div>
-            @endif
+            @endif -->
 
             <div class="head_view_ssu_table">
                 <table id="ssuTable">
@@ -150,7 +171,8 @@
 
                                 <div class="input-form1">
                                     <label for="contact">Contact #</label>
-                                    <input type="text" placeholder="Contact Number" id="contact" name="contact" required>
+                                    <span>+63</span>
+                                    <input type="text" id="contact" name="contact" placeholder="Enter your number" required>
                                 </div>
 
                                 <div class="input-form1">
@@ -180,6 +202,30 @@
             </div>
         </div>
     </main><!-- End #main -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                timer: 3000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "{{ session('error') }}",
+                timer: 3000,
+                showConfirmButton: false
+            });
+        </script>
+    @endif
     <script>
         function exportTableToExcel() {
             window.location.href = "{{ route('export.authorized_users') }}";

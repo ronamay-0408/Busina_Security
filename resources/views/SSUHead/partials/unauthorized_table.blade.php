@@ -4,6 +4,7 @@
     <thead>
         <tr>
             <th>Date</th>
+            <th>Full Name</th>
             <th>Plate No</th>
             <th>Time In</th>
             <th>Time Out</th>
@@ -13,6 +14,7 @@
         @foreach($unauthorizedRecords as $record)
             <tr>
                 <td>{{ $record->log_date }}</td>
+                <td>{{ $record->fullname }}</td>
                 <td>{{ $record->plate_no }}</td>
                 <td>{{ \Carbon\Carbon::parse($record->time_in)->format('g:i A') }}</td>
                 <td>
