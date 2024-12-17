@@ -40,6 +40,29 @@ class GateScannerController extends Controller
                 // Get all vehicles owned by the vehicle owner
                 $vehicles = $vehicleOwner->vehicles;
 
+                // NEW ADDED FOR THE UNCLAIMED BUSINA CARD VALIDATION //
+                $anyClaimed = false; // Flag to track if any vehicle has been claimed
+
+                // Loop through all vehicles to check their claiming status
+                foreach ($vehicles as $vehicle) {
+                    $transaction = $vehicle->transactions()->latest()->first(); // Get the latest transaction for the vehicle
+    
+                    // Check if there is a transaction and if the claiming_status_id is 3 (Claimed)
+                    if ($transaction && $transaction->claiming_status_id == 3) {
+                        $anyClaimed = true; // Mark that we found at least one vehicle with a claimed status
+                        break; // Exit the loop once we find the first claimed vehicle
+                    }
+                }
+    
+                if (!$anyClaimed) {
+                    // If no vehicles have a claimed status, return the message
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Your transaction with motorpool is not yet updated as CLAIMED, please contact motorpool if you already receive the BUsina card in order for you to have a gate access"
+                    ]);
+                }
+                // NEW ADDED FOR THE UNCLAIMED BUSINA CARD VALIDATION //
+
                 // Get current date and time
                 $currentDate = now()->toDateString();
                 $currentTime = now()->toTimeString();
